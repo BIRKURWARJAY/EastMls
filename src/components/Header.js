@@ -22,7 +22,7 @@ export default function Header() {
         <Link href={"/"}>Home</Link>
         <Link href={"/buy-property"}>Buy Property</Link>
         <Link href={"/sell-property"}>Sell Property</Link>
-        <Link href={"/property-list"}>Property List</Link>
+        <Link href={"/properties"}>Property List</Link>
         <Link href={"/agents"}>Agents</Link>
       </Stack>
 
