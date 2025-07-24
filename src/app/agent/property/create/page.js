@@ -213,7 +213,9 @@ export default function CreateAgentProperty() {
           <FormControl >
             <Stack spacing={3}>
               <Stack spacing={.3}>
-                <Stack>
+                <Stack sx={{
+                  opacity: 0
+                }}>
                   <FormLabel>
                     <ImageIcon fontSize="small" /> Property Images
                   </FormLabel>
@@ -232,7 +234,13 @@ export default function CreateAgentProperty() {
 
                 <Stack>
                   <Button sx={{
-                    
+                    bgcolor: "#faa61f",
+                    borderRadius: "10px",
+                    padding: "5px 10px",
+                    color: "#fff",
+                    maxWidth: "50%",
+                    position: "absolute",
+                    top: "20%"
                   }}>Choose Files</Button>
                 </Stack>
               </Stack>
