@@ -29,7 +29,7 @@ function page() {
     ]
 
     const [value, setvalue] = useState([])
-    const [type, settype] = useState('')
+    const [type, settype] = useState('Property type')
 
     const router = useRouter()
 
@@ -39,8 +39,8 @@ function page() {
                 <ToggleButtonGroup
                     value={value}
                     onChange={(e, newvalue) => setvalue(newvalue)}
-                    
-                    sx={{ gap: "1rem",width:"20%" }}>
+
+                    sx={{ gap: "1rem", width: "20%" }}>
                     <ToggleButton value={"rent"} sx={{ backgroundColor: "rgb(255 245 230)", borderRadius: "0rem", width: "50%" }} size='large'>
                         <Typography fontSize={12} fontWeight={600} color='black'>For Rent</Typography>
                     </ToggleButton >
@@ -52,27 +52,24 @@ function page() {
                 <TextField id="outlined-basic" placeholder="Enter keyword" variant="outlined" sx={{ width: "30%" }} />
 
                 <FormControl sx={{ width: '40%' }}>
-                    <InputLabel id="demo-simple-select-helper-label">Property type</InputLabel>
                     <Select
                         labelId="Property type"
                         id="demo-simple-select-helper"
                         value={type}
-                        label="Age"
                         onChange={(e) => settype(e.target.value)}
                     >
-                        <MenuItem value="">
-                            <em>None</em>
-                        </MenuItem>
+
+                        <MenuItem value={'Property type'}>Property type</MenuItem>
                         <MenuItem value={'villa'}>villa</MenuItem>
                         <MenuItem value={'home'}>home</MenuItem>
                         <MenuItem value={'flat'}>flat</MenuItem>
                     </Select>
                 </FormControl>
-                <Button variant="contained" sx={{ backgroundColor: "orange", width:"10%"}} >Search</Button>
+                <Button variant="contained" sx={{ backgroundColor: "orange", width: "10%" }} >Search</Button>
             </Stack>
 
             <Stack sx={{ mt: "3rem" }} padding={2}>
-                <PropertyListingCard data={demo} />
+                <PropertyListingCard data={demo} title={'Property listing'} />
             </Stack>
         </>
     )

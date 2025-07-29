@@ -6,14 +6,14 @@ import AspectRatioIcon from '@mui/icons-material/AspectRatio';
 import React from 'react'
 import Link from 'next/link';
 
-function PropertyListingCard({ data }) {
+function PropertyListingCard({ data, title }) {
 
     // console.log(data);
 
 
     return (
         <>
-            <Typography variant='h4' fontWeight={750} fontSize={30}>Property Listing</Typography>
+            <Typography variant='h4' fontWeight={750} fontSize={30}>{title}</Typography>
             <Typography variant='h6' fontSize={10}>There Are Currently 1 Results</Typography>
 
             <Stack justifyContent={'start'} gap={2} direction={'row'} alignItems={'start'} mt={6} >

@@ -11,7 +11,7 @@ import SearchIcon from '@mui/icons-material/Search';
 export default function Header() {
 
   return (
-    <Stack direction={"row"} component={"header"} sx={{ zIndex: 100, position: "sticky", top: 0, justifyContent: "space-between", paddingBlock: "16px", height: "6rem", alignItems: "center", bgcolor: "white", paddingInline: "32px", boxShadow: "5px 5px 10px gray" }} >
+    <Stack direction={"row"} component={"header"} sx={{ zIndex: 100, position: "sticky", top: 0, justifyContent: "space-between", paddingBlock: "16px", height: "6rem", alignItems: "center", bgcolor: "white", paddingInline: "32px", boxShadow: "0px 0px 10px #dbdbdb" }} >
       <Image
         src="/eastmls/logo.webp"
         alt="Logo"
@@ -21,9 +21,9 @@ export default function Header() {
       <Stack direction={"row"} gap={4} fontWeight={"semibold"} fontSize={"1rem"}>
         <Link href={"/"}>Home</Link>
         <Link href={"/buy-property"}>Buy Property</Link>
-        <Link href={"/sell-property"}>Sell Property</Link>
         <Link href={"/property"}>Property List</Link>
         <Link href={"/agents"}>Agents</Link>
+        <Link href={"/my-inquries"}>My inquries</Link>
       </Stack>
 
       <Stack direction={"row"} gap={4} fontSize={20} alignItems={"center"} fontWeight={500} >

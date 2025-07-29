@@ -67,9 +67,9 @@ function page() {
 
         </Stack>
 
-        <Stack display={'flex'} flexDirection={'row'} gap={3}>
+        <Stack display={'flex'} flexDirection={'row'} gap={3} mt={3}>
           <Box display={'flex'} flexDirection={'column'}>
-            <img style={{ margin: "2rem 0rem", borderRadius: "0.5rem" }} src={'https://eastmls-media.s3.us-east-2.amazonaws.com/6858fd3eb1f932ffcdda32e4/properties/68755e5ded97ed8b3feb74e8/images/IMG_0607.jpeg'} alt="" />
+            <img style={{ borderRadius: "0.5rem" }} src={'https://eastmls-media.s3.us-east-2.amazonaws.com/6858fd3eb1f932ffcdda32e4/properties/68755e5ded97ed8b3feb74e8/images/IMG_0607.jpeg'} alt="" />
 
             <Box gap={2}>
               <Overview />
