@@ -1,4 +1,6 @@
 import mongoose from "mongoose";
+import { ValidationError } from "yup";
+
 
 const Transactions = (fn) => async (req, res, next) => {
   const session = await mongoose.startSession();
@@ -19,8 +21,8 @@ const Transactions = (fn) => async (req, res, next) => {
     if (error instanceof mongoose.Error || error.code === 11000) {
       return next(new MongoError("Mongoose Errr", 409, error));
     }
-    if (error.isJoi) {
-      return next(new PostError(error.details[0].message, 409));
+    if (error instanceof ValidationError) {
+      return next(new PostError(error.errors));
     }
 
     return next(new PostError(error.message, 409));

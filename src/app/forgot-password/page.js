@@ -17,7 +17,7 @@ export default function Login() {
           <FormControl sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
             <Stack>
               <FormLabel sx={{ fontSize: 18, color: "black", marginLeft: .5 }}>Email</FormLabel>
-              <TextField variant="standard" placeholder="Email" sx={{ bgcolor: "white", padding: "10px", borderRadius: "10px" }}
+              <TextField variant="standard" placeholder="Email" type="email" sx={{ bgcolor: "white", padding: "10px", borderRadius: "10px" }}
                 InputProps={{
                   disableUnderline: true
                 }}

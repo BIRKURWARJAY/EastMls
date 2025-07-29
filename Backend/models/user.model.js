@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import bcrypt from "bcrypt";
 
 const userSchema = new mongoose.Schema({
   username: {
@@ -14,8 +15,20 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true
+  },
+  isDeleted: {
+    type: Boolean,
+    default: false
+  },
+  refreshToken: {
+    type: String,
+    default: null
   }
 }, { timestamps: true });
+
+userSchema.methods.isPasswordCorrect = async function(password) {
+  await bcrypt.compare(password, this.password);
+}
 
 
 export default User = mongoose.model('User', userSchema);
