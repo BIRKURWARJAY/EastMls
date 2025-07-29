@@ -39,18 +39,19 @@ function page() {
                 <ToggleButtonGroup
                     value={value}
                     onChange={(e, newvalue) => setvalue(newvalue)}
-                    sx={{ gap: "1rem" }}>
-                    <ToggleButton value={"rent"} sx={{ backgroundColor: "rgb(255 245 230)", borderRadius: "0rem", width: "10rem" }} size='large'>
+                    
+                    sx={{ gap: "1rem",width:"20%" }}>
+                    <ToggleButton value={"rent"} sx={{ backgroundColor: "rgb(255 245 230)", borderRadius: "0rem", width: "50%" }} size='large'>
                         <Typography fontSize={12} fontWeight={600} color='black'>For Rent</Typography>
                     </ToggleButton >
-                    <ToggleButton value={"sale"} sx={{ backgroundColor: "rgb(255 245 230)", borderRadius: "0rem", width: "10rem" }} size='large'>
+                    <ToggleButton value={"sale"} sx={{ backgroundColor: "rgb(255 245 230)", borderRadius: "0rem", width: "50%" }} size='large'>
                         <Typography fontSize={12} fontWeight={600} color='black'>For Sale</Typography>
                     </ToggleButton >
                 </ToggleButtonGroup>
 
-                <TextField id="outlined-basic" placeholder="Enter keyword" variant="outlined" sx={{ width: "30rem" }} />
+                <TextField id="outlined-basic" placeholder="Enter keyword" variant="outlined" sx={{ width: "30%" }} />
 
-                <FormControl sx={{ width: '40rem' }}>
+                <FormControl sx={{ width: '40%' }}>
                     <InputLabel id="demo-simple-select-helper-label">Property type</InputLabel>
                     <Select
                         labelId="Property type"
@@ -67,7 +68,7 @@ function page() {
                         <MenuItem value={'flat'}>flat</MenuItem>
                     </Select>
                 </FormControl>
-                <Button variant="contained" sx={{ backgroundColor: "orange" }} size='large'>Search</Button>
+                <Button variant="contained" sx={{ backgroundColor: "orange", width:"10%"}} >Search</Button>
             </Stack>
 
             <Stack sx={{ mt: "3rem" }} padding={2}>

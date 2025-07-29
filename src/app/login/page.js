@@ -1,6 +1,6 @@
 'use client'
 
-import { Button, FormControl, FormLabel, Stack, TextField, Typography, Card, InputAdornment, CardContent, IconButton } from "@mui/material";
+import { Button, FormControl, FormLabel, Stack, TextField, Typography, Card, InputAdornment, CardContent, IconButton, Switch } from "@mui/material";
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { useState } from "react";
@@ -23,7 +23,7 @@ export default function Login() {
         </Typography>
 
         <CardContent sx={{ border: "none", }}>
-          <FormControl sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+          <form className="flex flex-col gap-4">
             <Stack>
               <FormLabel sx={{ fontSize: 18, color: "black", marginLeft: .5 }}>Email</FormLabel>
               <TextField variant="standard" placeholder="Email" sx={{ bgcolor: "white", padding: "10px", borderRadius: "10px" }}
@@ -75,12 +75,13 @@ export default function Login() {
             <Button variant="contained" sx={{ paddingBlock: 1.5, bgcolor: "rgb(255 138 0)" }}>
               Login
             </Button>
-          </FormControl>
+          </form>
         </CardContent>
 
         <Typography variant="p" sx={{ fontSize: 20 }}>
           Don't have an account?  <Link href={"/register"}>Register</Link>
         </Typography>
+
 
         <Link href={"/forgot-password"}>Forgot password?</Link>
       </Card>

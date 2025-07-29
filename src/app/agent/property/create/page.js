@@ -6,8 +6,10 @@ import {
   FormLabel,
   Grid,
   IconButton,
+  InputLabel,
   MenuItem,
   OutlinedInput,
+  Select,
   Stack,
   Switch,
   TextareaAutosize,
@@ -58,21 +60,21 @@ export default function CreateAgentProperty() {
               <Typography variant="h5">Create Property Listing</Typography>
             </Stack>
 
-            <FormControl >
+            <form >
               <Stack spacing={3}>
                 <Stack direction="row" spacing={3}>
                   <Stack flex={1} spacing={.3}>
                     <FormLabel>Lease Type</FormLabel>
-                    <TextField slotProps={{
-                      inputLabel: { shrink: false }
-                    }} label="Select Lease Type" select defaultValue={""}>
-                      <MenuItem value="" disabled>Select Lease Type</MenuItem>
+                    <Select defaultValue={" "}>
+                      <MenuItem disabled value=" ">
+                        <em>Select Lease Type</em>
+                      </MenuItem>
                       {leaseTypes.map((type) => (
                         <MenuItem key={type} value={type}>
                           {type}
                         </MenuItem>
                       ))}
-                    </TextField>
+                    </Select>
                   </Stack>
 
                   <Stack flex={1} spacing={.3}>
@@ -114,10 +116,8 @@ export default function CreateAgentProperty() {
                     <FormLabel>
                       <MeetingRoomIcon fontSize="small" /> Property Type
                     </FormLabel>
-                    <TextField slotProps={{
-                      inputLabel: { shrink: false }
-                    }} select defaultValue="" label="Select Property Type" >
-                      <MenuItem value="" disabled>
+                    <Select defaultValue={" "}>
+                      <MenuItem value=" " disabled>
                         Select Property Type
                       </MenuItem>
                       {propertyTypes.map((type) => (
@@ -125,27 +125,23 @@ export default function CreateAgentProperty() {
                           {type}
                         </MenuItem>
                       ))}
-                    </TextField>
-
+                    </Select>
                   </Stack>
 
                   <Stack flex={1} spacing={.3}>
-                    <FormLabel> <AutoMode fontSize="small" /> Status </FormLabel>
-                    <TextField slotProps={{
-                      inputLabel: { shrink: false }
-                    }} select defaultValue={""} label="Select Status">
-                      <MenuItem value="" disabled>Select Status</MenuItem>
-                      {statusArr.map((status) => (
-                        <MenuItem key={status} value={status} sx={{
-                          '&:hover': {
-                            bgcolor: '#faa61f',
-                            color: '#fff',
-                          },
-                        }}>
-                          {status}
+                   <FormLabel>
+                      <AutoMode fontSize="small" /> Status
+                    </FormLabel>
+                    <Select defaultValue={" "}>
+                      <MenuItem value=" " disabled>
+                        Select Status
+                      </MenuItem>
+                      {statusArr.map((type) => (
+                        <MenuItem key={type} value={type}>
+                          {type}
                         </MenuItem>
                       ))}
-                    </TextField>
+                    </Select>
                   </Stack>
 
                   <Stack flex={1} spacing={.3}>
@@ -201,7 +197,7 @@ export default function CreateAgentProperty() {
                   />
                 </Stack>
               </Stack>
-            </FormControl>
+            </form>
           </Stack>
         </Grid>
 
@@ -212,54 +208,80 @@ export default function CreateAgentProperty() {
         }}>
           <FormControl >
             <Stack spacing={3}>
-              <Stack spacing={.3}>
+              <Stack spacing={.3} sx={{
+                borderRadius: '10px',
+                color: '#faa61f',
+                position: "relative"
+              }}>
+                <FormLabel>
+                  <ImageIcon fontSize="small" /> Property Images
+                </FormLabel>
                 <Stack sx={{
-                  opacity: 0
+                  opacity: 0,
+                  zIndex: 5,
                 }}>
-                  <FormLabel>
-                    <ImageIcon fontSize="small" /> Property Images
-                  </FormLabel>
                   <TextField
                     type="file"
                     inputProps={{ multiple: true, accept: 'image/*' }}
-
-                    sx={{
-                      bgcolor: 'rgb(255 247 237)',
-                      borderRadius: '10px',
-                      padding: '10px 15px',
-                      color: '#faa61f',
-                    }}
                   />
                 </Stack>
 
                 <Stack>
                   <Button sx={{
-                    bgcolor: "#faa61f",
+                    bgcolor: "rgb(255 247 237)",
                     borderRadius: "10px",
                     padding: "5px 10px",
-                    color: "#fff",
+                    color: "rgb(255 138 0)",
+                    fontWeight: 700,
                     maxWidth: "50%",
                     position: "absolute",
-                    top: "20%"
+                    top: "40%"
                   }}>Choose Files</Button>
+                  <Button sx={{
+                    position: "absolute",
+                    top: "40%",
+                    right: "10%",
+                    color: "rgb(255 138 0)",
+                  }}>No File Chosen</Button>
                 </Stack>
               </Stack>
 
-              <Stack spacing={.3}>
+              <Stack spacing={.3} sx={{
+                borderRadius: '10px',
+                color: '#faa61f',
+                position: "relative"
+              }}>
                 <FormLabel>
-                  <VideocamIcon fontSize="small" /> Property Videos (Optional)
+                  <ImageIcon fontSize="small" /> Property Videos (Optional)
                 </FormLabel>
-                <TextField
-                  type="file"
-                  inputProps={{ accept: 'video/*' }}
+                <Stack sx={{
+                  opacity: 0,
+                  zIndex: 5,
+                }}>
+                  <TextField
+                    type="file"
+                    inputProps={{ multiple: true, accept: 'image/*' }}
+                  />
+                </Stack>
 
-                  sx={{
-                    bgcolor: 'rgb(255 247 237)',
-                    borderRadius: '10px',
-                    padding: '10px 15px',
-                    color: '#faa61f',
-                  }}
-                />
+                <Stack>
+                  <Button sx={{
+                    bgcolor: "rgb(255 247 237)",
+                    borderRadius: "10px",
+                    padding: "5px 10px",
+                    color: "rgb(255 138 0)",
+                    maxWidth: "50%",
+                    position: "absolute",
+                    top: "40%",
+                    fontWeight: 700
+                  }}>Choose Files</Button>
+                  <Button sx={{
+                    position: "absolute",
+                    top: "40%",
+                    right: "10%",
+                    color: "rgb(255 138 0)",
+                  }}>No File Chosen</Button>
+                </Stack>
               </Stack>
             </Stack>
           </FormControl>

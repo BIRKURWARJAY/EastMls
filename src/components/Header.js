@@ -11,14 +11,14 @@ import SearchIcon from '@mui/icons-material/Search';
 export default function Header() {
 
   return (
-    <Stack direction={"row"} component={"header"} sx={{ zIndex: 100, position: "", top: 0, justifyContent: "space-between", paddingBlock: "16px", height: "6rem", alignItems: "center", bgcolor: "white", paddingInline: "32px" }} >
+    <Stack direction={"row"} component={"header"} sx={{ zIndex: 100, position: "sticky", top: 0, justifyContent: "space-between", paddingBlock: "16px", height: "6rem", alignItems: "center", bgcolor: "white", paddingInline: "32px", boxShadow: "5px 5px 10px gray" }} >
       <Image
         src="/eastmls/logo.webp"
         alt="Logo"
         width={80}
         height={80}
       />
-      <Stack direction={"row"} gap={8} fontWeight={"semibold"} fontSize={20}>
+      <Stack direction={"row"} gap={4} fontWeight={"semibold"} fontSize={"1rem"}>
         <Link href={"/"}>Home</Link>
         <Link href={"/buy-property"}>Buy Property</Link>
         <Link href={"/sell-property"}>Sell Property</Link>

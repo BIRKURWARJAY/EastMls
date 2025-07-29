@@ -7,7 +7,7 @@ function BreadCrumbs({ array }) {
     
     return (
         <>
-            <Stack spacing={2} width={'90%'} borderBottom={`1px solid ${colors.grey[200]}`} >
+            <Stack spacing={2} width={'100%'} borderBottom={`1px solid ${colors.grey[200]}`} >
                 <Breadcrumbs
                     separator={<NavigateNextIcon fontSize="small" />}
                     aria-label="breadcrumb"
