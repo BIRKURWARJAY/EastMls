@@ -39,8 +39,8 @@ async function page({ params }) {
                 <BreadCrumbs array={breadcrumbs} />
 
 
-                <Box display={'flex'} flexDirection={'row'} mt={6} justifyContent={'space-between'}>
-                    <Box width={'120%'}>
+                <Box display={'flex'} flexDirection={{ xs: 'column', md: 'row' }} mt={6} justifyContent={'space-between'} >
+                    <Box >
                         <AgentCard temp={temp} />
                         <Box p={3}  boxShadow={'0px 0px 10px 0px #dbdbdb'} borderRadius={5}>
                             <Typography variant='h6' fontWeight={600} mb={3}>About Hussen ali</Typography>

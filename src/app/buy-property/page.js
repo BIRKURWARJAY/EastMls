@@ -45,7 +45,7 @@ function page() {
             onChange={(e) => settype(e.target.value)}
           >
 
-            <MenuItem value={'Property type'}>Property type</MenuItem>
+            <MenuItem disabled value={'Property type'}>Property type</MenuItem>
             <MenuItem value={'villa'}>villa</MenuItem>
             <MenuItem value={'home'}>home</MenuItem>
             <MenuItem value={'flat'}>flat</MenuItem>

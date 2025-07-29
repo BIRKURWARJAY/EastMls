@@ -43,7 +43,7 @@ function page() {
 
         <BreadCrumbs array={breadcrumbs} />
 
-        <Stack mt={5} display={'flex'} direction={'row'} justifyContent={'space-between'}>
+        <Stack mt={5} display={'flex'} direction={'row'} justifyContent={'space-between'} flexWrap={'wrap'}>
 
           <Box>
             <Typography variant='h4' fontWeight={600}>Villa In Kilimani</Typography>
@@ -58,7 +58,7 @@ function page() {
               <Typography display={'flex'} alignItems={'center'}><AspectRatioOutlinedIcon />1000 sq.ft</Typography>
             </Box>
           </Box>
-          <Box display={'flex'} flexDirection={'column'} justifyContent={'end'} alignItems={'end'} gap={1}>
+          <Box display={'flex'} flexDirection={'column'} justifyContent={'end'} alignItems={'end'} gap={1} >
             <IconButton sx={{ border: "1px solid", color: "#c2c2c2", borderRadius: "10px" }}>
               <IosShareOutlined />
             </IconButton>
@@ -67,12 +67,13 @@ function page() {
 
         </Stack>
 
-        <Stack display={'flex'} flexDirection={'row'} gap={3} mt={3}>
-          <Box display={'flex'} flexDirection={'column'}>
+        <Stack display={'flex'}  justifyContent={'space-evenly'}  flexDirection={'row'} gap={3} mt={3} flexWrap={'wrap'}>
+          <Box display={'flex'} flexDirection={'column'} gap={3} mb={3}>
             <img style={{ borderRadius: "0.5rem" }} src={'https://eastmls-media.s3.us-east-2.amazonaws.com/6858fd3eb1f932ffcdda32e4/properties/68755e5ded97ed8b3feb74e8/images/IMG_0607.jpeg'} alt="" />
 
             <Box gap={2}>
               <Overview />
+
               <Propertydetails />
             </Box>
           </Box>

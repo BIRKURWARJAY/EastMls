@@ -8,7 +8,7 @@ import React from 'react'
 import FacebookIcon from '@mui/icons-material/Facebook';
 import { useRouter } from 'next/navigation';
 
-function AgentCard({temp}) {
+function AgentCard({ temp }) {
 
     const router = useRouter()
 
@@ -16,11 +16,12 @@ function AgentCard({temp}) {
     return (
         <div className=' w-[100%] '>
 
-            {temp && temp.map((data,index) => (
-                
-                <Stack onClick={()=>router.push(`/agents/${data.id}`)} key={index} sx={{cursor:"pointer", width:"100%"}} display={'flex'} gap={3} mb={4} flexDirection={'row'} p={2} boxShadow={'0px 0px 10px 0px #dbdbdb'} borderRadius={5} width={'65%'}>
-                    <img  height={2000} width={300} style={{ height: "15rem !important", objectFit: "cover", borderRadius: "10px" }} src={data.image} alt="hello" />
-                    <Box display={'flex'} flexDirection={'column'} justifyContent={'space-between'} alignItems={'stretch'} gap={0.5}>
+            {temp && temp.map((data, index) => (
+
+                <Stack onClick={() => router.push(`/agents/${data.id}`)} key={index} sx={{ cursor: "pointer", width: "100%" }} display={'flex'} flexWrap={'wrap'} gap={3} mb={4} flexDirection={'row'} p={2} boxShadow={'0px 0px 10px 0px #dbdbdb'} borderRadius={5} width={'65%'}>
+
+                        <img height={2000} width={300} style={{ height: "15rem !important", objectFit: "cover", borderRadius: "10px", minWidth: "20rem" }} src={data.image} alt="hello" />
+                    <Box display={'flex'} flexDirection={'column'} justifyContent={'start'} alignItems={'stretch'} gap={0.5}>
                         <Typography variant='h5' fontWeight={700}>{data.name}</Typography>
                         <Typography variant='body1'>{data.role}</Typography>
 
@@ -37,14 +38,14 @@ function AgentCard({temp}) {
                             <Typography >{data.property}</Typography>
                         </Box>
 
-                        <Box  borderTop={'1px solid #dbdbdb'} width={500}>
+                        <Box borderTop={'1px solid #dbdbdb'}>
                             <FacebookIcon fontSize='large' sx={{ color: "gray", mt: "1rem" }} />
                         </Box>
 
                     </Box>
                 </Stack>
             ))}
-    </div>
+        </div>
     )
 }
 

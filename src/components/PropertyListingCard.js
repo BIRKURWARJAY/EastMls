@@ -16,10 +16,10 @@ function PropertyListingCard({ data, title }) {
             <Typography variant='h4' fontWeight={750} fontSize={30}>{title}</Typography>
             <Typography variant='h6' fontSize={10}>There Are Currently 1 Results</Typography>
 
-            <Stack justifyContent={'start'} gap={2} direction={'row'} alignItems={'start'} mt={6} >
+            <Stack justifyContent={'center'} gap={2} direction={'row'} alignItems={'start'} mt={6} flexWrap={'wrap'}>
                 {data && data.map((prop) =>
                     <Link href={`/property/${prop.name.replaceAll(' ','_')}/${prop.id}`} key={prop.id}>
-                        <Card  variant='outlined' sx={{ width: "32rem", position: "relative" }}  >
+                        <Card  variant='outlined' sx={{ maxWidth: "32rem", position: "relative" }}  >
 
                             <Button sx={{ position: "absolute", left: "0.5rem", top: "0.5rem", bgcolor: "orange", color: "white", fontSize: "8px", fontWeight: "600", width: "1px", padding: "5px" }} >For sale</Button>
 

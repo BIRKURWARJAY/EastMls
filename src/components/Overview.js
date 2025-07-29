@@ -47,7 +47,7 @@ function Overview({ prop }) {
             <Paper sx={{ padding: "2rem 1rem" }}>
                 <Typography variant='h6' fontWeight={600} borderBottom={'1px solid #e5e5e5'} mb={2} pb={1}>Overview</Typography>
                 <Grid container  columnGap={0}>
-                    {temp && temp.map((data, index) =>
+                    {temp?.map((data, index) =>
                         <Grid size={{ xs: 12, sm: 3 }} alignItems={'center'} key={index}>
                             <Box display={'flex'} gap={1.5}>
                                 {data.icon}
