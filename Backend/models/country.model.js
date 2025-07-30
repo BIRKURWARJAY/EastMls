@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const citySchema = new mongoose.Schema({
+const CountrySchema = new mongoose.Schema({
     countryCode: {
         type: String,
         required: true,
@@ -23,4 +23,4 @@ const citySchema = new mongoose.Schema({
 }, { timestamps: true });
 
 
-export default City = mongoose.model('City', citySchema);
+export default Country = mongoose.model('Country', citySchema);

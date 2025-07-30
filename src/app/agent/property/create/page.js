@@ -114,6 +114,7 @@ export default function CreateAgentProperty() {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Grid container spacing={4} sx={{
         bgcolor: "#abb0b445",
+        padding: 2,
         justifyContent: 'space-between'
       }}>
         <Grid size={{ xs: 12, md: 7, lg: 9 }} sx={{
@@ -277,7 +278,6 @@ export default function CreateAgentProperty() {
                     minDate={dayjs()}
                     maxDate={dayjs().add(5, 'year')}
                     onChange={(date) => formik.setFieldValue('availableFrom', date)}
-                    onBlur={formik.handleBlur}
                     slotProps={{
                       textField: {
                         error: formik.touched.availableFrom && formik.errors.availableFrom,

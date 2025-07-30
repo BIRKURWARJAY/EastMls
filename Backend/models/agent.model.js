@@ -17,12 +17,18 @@ const agentSchema = new mongoose.Schema({
   },
   licenseNumber: {
     type: String,
+    default: null
   },
   imageUrl: {
     type: String,
+    default: null
   },
   mob: {
-    type: Number
+    type: Number,
+    default: null
   },
   
 }, { timestamps: true });
+
+
+export default Agent = mongoose.model('Agent', agentSchema);
