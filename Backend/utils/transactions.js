@@ -31,4 +31,16 @@ const Transactions = (fn) => async (req, res, next) => {
   }
 };
 
-export default Transactions;
+const tryCatchWrapper = (fn) => (req, res, next) => {
+  return fn(req, res, next).catch((error) => {
+    if (error instanceof mongoose.Error || error.code === 11000) {
+      return next(new MongoError("Mongoose Errr", 409, error));
+    }
+    if (error instanceof ValidationError) {
+      return next(new PostError(error.errors));
+    }
+    return next(new PostError(error.message, 409));
+  });
+};
+
+export { Transactions, tryCatchWrapper };

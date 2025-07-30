@@ -1,100 +1,73 @@
-import Transactions from "../utils/transactions";
-import { userLoginValidationSchema, userValidator } from "../validators/user.validator";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import { ValidationError } from "yup";
+import Transactions, { tryCatchWrapper } from "../utils/transactions";
+import userModel from "../models/user.model";
+import { PostError, MongoError } from "../utils/ErrorHandler.js";
 
 
-export function regiterUser() {
-  return Transactions(async (req, res, next, session) => {
-    await userValidator.validate(req.body);
 
-    const { fullName, email, licenseNumber, password } = req.body;
 
-    const existedUser = await userModel.findOne({
-      email
-    });
-
-    if (existedUser) {
-      throw PostError("User Already Exists", 301);
+export function getUserDetails() { 
+  return tryCatchWrapper(async (req, res, next) => {
+    const token = req.cookies.EastMls?.token;
+    if (!token) {
+      return next(PostError("No token provided", 401));
     }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const createdUser = await userModel.create([fullName, email, hashedPassword, licenseNumber], { session });
-    if (!createdUser) {
-      throw MongoError("Error occured while registering user", 404);
+    const decoded = jwt.verify(token, process.env.JWTSECRET);
+    if (!decoded) {
+      return next(PostError("Invalid token", 401));
     }
-
-    return { status: 200, message: "User Registered successfully", data: null };
+    const user = await userModel.findById(decoded.id).select("-password -refreshToken");
+    if (!user) {
+      return next(PostError("User not found", 404));
+    }
+    return res.status(200).json({ user });
   })
 }
 
-export async function loginUser() {
-  try {
-    await userLoginValidationSchema.validate(req.body);
+export function updateUserDetails() {
+  return Transactions(async (req, res, next, session) => {
+    const { fullName, email } = req.body;
 
-    const existedUser = await userModel.findOne({
-      email: req.body.email,
-      isDeleted: false,
-    });
-    if (!existedUser) {
-      return next(PostError("User Doesn't Exists", 404));
-    }
-
-    const passwordCheck = await existedUser.isPasswordCorrect(
-      req.body.password
+    const updatedUser = await userModel.findByIdAndUpdate(
+      req.user.id,
+      { fullName, email, licenseNumber: req.body?.licenseNumber },
+      { new: true, session }
     );
 
-    if (!passwordCheck) return next(PostError("password is incorrect", 404));
+    if (!updatedUser) {
+      throw MongoError("Error updating user details", 404);
+    }
 
-    const { password, ...user } = existedUser._doc;
+    return { status: 200, message: "User details updated successfully", data: updatedUser };
+  });
+}
 
-    const accessToken = jwt.sign({
-      email: existedUser.email,
-      id: existedUser._id
-    },
-      process.env.JWTSECRET,
-      {
-        algorithm: "HS256"
-      }
-    )
-
-    if (!accessToken) return next(PostError('Error Creating AccessToken', 500));
-
-    const refreshToken = jwt.sign({
-      email: existedUser.email,
-      id: existedUser._id
-    },
-      process.env.JWTSECRET,
-      {
-        algorithm: "HS256"
-      }
-    )
-    if (!refreshToken) return next(PostError('Error Creating RefreshToken', 500));
-    
-    existedUser.refreshToken = refreshToken;
-
-    await existedUser.save();
+export function softDeleteUser() {
+  return tryCatchWrapper(async (req, res, next) => {
+    const token = req.cookies.EastMls?.token;
+    if (!token) {
+      return next(PostError("No token provided", 401));
+    }
+    const decoded = jwt.verify(token, process.env.JWTSECRET);
+    if (!decoded) {
+      return next(PostError("Invalid token", 401));
+    }
+    const user = await userModel.findById(decoded.id);
+    if (!user) {
+      return next(PostError("User not found", 404));
+    }
+    user.isDeleted = true;
+    await user.save();
 
     return res
+      .clearCookie("EastMls")
       .status(200)
-      .cookie(
-        "EastMls",
-        { token: accessToken },
-        cookieOptions
-      )
-      .json({
-        message: "User Logged in successfully",
-        user,
-      });
-  } catch (error) {
-    if (error instanceof ValidationError) {
-      return next(PostError(error.errors));
-    }
-    if (error instanceof mongoose.Error || error.code === 11000) {
-      return next(MongoError("Mongoose Errrr"));
-    }
-    return next(PostError(error.message, 409));
-  }
+      .json({ message: "User soft deleted successfully" });
+  });
+}
+
+/////////////////////////////
+export function deleteUserPermanently() {
+  return tryCatchWrapper(async (req, res, next) => {
+
+  })
 }
