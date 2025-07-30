@@ -37,9 +37,9 @@ const initialValues={
   
 
   return (
-    <Stack id="loginPage" sx={{ height: "auto", minHeight: "calc(100vh - 6rem)", backgroundImage: 'url(/eastmls/registerbg.webp)', backgroundRepeat: "no-repeat", backgroundSize: "cover" }}>
+    <Stack id="loginPage" sx={{ height: "88vh", backgroundImage: 'url(/eastmls/registerbg.webp)' }} display={'flex'} justifyContent={'center'} alignItems={'center'}>
 
-      <Card className="Login-modal" sx={{ minWidth:"30rem", width: "30rem", bgcolor: "#e2e2e2cc", marginInline: "auto", marginBlock: "auto", borderRadius: "20px", paddingBlock: 4, paddingInline: 2, alignItems: "center", display: "flex", flexDirection: "column", gap: 2 }}>
+      <Card className="Login-modal" sx={{ maxWidth: "50rem", bgcolor: "#e2e2e2cc", borderRadius: "20px", padding: 4, paddingInline: 2, alignItems: "center",justifyContent:"center", display: "flex", flexDirection: "column", gap: 2 }}>
         <Typography variant="h1" sx={{ fontSize: 30, fontWeight: 800 }}>
           Login to your Account
         </Typography>
@@ -82,23 +82,19 @@ const initialValues={
                 />
               </Stack>
 
-              <Stack direction={"row"} sx={{ gap: 4 }}>
-                <Button variant="contained"
-                  onClick={() => {
-                    setToggleButton("user"),
-                      formik.resetForm()
-                  }}
-                 
-                  sx={{ bgcolor: toggleButton === "user" ? "rgb(255 138 0)" : "white", color: toggleButton === "user" ? "white" : "black", borderRadius: "15px", display: "flex", flexDirection: "column", width: "50%", paddingBlock: 4 }}
-                  disableRipple
-                >
-                  <Typography variant="h6" sx={{ fontWeight: 700 }} component={"p"}>
-                    User
-                  </Typography>
-                  <Typography variant="body2" sx={{ maxWidth: "80%", fontSize: 12, letterSpacing: 1 }} >
-                    Explore listed properties
-                  </Typography>
-                </Button>
+            <Stack direction={"row"} sx={{ gap: 2 }}>
+              <Button variant="contained"
+                onClick={() => setToggleButton("user")}
+                sx={{ bgcolor: toggleButton === "user" ? "rgb(255 138 0)" : "white", color: toggleButton === "user" ? "white" : "black", borderRadius: "15px", display: "flex", flexDirection: "column", width: "50%", paddingBlock: 4 }}
+                disableRipple
+              >
+                <Typography variant="h6" sx={{ fontWeight: 700 }} component={"p"}>
+                  User
+                </Typography>
+                <Typography variant="body2" sx={{ maxWidth: "80%", fontSize: 12, letterSpacing: 1 }} >
+                  Explore listed properties
+                </Typography>
+              </Button>
 
                 <Button variant="contained"
                   onClick={() => {

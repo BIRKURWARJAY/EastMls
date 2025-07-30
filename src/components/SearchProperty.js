@@ -19,7 +19,7 @@ export default function SearchProperty() {
   }
 
   return (
-    <Stack sx={{ alignItems: "center", width: "50%" }}>
+    <Stack sx={{ alignItems: "center" }} maxWidth={{ sm: '100%', md: '50%' }} >
       <ButtonGroup
         value={propertySearch}
       >
@@ -28,8 +28,8 @@ export default function SearchProperty() {
         <Button disableRipple variant="contained" sx={{ padding: "10px 20px", borderBottomRightRadius: 0, border: "none", fontWeight: 600, ...BgColor2 }} onClick={() => setPropertySearch("For Sale")}>For Sale</Button>
       </ButtonGroup>
 
-      <Paper sx={{ padding: 4, borderRadius: "10px", width: "100%", padding: "20px 30px" }}>
-        <Stack direction={"row"} spacing={2}>
+      <Paper sx={{ padding: 4, borderRadius: "10px", width: "100%", padding: "20px 30px" }} >
+        <Stack direction={"row"} alignItems={'center'} justifyContent={'center'} display={'flex'} flexWrap={'wrap'} spacing={2}>
 
           <TextField variant="outlined" label="Enter Keyword" />
 
