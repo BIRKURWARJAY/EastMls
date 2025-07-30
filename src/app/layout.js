@@ -2,13 +2,10 @@
 
 import Header from "../components/Header";
 import "./globals.css";
-import { usePathname } from "next/navigation";
 
 export default function RootLayout({ children }) {
 
-  const notHeaderPages = ["/register"]
 
-  const pathname = usePathname()
 
     return (
       <html lang="en">
@@ -17,7 +14,7 @@ export default function RootLayout({ children }) {
         </head>
         <body
         >
-          {!notHeaderPages.includes(pathname) && <Header />}
+      <Header />
           {children}
         </body>
       </html>

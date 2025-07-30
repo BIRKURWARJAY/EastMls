@@ -28,8 +28,8 @@ function Header() {
 
   return (
     <AppBar position="static" sx={{ bgcolor: 'white', color: 'black' }}>
-      <Container maxWidth="xl">
-        <Toolbar disableGutters sx={{ justifyContent: 'space-between' }}>
+      <Container sx={{width:"100%",height:"12vh", display:"flex", zIndex:"500", minHeight:"5rem"}}>
+        <Toolbar disableGutters sx={{ justifyContent: 'space-between', width:"100%" }}>
 
           <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
             <IconButton onClick={toggleDrawer(true)} color="inherit">
@@ -48,15 +48,25 @@ function Header() {
             sx={{
               flexGrow: 1,
               display: { xs: 'none', md: 'flex' },
-              justifyContent: 'center',
+              justifyContent: 'end',
             }}
           >
-            <Stack direction="row" gap={4} fontWeight="semibold" fontSize="1rem">
-              <Link href="/">Home</Link>
-              <Link href="/buy-property">Buy Property</Link>
-              <Link href="/property">Property List</Link>
-              <Link href="/agents">Agents</Link>
-              <Link href="/my-inquries">My Inquiries</Link>
+            <Stack direction="row" sx={{width:"80%"}} justifyContent={'space-between'}  fontWeight="semibold" fontSize="1rem" alignItems={'center'}>
+              <Box display={'flex'} justifyContent={'center'} gap={5}>
+
+                <Link href="/">Home</Link>
+                <Link href="/buy-property">Buy Property</Link>
+                <Link href="/property">Property List</Link>
+                <Link href="/agents">Agents</Link>
+                <Link href="/my-inquries">My Inquiries</Link>
+              </Box>
+
+              <Box >
+
+                <Button sx={{ bgcolor: "orange", color: "white", mr:"2rem"}} >Sell property</Button>
+                <Link href="/login">Login</Link>
+              </Box>
+
             </Stack>
           </Box>
 
@@ -87,7 +97,7 @@ function Header() {
                 <ListItem button component={Link} href={"/"}>
                   <ListItemText  >Logout</ListItemText>
                 </ListItem>
-                <Button fullWidth sx={{bgcolor:"orange", color:"white"}}>Search property</Button>
+                <Button fullWidth sx={{ bgcolor: "orange", color: "white" }}>Search property</Button>
               </List>
             </Box>
           </Drawer>

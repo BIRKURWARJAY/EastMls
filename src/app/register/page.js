@@ -28,9 +28,9 @@ export default function Login() {
 
 
   return (
-    <Stack id={"registerPage"} sx={{ width: "100%", minHeight: "100vh", height: "auto", backgroundImage: 'url(/eastmls/registerbg.webp)' }}>
+    <Stack id={"registerPage"} sx={{ width: "100%", height: "88vh", backgroundImage: 'url(/eastmls/registerbg.webp)' }}>
 
-      <Card className="Login-modal" sx={{ width: "30%", bgcolor: "#e2e2e2cc", marginInline: "auto", marginBlock: "auto", borderRadius: "20px", paddingBlock: 4, paddingInline: 2, alignItems: "center", display: "flex", flexDirection: "column", gap: 2 }}>
+      <Card className="Login-modal" sx={{ maxWidth: "50rem", bgcolor: "#e2e2e2cc", marginInline: "auto", marginBlock: "auto", borderRadius: "20px", paddingBlock: 4, paddingInline: 2, alignItems: "center", display: "flex", flexDirection: "column", gap: 2 }}>
         <Typography variant="h1" sx={{ fontSize: 30, fontWeight: 800 }}>
           Create your Account
         </Typography>
@@ -87,10 +87,10 @@ export default function Login() {
                   }} />
                 </Stack>
 
-                <Stack direction={"row"} sx={{ gap: 4 }}>
+                <Stack direction={"row"} sx={{ gap: 2 }} flexWrap={{ xs: "wrap", sm: "nowrap" }} justifyContent={'center'}>
                   <Button variant="contained"
                     onClick={() => setToggleButton("user")}
-                    sx={{ bgcolor: toggleButton === "user" ? "rgb(255 138 0)" : "white", color: toggleButton === "user" ? "white" : "black", borderRadius: "15px", display: "flex", flexDirection: "column", width: "50%", paddingBlock: 4 }}
+                    sx={{ bgcolor: toggleButton === "user" ? "rgb(255 138 0)" : "white", color: toggleButton === "user" ? "white" : "black", borderRadius: "15px", display: "flex", flexDirection: "column", paddingBlock: 4, width: { xs: "100%", sm: "50%" } }}
                     disableRipple
                   >
                     <Typography variant="h6" sx={{ fontWeight: 700 }} component={"p"}>
@@ -104,7 +104,7 @@ export default function Login() {
                   <Button variant="contained"
                     onClick={() => setToggleButton("agent")}
                     disableRipple
-                    sx={{ bgcolor: toggleButton === "agent" ? "rgb(255 138 0)" : "white", color: toggleButton === "agent" ? "white" : "black", display: "flex", borderRadius: "15px", flexDirection: "column", width: "50%", paddingBlock: 2 }}>
+                    sx={{ bgcolor: toggleButton === "agent" ? "rgb(255 138 0)" : "white", color: toggleButton === "agent" ? "white" : "black", display: "flex", borderRadius: "15px", flexDirection: "column", width: { xs: "100%", sm: "50%" }, paddingBlock: 4 }}>
                     <Typography variant="h6" sx={{ fontWeight: 700 }} component={"p"}>
                       Agent
                     </Typography>
