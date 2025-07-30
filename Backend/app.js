@@ -2,11 +2,13 @@ import express from "express";
 import cors from "cors";
 import {userValidator} from "./validators/user.validator.js";
 import { configDotenv } from "dotenv";
+import connect from "./db/connect.js";
 
 
 const app = express();
 
 configDotenv();
+connect()
 
 app.use(cors());
 app.use(express.urlencoded());

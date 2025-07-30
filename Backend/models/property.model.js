@@ -14,7 +14,7 @@ const propertySchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    description: {
+    propertyDescription: {
         type: String,
         required: true,
     },
@@ -22,7 +22,7 @@ const propertySchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    type: {
+    propertyType: {
         type: String,
         required: true,
     },
@@ -47,17 +47,29 @@ const propertySchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
+    yearOfBuild: {
+        type: Number,
+        required: true,
+    },
+    postalCode: {
+        type: String,
+        required: true,
+    },
     bathrooms: {
         type: Number,
+        required: true,
     },
     bedrooms: {
         type: Number,
+        required: true,
     },
     garage: {
         type: Number,
+        required: true,
     },
     garageSize: {
         type: Number,
+        required: true,
     },
     city: {
         type: mongoose.Schema.Types.ObjectId,
@@ -81,6 +93,22 @@ const propertySchema = new mongoose.Schema({
     verification: {
         type: Boolean,
         required: true,
+        default: false
+    },
+    viewCount: {
+        type: Number,
+        default: 0
+    },
+    isPriceNegotiable: {
+        type: Boolean,
+        default: false
+    },
+    availableFrom: {
+        type: String,
+        default: false
+    },
+    featured: {
+        type: Boolean,
         default: false
     },
     features: {
