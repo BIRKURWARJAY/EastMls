@@ -1,10 +1,10 @@
 import bcrypt from 'bcrypt';
-import userModel from '../models/user.model';
-import agentModel from '../models/agent.model';
-import { userLoginValidationSchema, userValidator } from "../validators/user.validator";
-import { PostError, MongoError } from '../utils/ErrorHandler';
+import userModel from '../models/user.model.js';
+import agentModel from '../models/agent.model.js';
+import { userLoginValidationSchema, userValidator } from "../validators/user.validator.js";
+import { PostError, MongoError } from '../utils/ErrorHandler.js';
 import jwt from "jsonwebtoken";
-import { Transactions, tryCatchWrapper } from '../utils/transactions';
+import { Transactions, tryCatchWrapper } from '../utils/transactions.js';
 
 const cookieOptions = (maxAge) => {
   return {
@@ -28,14 +28,14 @@ export function regiterUser() {
     });
 
     if (existedUser) {
-      throw next(PostError("User Already Exists", 301));
+      return next(PostError("User Already Exists", 301));
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const createdUser = userType === "user" ? await userModel.create({ ...req.body, password: hashedPassword }) : await agentModel.create({ ...req.body, password: hashedPassword })
     if (!createdUser) {
-      throw next(MongoError("Error occured while registering user", 404));
+      return next(MongoError("Error occured while registering user", 404));
     }
 
     return { status: 200, message: "User Registered successfully", data: null };
@@ -108,18 +108,7 @@ export function loginUser() {
 
 export function logoutUser() {
   return tryCatchWrapper(async (req, res, next) => {
-    const token = req.cookies.EastMls?.token;
-    if (!token) {
-      return next(PostError("No token provided", 401));
-    }
-    const decoded = jwt.verify(token, process.env.JWTSECRET);
-    if (!decoded) {
-      return next(PostError("Invalid token", 401));
-    }
-
-    const Model = decoded.userType === "user" ? userModel : agentModel;
-
-    const user = await Model.findById(decoded.id);
+    const user = await req.Model.findById(req.user.id);
     if (!user) {
       return next(PostError("User not found", 404));
     }
@@ -133,18 +122,21 @@ export function logoutUser() {
 }
 
 export function updateUserDetails() {
-  return Transactions(async (req, res, next, session) => {
+  return tryCatchWrapper(async (req, res, next) => {
     const { fullName, email } = req.body;
-    const Model = decoded.userType === "user" ? userModel : agentModel;
 
-    const updatedUser = await Model.findByIdAndUpdate(
+    const updatedUser = req.userType === "user" ?  await req.Model.findByIdAndUpdate(
       req.user.id,
-      { fullName, email, licenseNumber: req.body?.licenseNumber },
-      { new: true, session }
+      {fullName, email},
+      { new: true }
+    ) :  await req.Model.findByIdAndUpdate(
+      req.user.id,
+      req.body,
+      { new: true }
     );
 
     if (!updatedUser) {
-      throw MongoError("Error updating user details", 404);
+      return next(MongoError("Error updating user details", 404));
     }
 
     return { status: 200, message: "User details updated successfully", data: updatedUser };
@@ -153,15 +145,7 @@ export function updateUserDetails() {
 
 export function softDeleteUser() {
   return tryCatchWrapper(async (req, res, next) => {
-    const token = req.cookies.EastMls?.token;
-    if (!token) {
-      return next(PostError("No token provided", 401));
-    }
-    const decoded = jwt.verify(token, process.env.JWTSECRET);
-    if (!decoded) {
-      return next(PostError("Invalid token", 401));
-    }
-    const user = await userModel.findById(decoded.id);
+    const user = await req.Model.findById(req.user.id);
     if (!user) {
       return next(PostError("User not found", 404));
     }

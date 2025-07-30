@@ -31,4 +31,4 @@ const agentSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 
-export default Agent = mongoose.model('Agent', agentSchema);
+export default mongoose.model('Agent', agentSchema);
