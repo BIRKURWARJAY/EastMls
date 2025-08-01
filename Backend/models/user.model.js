@@ -23,6 +23,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  profileImage: {
+    type: String,
+    default: "https://eastmls.net/_next/image?url=https%3A%2F%2Feastmls-media.s3.us-east-2.amazonaws.com%2F6858fd3eb1f932ffcdda32e4%2FIMG_0329.jpeg&w=1080&q=75"
+  },
   refreshToken: {
     type: String,
     default: null
