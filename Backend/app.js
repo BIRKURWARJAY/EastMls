@@ -15,6 +15,7 @@ const app = express();
 
 configDotenv();
 connect()
+connect()
 
 app.use(cors({
   origin: process.env.FRONTEND_URL || "http://localhost:3000",
@@ -39,6 +40,8 @@ app.on("uncaughtException", (err) => {
   console.error("Uncaught Exception:", err);
 });
 
+app.listen(5000, () => {
+  console.log(`server is running on localhost:5000`)
 app.listen(5000, () => {
   console.log(`server is running on localhost:5000`)
 })

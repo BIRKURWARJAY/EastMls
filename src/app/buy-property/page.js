@@ -9,7 +9,6 @@ function page() {
   const [type, settype] = useState('Property type')
   const [prop, setprop] = useState()
 
-
   const demo = [
     {
       id: "1",
