@@ -1,9 +1,58 @@
+'use client'
+
+import { api } from "@/utils/api";
 import { Button, FormControl, FormLabel, Stack, TextField, Typography, Card, CardContent } from "@mui/material";
 import Link from "next/link";
+import { useRef } from "react";
+import { useRouter } from "next/navigation";
 
 
-export default function Login() {
+export default function ForgotPassword() {
 
+  const router = useRouter();
+  const emailRef = useRef();
+  const passwordRef = useRef();
+
+  const validateEmail = async(email) => {
+    try {
+      if (!email.trim()) {
+        return alert("email is required");
+      }
+      const res = await api.post("/user/validateEmail", {
+        email
+      });
+      if (res.data.status === "success") {
+        alert("email validated");
+      }
+      if (res.data.status === 404) {
+        alert("invalid Email")
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
+  }
+
+  const resetPassword = async (email, password) => {
+    try {
+      if (!email.trim()) {
+        return alert("email is required");
+      }
+      if (!password.trim() || !password.length > 6) {
+        return alert("password length must be > 6");
+      }
+
+      const res = await api.post("/user/forgot-password", {
+        email,
+        password
+      });
+      if (res.status === 201) {
+        alert("password changed please login");
+        return router.push("/login");
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
+  }
 
   return (
     <Stack id="loginPage" sx={{ height: "auto", minHeight: "calc(100vh - 6rem)", backgroundImage: 'url(/eastmls/registerbg.webp)' }}>
@@ -17,14 +66,14 @@ export default function Login() {
           <FormControl sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
             <Stack>
               <FormLabel sx={{ fontSize: 18, color: "black", marginLeft: .5 }}>Email</FormLabel>
-              <TextField variant="standard" placeholder="Email" type="email" sx={{ bgcolor: "white", padding: "10px", borderRadius: "10px" }}
+              <TextField variant="standard" ref={emailRef} placeholder="Email" type="email" sx={{ bgcolor: "white", padding: "10px", borderRadius: "10px" }}
                 InputProps={{
                   disableUnderline: true
                 }}
               />
             </Stack>
 
-            <Button variant="contained" sx={{ paddingBlock: 1.5, bgcolor: "rgb(255 138 0)" }}>
+            <Button variant="contained" onClick={() => validateEmail(emailRef.current)} sx={{ paddingBlock: 1.5, bgcolor: "rgb(255 138 0)" }} disabled={!emailRef.current.trim()}>
               Submit
             </Button>
           </FormControl>

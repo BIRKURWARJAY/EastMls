@@ -16,6 +16,8 @@ import { useRouter } from 'next/navigation';
 
 function Header() {
   const [drawerOpen, setDrawerOpen] = React.useState(false);
+  const isLoggedIn = eastmlsStore(s => s.isLoggedIn);
+  const logout = eastmlsStore(s => s.logout);
 
   const router = useRouter();
 
@@ -37,9 +39,10 @@ function Header() {
       console.log("Logout response:", res.data);
       if (res.data.status === "success") {
         router.push("/login");
+        logout();
       }
     } catch (error) {
-      router.push("/login")
+      console.error("Error logging out...")
     }
   }
 

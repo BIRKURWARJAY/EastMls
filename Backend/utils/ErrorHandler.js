@@ -1,9 +1,10 @@
 import mongoose from "mongoose";
 
 function PostError(message, statusCode) {
-  const error = new Error(message);
+  const error = new Error();
   Error.captureStackTrace(error, PostError);
-  return { error, statusCode, isOperational: true }
+  const errorMessage = message || error.message;
+  return { error, errorMessage, statusCode, isOperational: true }
 }
 
 const errorHandler = async (err, req, res, next) => {
@@ -33,13 +34,13 @@ const errorHandler = async (err, req, res, next) => {
 
     return res.status(err.statusCode).json({
       status: "Mongoose unknown Errrr",
-      message: err.message,
+      message: err.errorMessage,
     });
   }
   if (err instanceof PostError) {
     return res.status(err.statusCode).json({
       status: "error",
-      message: err.error.message,
+      message: err.errorMessage
     })
   }
 
@@ -48,13 +49,16 @@ const errorHandler = async (err, req, res, next) => {
 
   res.status(500).json({
     status: "unknown error!",
-    message: err?.error?.message,
+    message: err.errorMessage
   });
 };
 
 // Define specific MongoDB/Mongoose error handlers
-function MongoError(message, statusCode, originError) {
-  return { message, statusCode, originError }
+function MongoError(message, statusCode) {
+  const error = new Error();
+  Error.captureStackTrace(error, MongoError);
+  const errorMessage = message || error.message;
+  return { error, errorMessage, statusCode, isOperational: true }
 }
 
 export { PostError, errorHandler, MongoError };

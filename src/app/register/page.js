@@ -8,9 +8,9 @@ import Link from "next/link";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import ErrorText from "@/components/ErrorText";
-import axios from "axios";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { api } from "@/utils/api";
 
 
 
@@ -39,7 +39,7 @@ export default function Login() {
     validationSchema: YupValidation,
     onSubmit: async (values) => {
       try {
-        const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKENDURI}api/auth`, {
+        const res = await api.post(`/auth`, {
           username: values.fullName,
           email: values.email,
           licenseNumber: values.licenseNumber,
@@ -48,10 +48,9 @@ export default function Login() {
         }
         )
 
-        res.status === 200 && toast.success(data.message.message);
-        router.push("/login");
+        res.status === 200 && router.push("/login");
       } catch (error) {
-        toast.error(error.message.message)
+        console.error(error.message)
       }
     }
   })

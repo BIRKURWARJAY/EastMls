@@ -18,12 +18,12 @@ export const authenticateUser = (req, res, next) => {
   });
 }
 
-export const restrictAuthUser = (req, res, next) => {
-  const token = req.headers.authorization?.split(" ")[1] || undefined;
-  jwt.verify(token, process.env.JWTSECRET, (err, decoded) => {
-    if (decoded) {
-      return next(PostError("not allowed", 420));
-    }
-  });
-  next()
-}
+// export const restrictAuthUser = (req, res, next) => {
+//   const token = req.headers.authorization?.split(" ")[1] || undefined;
+//   jwt.verify(token, process.env.JWTSECRET, (err, decoded) => {
+//     if (decoded) {
+//       return next(PostError("not allowed", 420));
+//     }
+//   });
+//   next()
+// }
