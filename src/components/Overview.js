@@ -1,44 +1,44 @@
-import { BathroomOutlined, SensorDoorOutlined } from '@mui/icons-material'
+import { AspectRatioOutlined, BathroomOutlined, BedOutlined, CalendarTodayOutlined, HomeOutlined, SensorDoorOutlined, WarehouseOutlined } from '@mui/icons-material'
 import { Box, Grid, Paper, Stack, Typography } from '@mui/material'
 import React from 'react'
 
-function Overview({ prop }) {
+function Overview({ data }) {
 
     const temp = [
         {
             icon: <SensorDoorOutlined sx={{ fontSize: 40, p: 0.8, border: "1px solid #e5e5e5", borderRadius: "0.5rem" }} />,
             title: "Rooms",
-            detail: 5
+            detail: data?.bedrooms
+        },
+        {
+            icon: <BedOutlined sx={{ fontSize: 40, p: 0.8, border: "1px solid #e5e5e5", borderRadius: "0.5rem" }} />,
+            title: "Beds",
+            detail: data?.bedrooms
         },
         {
             icon: <BathroomOutlined sx={{ fontSize: 40, p: 0.8, border: "1px solid #e5e5e5", borderRadius: "0.5rem" }} />,
             title: "Baths",
-            detail: 5
+            detail: data?.bathrooms
         },
         {
-            icon: <BathroomOutlined sx={{ fontSize: 40, p: 0.8, border: "1px solid #e5e5e5", borderRadius: "0.5rem" }} />,
-            title: "Baths",
-            detail: 5
+            icon: <AspectRatioOutlined sx={{ fontSize: 40, p: 0.8, border: "1px solid #e5e5e5", borderRadius: "0.5rem" }} />,
+            title: "Area",
+            detail: `${data?.areaSqFt} Sq Ft`
         },
         {
-            icon: <BathroomOutlined sx={{ fontSize: 40, p: 0.8, border: "1px solid #e5e5e5", borderRadius: "0.5rem" }} />,
-            title: "Baths",
-            detail: 5
+            icon: <CalendarTodayOutlined sx={{ fontSize: 40, p: 0.8, border: "1px solid #e5e5e5", borderRadius: "0.5rem" }} />,
+            title: "Year built",
+            detail: data?.yearOfBuild
         },
         {
-            icon: <BathroomOutlined sx={{ fontSize: 40, p: 0.8, border: "1px solid #e5e5e5", borderRadius: "0.5rem" }} />,
-            title: "Baths",
-            detail: 5
+            icon: <WarehouseOutlined sx={{ fontSize: 40, p: 0.8, border: "1px solid #e5e5e5", borderRadius: "0.5rem" }} />,
+            title: "Garage",
+            detail: data?.garage
         },
         {
-            icon: <BathroomOutlined sx={{ fontSize: 40, p: 0.8, border: "1px solid #e5e5e5", borderRadius: "0.5rem" }} />,
+            icon: <HomeOutlined sx={{ fontSize: 40, p: 0.8, border: "1px solid #e5e5e5", borderRadius: "0.5rem" }} />,
             title: "Baths",
-            detail: 5
-        },
-        {
-            icon: <BathroomOutlined sx={{ fontSize: 40, p: 0.8, border: "1px solid #e5e5e5", borderRadius: "0.5rem" }} />,
-            title: "Baths",
-            detail: 5
+            detail: data?.propertyType
         },
     ]
 

@@ -29,16 +29,14 @@ export const propertyValidator = Yup.object().shape({
     .required('propertyType is required'),
 
   type: Yup.string()
-    .oneOf(['Point', 'Circle', 'Area'], 'Invalid property type')
-    .required('propertyType is required'),
+    .oneOf(['Point', 'Circle', 'Area'], 'Invalid  type')
+    .required('type is required'),
 
   status: Yup.string()
     .oneOf(['available', 'pending', 'sold', 'rented'], 'Invalid status')
     .required('status is required'),
 
-  availableFrom: Yup.date()
-    .min(today.toDate(), `availableFrom must be at least ${today.format('DD/MM/YYYY')}`)
-    .max(maxAvailableFrom, `availableFrom cannot be after ${dayjs(maxAvailableFrom).format('DD/MM/YYYY')}`)
+  availableFrom: Yup.string()
     .required('availableFrom is required'),
 
   bedrooms: Yup.number()
@@ -57,14 +55,14 @@ export const propertyValidator = Yup.object().shape({
     .required('garage is required'),
 
   garageSize: Yup.number()
-    .typeError('area must be a number')
-    .min(1, 'area must be at least 1')
-    .required('area is required'),
+    .typeError('garageSize must be a number')
+    .min(1, 'garageSize must be at least 1')
+    .required('garageSize is required'),
 
   areaSqFt: Yup.number()
-    .typeError('area must be a number')
-    .min(1, 'area must be at least 1')
-    .required('area is required'),
+    .typeError('areaSqFt must be a number')
+    .min(1, 'areaSqFt must be at least 1')
+    .required('areaSqFt is required'),
 
   viewCount: Yup.number()
     .typeError('viewCount must be a number')
@@ -75,7 +73,7 @@ export const propertyValidator = Yup.object().shape({
     .required('isPriceNegotiable is required'),
 
   countryStatus: Yup.boolean()
-    .required('isPriceNegotiable is required'),
+    .required('countryStatus is required'),
 
   featured: Yup.boolean()
     .required('featured is required'),
@@ -85,7 +83,7 @@ export const propertyValidator = Yup.object().shape({
 
   propertyDescription: Yup.string()
     .trim()
-    .required('description is required'),
+    .required('propertyDescription is required'),
 
   currency: Yup.string()
     .trim()
@@ -101,7 +99,7 @@ export const propertyValidator = Yup.object().shape({
 
   country: Yup.string()
     .trim()
-    .required('country id is required'),
+    .required('country is required'),
 
   countryCode: Yup.string()
     .trim()

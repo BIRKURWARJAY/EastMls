@@ -1,11 +1,13 @@
 'use client'
 import PropertyListingCard from '@/components/PropertyListingCard'
 import { Button, FormControl, InputLabel, MenuItem, Select, Stack, TextField } from '@mui/material'
-import React, { useState } from 'react'
+import axios from 'axios'
+import React, { useEffect, useState } from 'react'
 
 function page() {
 
   const [type, settype] = useState('Property type')
+  const [prop, setprop] = useState()
 
   const demo = [
     {
@@ -27,6 +29,16 @@ function page() {
 
     },
   ]
+
+  useEffect(() => {
+    const fetchProp = async () => {
+      const response = await axios.get(`http://localhost:5000/property/all`)
+      console.log(response.data);
+      setprop(response.data.allprop)
+    }
+    fetchProp()
+
+  }, [])
 
 
   return (
@@ -55,7 +67,7 @@ function page() {
       </Stack>
 
       <Stack sx={{ mt: "3rem" }} padding={2}>
-        <PropertyListingCard data={demo} title={'Buy Property listing'}/>
+        <PropertyListingCard data={prop} title={'Buy Property listing'} />
       </Stack>
     </>
   )

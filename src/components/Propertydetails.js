@@ -4,11 +4,14 @@ import React, { useState } from 'react'
 function Propertydetails({ data }) {
 
     const temp = {
-        Id: "123456",
-        name: "hello123",
-        user: "123456",
-        hello: "lfhdzhbskjnfsj",
-        password:"12sbvgdjv"
+        Id: data?._id,
+        price: `${data?.currency, data?.price}`,
+        size: `${data?.areaSqFt} Sq. Ft.`,
+        rooms: data?.bedrooms,
+        bath: data?.bathrooms,
+        'garage size': data?.garageSize,
+        Year: data?.yearOfBuild,
+        Land: data?.landArea,
     }
 
     // for (const [key, value] of Object.entries(temp)) {
@@ -26,7 +29,7 @@ function Propertydetails({ data }) {
                 <Grid container columnGap={15} display={'flex'} >
                     {
                         Object.keys(temp).map(key => (
-                            < Grid key={key} size={{ xs: 12, sm: 6 }} display={"flex"}  justifyContent={"space-between"} sx={{maxWidth:"30%"}} >
+                            < Grid key={key} size={{ xs: 12, sm: 6 }} display={"flex"} justifyContent={"space-between"} sx={{ maxWidth: "30%" }} >
 
                                 <Typography fontWeight={600}>{key}</Typography>
                                 <Typography textAlign={'left'} width={100}>{temp[key]}</Typography>

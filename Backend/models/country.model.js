@@ -23,4 +23,5 @@ const countrySchema = new mongoose.Schema({
 }, { timestamps: true });
 
 
-export default Country = mongoose.model('Country', countrySchema);
+const Country = mongoose.models.Property || mongoose.model('Country', countrySchema)
+export default Country;
