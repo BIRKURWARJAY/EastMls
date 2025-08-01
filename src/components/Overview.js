@@ -37,7 +37,7 @@ function Overview({ data }) {
         },
         {
             icon: <HomeOutlined sx={{ fontSize: 40, p: 0.8, border: "1px solid #e5e5e5", borderRadius: "0.5rem" }} />,
-            title: "Baths",
+            title: "Type",
             detail: data?.propertyType
         },
     ]
