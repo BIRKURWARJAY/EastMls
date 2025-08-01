@@ -232,6 +232,8 @@ const deleteproperty = async (req, res) => {
 
 const allproperties = async (req, res) => {
     try {
+        console.log("called");
+        
         const allprop = await Property.find()
         if (!allprop) {
             return res.status(500).json({
@@ -239,7 +241,7 @@ const allproperties = async (req, res) => {
             })
         }
 
-        res.status(200).json({
+        return res.status(200).json({
             message: "All properties is fetched",
             allprop
         })

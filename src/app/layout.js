@@ -1,20 +1,15 @@
-'use client'
-
-import { useEffect } from "react";
-import Header from "../components/Header";
+// import Header from "../components/Header";
+import Header from "@/components/Header";
 import "./globals.css";
 import eastmlsStore from "@/store/eastmlsStore";
+import Api from "@/utils/api";
+import { cookies } from 'next/headers'
 
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
 
-  const setIsLoggedIn = eastmlsStore(state => state.setIsLoggedIn);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setIsLoggedIn(document.cookie?.includes("EastMls"));
-    }
-  }, [])
+  const cookiesdata = await cookies()
+  const token = cookiesdata.get('Eastmls')?.value || '';
 
   return (
     <html lang="en">
@@ -24,6 +19,7 @@ export default function RootLayout({ children }) {
       <body
         style={{ margin: 0 }}
       >
+        <Api token={token}/>
         <Header />
         {children}
       </body>

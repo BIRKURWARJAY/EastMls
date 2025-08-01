@@ -9,25 +9,29 @@ import { useParams, useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
 function page() {
-     const params = useParams()
     const [value, setvalue] = useState([])
     const [prop, setprop] = useState()
     const [type, settype] = useState('Property type')
 
     const router = useRouter()
 
-      useEffect(() => {
-    const fetchprop = async () => {
-      const response = await axios.get(`http://localhost:5000/properties`)
-      console.log(response.data);
-      setprop(response.data.propertydetails)
-    }
-    fetchprop()
-  }, [])
+    useEffect(() => {
+       try {
+         const fetchprop = async () => {
+             const response = await axios.get(`http://localhost:5000/property/all`)
+             console.log(response.data);
+             setprop(response.data.allprop)
+         }
+         fetchprop()
+       } catch (error) {
+        console.log(error);
+        
+       }
+    }, [])
 
     return (
         <>
-            <Stack flexDirection={'row'}  display={'flex'} justifyContent={'center'} flexWrap={'wrap'} boxShadow={"0px 1px 10px 1px #d6d6d6"} py={4} gap={2}>
+            <Stack flexDirection={'row'} display={'flex'} justifyContent={'center'} flexWrap={'wrap'} boxShadow={"0px 1px 10px 1px #d6d6d6"} py={4} gap={2}>
                 <ToggleButtonGroup
 
                     value={value}

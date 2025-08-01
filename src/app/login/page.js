@@ -10,7 +10,6 @@ import * as Yup from "yup";
 import ErrorText from "@/components/ErrorText";
 import { useRouter } from "next/navigation";
 import useEastmlsStore from "../../store/eastmlsStore.js";
-import { api } from "../../utils/api.js";
 
 
 export default function Login() {

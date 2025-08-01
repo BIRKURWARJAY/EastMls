@@ -23,13 +23,13 @@ function PropertyListingCard({ data, title }) {
 
                             <Button sx={{ position: "absolute", left: "0.5rem", top: "0.5rem", bgcolor: "orange", color: "white", fontSize: "8px", fontWeight: "600", width: "1px", padding: "5px" }} >For sale</Button>
 
-                            {/* <CardMedia
+                            <CardMedia
                                 sx={{ borderRadius: "5px", height: "16rem" }}
                                 component="img"
 
                                 image={prop?.images[0]}
                                 alt="Paella dish"
-                            /> */}
+                            />
 
                             <CardContent sx={{ paddingBottom: "1rem !important" }}>
                                 <Box flexDirection={'row'} display={'flex'} gap={0.5} color={'gray'} justifyContent={'space-between'} mb={1}>

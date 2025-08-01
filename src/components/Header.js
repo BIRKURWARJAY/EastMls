@@ -13,7 +13,6 @@ import Image from 'next/image';
 import { Button, List, ListItem, ListItemText } from '@mui/material';
 import eastmlsStore from '@/store/eastmlsStore';
 import { useRouter } from 'next/navigation';
-import { api } from '@/utils/api';
 
 function Header() {
   const [drawerOpen, setDrawerOpen] = React.useState(false);
@@ -37,7 +36,7 @@ function Header() {
   const handleLogout = async() => {
     try {
       console.log("Logging out...");
-      const res = await api.get("/auth");
+      const res = await axios.get("/auth");
       console.log("Logout response:", res.data);
       if (res.data.status === "success") {
         router.push("/login");
