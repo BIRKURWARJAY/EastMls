@@ -9,17 +9,6 @@ import Container from '@mui/material/Container';
 import Drawer from '@mui/material/Drawer';
 import Stack from '@mui/material/Stack';
 import Link from 'next/link';
-'use client';
-import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
-import Container from '@mui/material/Container';
-import Drawer from '@mui/material/Drawer';
-import Stack from '@mui/material/Stack';
-import Link from 'next/link';
 import Image from 'next/image';
 import { Button, List, ListItem, ListItemText } from '@mui/material';
 import eastmlsStore from '@/store/eastmlsStore';
@@ -84,7 +73,7 @@ function Header() {
   ]
 
   return (
-    <AppBar position="static" sx={{ bgcolor: 'white', color: 'black' }}>
+    <AppBar position="static" sx={{ bgcolor: 'white', color: 'black', width: "100%" }}>
       <Container sx={{ width: "100%", height: "12vh", display: "flex", zIndex: "500", minHeight: "5rem" }}>
         <Toolbar disableGutters sx={{ justifyContent: 'space-between', width: "100%" }}>
 
