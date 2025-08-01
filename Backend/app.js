@@ -7,10 +7,8 @@ import authRouter from "./routes/auth.routes.js";
 import { errorHandler } from "./utils/ErrorHandler.js";
 import userRouter from "./routes/user.routes.js";
 import agentRouter from "./routes/agent.routes.js";
-
-import autoRefreshToken from "./utils/autoRefreshToken.js";
-import { authenticateUser } from "./middlewares/auth.js";
 import inquiryRouter from "./routes/inquiry.routes.js";
+import cookieParser from "cookie-parser";
 
 
 const app = express();
@@ -22,10 +20,7 @@ app.use(cors({
   origin: "http://localhost:3000"
 }));
 app.use(express.json());
-app.use(cors({
-  origin: "http://localhost:3000",
-  credentials: true
-}))
+
 
 
 app.use(cookieParser());

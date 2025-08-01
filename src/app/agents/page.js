@@ -1,6 +1,7 @@
 'use client';
 import AgentCard from '@/components/AgentCard';
 import BreadCrumbs from '@/components/BreadCrumbs';
+import { api } from '@/utils/api';
 import {
   Box,
   FormControl,
@@ -10,44 +11,27 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import axios from 'axios';
 import Link from 'next/link';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+
+const token = JSON.parse(localStorage.getItem("EastMls") || "{}")?.token;
 
 function Page() {
   const [value, setvalue] = useState(10);
+  const [data,setdata] = useState()
 
-  const temp = [
-    {
-      id: '1',
-      image:
-        'https://eastmls.net/_next/image?url=%2Fproperty.jpg&w=1080&q=75',
-      name: 'Hussen ali',
-      role: 'agent1',
-      number: '+91 897541132',
-      email: '@adminagent@gmail.com',
-      property: '3 house',
-    },
-    {
-      id: '2',
-      image:
-        'https://eastmls.net/_next/image?url=https%3A%2F%2Feastmls-media.s3.us-east-2.amazonaws.com%2F6858fd3eb1f932ffcdda32e4%2Fproperties%2F6885ec2dc7daa3cd430b2604%2Fimages%2FIMG_0662.jpeg&w=256&q=75',
-      name: 'Hussen ali2',
-      role: 'agent2',
-      number: '+91 654321789',
-      email: '@adminkjdsbcvjagent@gmail.com',
-      property: '5 house',
-    },
-    {
-      id: '3',
-      image:
-        'https://eastmls.net/_next/image?url=%2Fproperty.jpg&w=1080&q=75',
-      name: 'Hussen ali3',
-      role: 'agent3',
-      number: '+91 321789654',
-      email: '@jdgfuydsgvbj@gmail.com',
-      property: '10 house',
-    },
-  ];
+
+  useEffect(()=>{
+
+    const fetchagent = async()=>{
+      const response = await api.get('/agent')
+      console.log(response,data);
+      setdata(response.data)
+    }
+    fetchagent()
+
+  },[])
 
   const breadcrumbs = [
     <Link key="1" color="inherit" href="/">
@@ -74,7 +58,7 @@ function Page() {
         gap={4}
       >
         <Box flex={1}>
-          <AgentCard temp={temp} />
+          <AgentCard temp={data} />
         </Box>
 
         <Stack
