@@ -30,12 +30,12 @@ export function getUserDetailsById() {
 export function validateEmail() {
   return tryCatchWrapper(async (req, res, next) => {
     const { email } = req.body;
-    if (!email) return next(PostError("Email is required", 404));
+    if (!email) return next(PostError("Email is required", 304));
 
     const user = await userModel.findOne({
       email
     });
-    if (!user) return next(PostError("User doesn't exist"));
+    if (!user) return next(PostError("User doesn't exist", 404));
 
     res.status(200).json({
       message: "account exists",
