@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { ValidationError } from "yup";
+import { PostError, MongoError } from "./ErrorHandler.js";
 
 
 const Transactions = (fn) => async (req, res, next) => {
@@ -31,4 +32,18 @@ const Transactions = (fn) => async (req, res, next) => {
   }
 };
 
-export default Transactions;
+const tryCatchWrapper = (fn) => async(req, res, next) => {
+  try {
+    await fn(req, res, next);
+  } catch (error) {
+    if (error instanceof mongoose.Error || error.code === 11000) {
+      return next(MongoError("Mongoose Errr", 409, error));
+    }
+    if (error instanceof ValidationError) {
+      return next(PostError(error.errors));
+    }
+    return next(PostError(error.message, 409));
+  }
+};
+
+export { Transactions, tryCatchWrapper };

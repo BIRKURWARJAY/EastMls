@@ -14,21 +14,24 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
-    unique: true
   },
   isDeleted: {
     type: Boolean,
     default: false
   },
+  role: {
+    type: String,
+    required: true
+  },
   refreshToken: {
     type: String,
     default: null
   }
-}, { timestamps: true });
+}, { timestamps: true, strict: false });
 
-userSchema.methods.isPasswordCorrect = async function(password) {
-  await bcrypt.compare(password, this.password);
+userSchema.methods.isPasswordCorrect = async function (password) {
+  return await bcrypt.compare(password, this.password);
 }
 
 
-export default User = mongoose.model('User', userSchema);
+export default mongoose.model('User', userSchema);

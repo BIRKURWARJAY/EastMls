@@ -1,48 +1,151 @@
-'use client'
-
-
-import { Button, Grid, Stack } from '@mui/material';
-import Image from 'next/image';
+'use client';
+import * as React from 'react';
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
+import Container from '@mui/material/Container';
+import Drawer from '@mui/material/Drawer';
+import Stack from '@mui/material/Stack';
 import Link from 'next/link';
-import SearchIcon from '@mui/icons-material/Search';
+import Image from 'next/image';
+import { Button, List, ListItem, ListItemText } from '@mui/material';
+import eastmlsStore from '@/store/eastmlsStore';
+import { useRouter } from 'next/navigation';
+import { api } from '@/utils/api';
+
+function Header() {
+  const [drawerOpen, setDrawerOpen] = React.useState(false);
+
+  const isLoggedIn = eastmlsStore(state => state.isLoggedIn);
+  const setIsLoggedIn = eastmlsStore(state => state.setIsLoggedIn);
+
+  const router = useRouter();
+
+  const toggleDrawer = (open) => (event) => {
+    if (
+      event.type === 'keydown' &&
+      (event.key === 'Tab' || event.key === 'Shift')
+    ) {
+      return;
+    }
+    setDrawerOpen(open);
+  };
 
 
+  const handleLogout = async() => {
+    try {
+      console.log("Logging out...");
+      const res = await api.get("/auth");
+      console.log("Logout response:", res.data);
+      if (res.data.status === "success") {
+        router.push("/login");
+        document.cookie = "EastMls=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        setIsLoggedIn(false);
+      }
+    } catch (error) {
+      router.push("/login")
+    }
+  }
 
-export default function Header() {
+  const links = [
+    {
+      text: "Home",
+      href: "/"
+    },
+    {
+      text: "Buy Property",
+      href: "/buy-property"
+    },
+    {
+      text: "Property List",
+      href: "/property"
+    },
+    {
+      text: "Agents",
+      href: "/agents"
+    },
+    {
+      text: "My Inquiries",
+      href: "/my-inquiries"
+    }
+  ]
 
   return (
-    <Grid container component={"header"} sx={{ zIndex: 100, position: "sticky", top: 0, justifyContent: "space-between", paddingBlock: "16px", height: "6rem", alignItems: "center", bgcolor: "white", paddingInline: "32px", boxShadow: "5px 5px 10px gray", width: "fit", minWidth: "100%" }} >
-      <Grid size={{ xs: 2 }}>
-        <Image
-          src="/eastmls/logo.webp"
-          alt="Logo"
-          width={80}
-          height={80}
-        />
-      </Grid>
-      <Grid size={{ xs: 6 }}>
-        <Stack direction={"row"} gap={4}>
-          <Link href={"/"}>Home</Link>
-          <Link href={"/buy-property"}>Buy Property</Link>
-          <Link href={"/sell-property"}>Sell Property</Link>
-          <Link href={"/property-list"}>Property List</Link>
-          <Link href={"/agents"}>Agents</Link>
-        </Stack>
-      </Grid>
+    <AppBar position="static" sx={{ bgcolor: 'white', color: 'black' }}>
+      <Container sx={{ width: "100%", height: "12vh", display: "flex", zIndex: "500", minHeight: "5rem" }}>
+        <Toolbar disableGutters sx={{ justifyContent: 'space-between', width: "100%" }}>
 
-      <Grid direction={"row"} gap={4} fontSize={20} alignItems={"center"} fontWeight={500} >
-        <Stack direction={"row"} gap={2}>
-          <Button variant="contained" bgcolor="#faa61f" sx={{ paddingBlock: 1, paddingInline: 2, color: "white", bgcolor: "#faa61f", borderRadius: 1 }} startIcon={<SearchIcon />} >
-            Sell Property
-          </Button>
+          <Box sx={{ display: { xs: 'flex', lg: 'none' } }}>
+            <IconButton onClick={toggleDrawer(true)} color="inherit">
+              <MenuIcon />
+            </IconButton>
+          </Box>
 
-          <Link href={"/login"}>
-            <Button variant='outlined' bgcolor="transparent" sx={{ paddingBlock: 1, paddingInline: 2 }} >
-              Login
-            </Button>
-          </Link>
-        </Stack>
-      </Grid>
-    </Grid>
-  )
+          <Image
+            src="/eastmls/logo.webp"
+            alt="Logo"
+            width={80}
+            height={80}
+          />
+
+          <Box
+            sx={{
+              flexGrow: 1,
+              display: { xs: 'none', lg: 'flex' },
+              justifyContent: 'space-between',
+              maxWidth: "80%",
+              alignItems: "center",
+              justifySelf: "center"
+            }}
+          >
+
+            <Stack direction={"row"} gap={5} >
+
+              {
+                links.map(link => (
+                  <Link key={link.href} href={link.href} style={{ color: "#faa61f", textDecoration: "none" }}>{link.text}</Link>
+                ))
+              }
+
+            </Stack>
+
+            <Stack direction={"row"} alignItems={"center"}>
+
+              <Button sx={{ bgcolor: "orange", color: "white", mr: "1rem" }} >Sell property</Button>
+              {
+                !isLoggedIn ? <Link href="/login" style={{ color: "#faa61f", textDecoration: "none" }}>Login</Link> : <Link href="/" onClick={handleLogout} style={{ color: "#faa61f", textDecoration: "none" }}>Logout</Link>
+              }
+            </Stack>
+
+          </Box>
+
+          <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)}>
+            <Box
+              sx={{ width: 250 }}
+              role="presentation"
+              onClick={toggleDrawer(false)}
+              onKeyDown={toggleDrawer(false)}
+            >
+              <List>
+
+                {
+                  links.map(link => (
+                    <ListItem button component={Link} href={link.href} sx={{ color: "#faa61f" }}>
+                      <ListItemText  >{link.text}</ListItemText>
+                    </ListItem>
+                  ))
+                }
+
+                <Button fullWidth sx={{ bgcolor: "orange", color: "white" }}>Search property</Button>
+              </List>
+            </Box>
+          </Drawer>
+        </Toolbar>
+      </Container>
+    </AppBar>
+  );
 }
+
+export default Header;

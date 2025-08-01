@@ -1,100 +1,85 @@
-import Transactions from "../utils/transactions";
-import { userLoginValidationSchema, userValidator } from "../validators/user.validator";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import { ValidationError } from "yup";
+import {Transactions, tryCatchWrapper } from "../utils/transactions.js";
+import { PostError, MongoError } from "../utils/ErrorHandler.js";
+import userModel from "../models/user.model.js";
+import { hashPassword } from "../utils/hashPassword.js";
 
 
-export function regiterUser() {
-  return Transactions(async (req, res, next, session) => {
-    await userValidator.validate(req.body);
 
-    const { fullName, email, licenseNumber, password } = req.body;
+
+export function getUserDetails() { 
+  return tryCatchWrapper(async (req, res, next) => {
+    const user = await req.Model.findById(req.user.id).select("-password -refreshToken");
+    if (!user) {
+      return next(PostError("User not found", 404));
+    }
+    return res.status(200).json({ user });
+  })
+}
+
+export function getUserDetailsById() {
+  return tryCatchWrapper(async (req, res, next) => {
+    const user = req.Model.findById(req.user.id).select("-password", "-refreshToken");
+    if (!user) return next(PostError("User Doesn't Exists"));
+
+    return res.status(200).json({
+      user
+    })
+  })
+}
+
+export function validateEmail() {
+  return tryCatchWrapper(async (req, res, next) => {
+    const { email } = req.body;
+    if (!email) return next(PostError("Email is required", 404));
+
+    const user = await userModel.findOne({
+      email
+    });
+    if (!user) return next(PostError("User doesn't exist"));
+
+    res.status(200).json({
+      message: "account exists",
+      status: "success"
+    })
+  })
+}
+
+export function forgotPassword() {
+  return tryCatchWrapper(async (req, res, next) => {
+    const { email, password } = req.body;
+    if (!email || !password) return next(PostError("Email and Password is required"));
 
     const existedUser = await userModel.findOne({
       email
     });
+    if (!existedUser) return next(PostError("Account Not Found", 404));
 
-    if (existedUser) {
-      throw PostError("User Already Exists", 301);
-    }
+    const hashedPassword = await hashPassword(password);
+    
+    existedUser.password = hashedPassword;
+    await existedUser.save();
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const createdUser = await userModel.create([fullName, email, hashedPassword, licenseNumber], { session });
-    if (!createdUser) {
-      throw MongoError("Error occured while registering user", 404);
-    }
-
-    return { status: 200, message: "User Registered successfully", data: null };
+    return res.status(201).json({
+      message: "Password changed successfully",
+      status: "success"
+    })
   })
 }
 
-export async function loginUser() {
-  try {
-    await userLoginValidationSchema.validate(req.body);
+export function changePassword() {
+  return tryCatchWrapper(async(req, res, next) => {
+    const { password } = req.body;
+    if (!password || password.trim().length < 6) return next(PostError("password is not valid", 301));
 
-    const existedUser = await userModel.findOne({
-      email: req.body.email,
-      isDeleted: false,
-    });
-    if (!existedUser) {
-      return next(PostError("User Doesn't Exists", 404));
-    }
+    const hashedPassword = await hashPassword(password);
+    if (!hashedPassword) changePassword();
 
-    const passwordCheck = await existedUser.isPasswordCorrect(
-      req.body.password
-    );
+    const user = await userModel.findById(req.user.id);
+    if (!user) return next(PostError("user doesn't exist", 404));
 
-    if (!passwordCheck) return next(PostError("password is incorrect", 404));
+    user.password = hashedPassword;
+    await user.save();
 
-    const { password, ...user } = existedUser._doc;
-
-    const accessToken = jwt.sign({
-      email: existedUser.email,
-      id: existedUser._id
-    },
-      process.env.JWTSECRET,
-      {
-        algorithm: "HS256"
-      }
-    )
-
-    if (!accessToken) return next(PostError('Error Creating AccessToken', 500));
-
-    const refreshToken = jwt.sign({
-      email: existedUser.email,
-      id: existedUser._id
-    },
-      process.env.JWTSECRET,
-      {
-        algorithm: "HS256"
-      }
-    )
-    if (!refreshToken) return next(PostError('Error Creating RefreshToken', 500));
-    
-    existedUser.refreshToken = refreshToken;
-
-    await existedUser.save();
-
-    return res
-      .status(200)
-      .cookie(
-        "EastMls",
-        { token: accessToken },
-        cookieOptions
-      )
-      .json({
-        message: "User Logged in successfully",
-        user,
-      });
-  } catch (error) {
-    if (error instanceof ValidationError) {
-      return next(PostError(error.errors));
-    }
-    if (error instanceof mongoose.Error || error.code === 11000) {
-      return next(MongoError("Mongoose Errrr"));
-    }
-    return next(PostError(error.message, 409));
-  }
+    return res.status(201).json({ message: "password changed successfully" });
+  })
 }

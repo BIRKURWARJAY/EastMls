@@ -8,10 +8,13 @@ import Link from "next/link";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import ErrorText from "@/components/ErrorText";
+import { useRouter } from "next/navigation";
+import useEastmlsStore from "../../store/eastmlsStore.js";
+import { api } from "../../utils/api.js";
 
 
 export default function Login() {
-
+  const router = useRouter();
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [toggleButton, setToggleButton] = useState("user");
 
@@ -21,25 +24,37 @@ export default function Login() {
     email: Yup.string().email('invalid email').required('Email is required'),
     password: Yup.string().trim('password is required').min(6, 'password length must be > 6').required('password is required')
   })
-const initialValues={
+
+  const formik = useFormik({
+    initialValues: {
       email: "",
       password: ""
-    }
-  const formik = useFormik({
-    initialValues,
+    },
     validationSchema: YupValidation,
-    enableReinitialize: true,
-    onSubmit: (values) => {
-      formik.resetForm()
+    onSubmit: async (values) => {
+      try {
+        const res = await api.post("/auth/login", {
+          email: values.email,
+          password: values.password,
+          role: toggleButton
+        });
+        if (res.status === 200) {
+          const expires = new Date();
+          expires.setDate(expires.getDate() + 7); 
+          document.cookie = `EastMls=${JSON.stringify({ token: res.data.token })}; path=/; expires=${expires}; `
+        };
+        router.push("/buy-property");
+      } catch (error) {
+      }
     }
   })
 
-  
+
 
   return (
-    <Stack id="loginPage" sx={{ height: "auto", minHeight: "calc(100vh - 6rem)", backgroundImage: 'url(/eastmls/registerbg.webp)', backgroundRepeat: "no-repeat", backgroundSize: "cover" }}>
+    <Stack id="loginPage" sx={{ height: "auto", minHeight: "calc(100vh - 5.6rem)",  backgroundImage: 'url(/eastmls/registerbg.webp)' }} display={'flex'} justifyContent={'center'} alignItems={'center'}>
 
-      <Card className="Login-modal" sx={{ minWidth:"30rem", width: "30rem", bgcolor: "#e2e2e2cc", marginInline: "auto", marginBlock: "auto", borderRadius: "20px", paddingBlock: 4, paddingInline: 2, alignItems: "center", display: "flex", flexDirection: "column", gap: 2 }}>
+      <Card className="Login-modal" sx={{ maxWidth: "50rem", marginBlock: 2, bgcolor: "#e2e2e2cc", borderRadius: "20px", padding: 4, paddingInline: 2, alignItems: "center", justifyContent: "center", display: "flex", flexDirection: "column", gap: 2 }}>
         <Typography variant="h1" sx={{ fontSize: 30, fontWeight: 800 }}>
           Login to your Account
         </Typography>
@@ -51,7 +66,7 @@ const initialValues={
                 <FormLabel sx={{ fontSize: 18, color: "black", marginLeft: .5 }}>Email</FormLabel>
                 <TextField variant="standard" placeholder="Email" name="email"
                   slotProps={{
-                    input: { style: { backgroundColor: "white", padding: "10px", borderRadius: "10px" }, disableUnderline: true } 
+                    input: { style: { backgroundColor: "white", padding: "10px", borderRadius: "10px" }, disableUnderline: true }
                   }}
                   value={formik.values.email}
                   helperText={formik.touched.email && formik.errors.email && <ErrorText helperText={formik.errors.email} />}
@@ -73,7 +88,7 @@ const initialValues={
                       </InputAdornment>,
                     }
                   }}
-                  
+
                   value={formik.values.password}
                   helperText={formik.touched.password && formik.errors.password && <ErrorText helperText={formik.errors.password} />}
                   onChange={formik.handleChange}
@@ -82,13 +97,9 @@ const initialValues={
                 />
               </Stack>
 
-              <Stack direction={"row"} sx={{ gap: 4 }}>
+              <Stack direction={"row"} sx={{ gap: 2 }}>
                 <Button variant="contained"
-                  onClick={() => {
-                    setToggleButton("user"),
-                      formik.resetForm()
-                  }}
-                 
+                  onClick={() => setToggleButton("user")}
                   sx={{ bgcolor: toggleButton === "user" ? "rgb(255 138 0)" : "white", color: toggleButton === "user" ? "white" : "black", borderRadius: "15px", display: "flex", flexDirection: "column", width: "50%", paddingBlock: 4 }}
                   disableRipple
                 >

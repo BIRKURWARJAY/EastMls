@@ -5,15 +5,18 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { useState } from "react";
 import Link from "next/link";
-import { Formik, useFormik } from "formik";
+import { useFormik } from "formik";
 import * as Yup from "yup";
 import ErrorText from "@/components/ErrorText";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 
 
 
 export default function Login() {
-
+  const router = useRouter();
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [toggleButton, setToggleButton] = useState("user");
 
@@ -33,19 +36,36 @@ export default function Login() {
       licenseNumber: "",
       password: ""
     },
-    validationSchema: YupValidation
+    validationSchema: YupValidation,
+    onSubmit: async (values) => {
+      try {
+        const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKENDURI}api/auth`, {
+          username: values.fullName,
+          email: values.email,
+          licenseNumber: values.licenseNumber,
+          password: values.password,
+          role: toggleButton
+        }
+        )
+
+        res.status === 200 && toast.success(data.message.message);
+        router.push("/login");
+      } catch (error) {
+        toast.error(error.message.message)
+      }
+    }
   })
 
   return (
-    <Stack id={"registerPage"} sx={{ width: "100%", minHeight: "100vh", height: "auto", backgroundImage: 'url(/eastmls/registerbg.webp)' }}>
+    <Stack id={"registerPage"} sx={{ width: "100%", height: "auto", backgroundImage: 'url(/eastmls/registerbg.webp)' }}>
 
-      <Card className="Login-modal" sx={{ width: "30%", bgcolor: "#e2e2e2cc", marginInline: "auto", marginBlock: "auto", borderRadius: "20px", paddingBlock: 4, paddingInline: 2, alignItems: "center", display: "flex", flexDirection: "column", gap: 2 }}>
+      <Card className="Login-modal" sx={{ maxWidth: "50rem", bgcolor: "#e2e2e2cc", marginInline: "auto", marginBlock: "auto", borderRadius: "20px", paddingBlock: 4, paddingInline: 2, alignItems: "center", display: "flex", flexDirection: "column", marginBlock: 2, gap: 2 }}>
         <Typography variant="h1" sx={{ fontSize: 30, fontWeight: 800 }}>
           Create your Account
         </Typography>
 
         <CardContent sx={{ border: "none", }}>
-          <form>
+          <form onSubmit={formik.handleSubmit}>
             <Stack spacing={2}>
               <Stack>
                 <FormLabel sx={{ fontSize: 18, color: "black", marginLeft: .5 }}>Full Name</FormLabel>
@@ -87,13 +107,15 @@ export default function Login() {
                       input: { style: { backgroundColor: "white", borderRadius: "10px", padding: "10px" }, disableUnderline: true }
                     }}
                     value={formik.values.licenseNumber}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                   />
                 </Stack>
               )}
 
               <Stack>
                 <FormLabel sx={{ fontSize: 18, color: "black", marginLeft: .5 }}>Password</FormLabel>
-                <TextField variant="standard" name="password" type="password" placeholder="Enter Your Password"
+                <TextField variant="standard" name="password" type={passwordVisible ? "text" : "password"} placeholder="Enter Your Password"
                   slotProps={{
                     input: {
                       endAdornment: <InputAdornment position="end">
@@ -114,10 +136,10 @@ export default function Login() {
                 />
               </Stack>
 
-              <Stack direction={"row"} sx={{ gap: 4 }}>
+              <Stack direction={"row"} sx={{ gap: 2 }} flexWrap={{ xs: "wrap", sm: "nowrap" }} justifyContent={'center'}>
                 <Button variant="contained"
-                  onClick={() => { setToggleButton("user"); formik.resetForm(); }}
-                  sx={{ bgcolor: toggleButton === "user" ? "rgb(255 138 0)" : "white", color: toggleButton === "user" ? "white" : "black", borderRadius: "15px", display: "flex", flexDirection: "column", width: "50%", paddingBlock: 4 }}
+                  onClick={() => setToggleButton("user")}
+                  sx={{ bgcolor: toggleButton === "user" ? "rgb(255 138 0)" : "white", color: toggleButton === "user" ? "white" : "black", borderRadius: "15px", display: "flex", flexDirection: "column", paddingBlock: 4, width: { xs: "100%", sm: "50%" } }}
                   disableRipple
                 >
                   <Typography variant="h6" sx={{ fontWeight: 700 }} component={"p"}>
@@ -129,9 +151,9 @@ export default function Login() {
                 </Button>
 
                 <Button variant="contained"
-                  onClick={() => { setToggleButton("agent"); formik.resetForm() }}
+                  onClick={() => setToggleButton("agent")}
                   disableRipple
-                  sx={{ bgcolor: toggleButton === "agent" ? "rgb(255 138 0)" : "white", color: toggleButton === "agent" ? "white" : "black", display: "flex", borderRadius: "15px", flexDirection: "column", width: "50%", paddingBlock: 2 }}>
+                  sx={{ bgcolor: toggleButton === "agent" ? "rgb(255 138 0)" : "white", color: toggleButton === "agent" ? "white" : "black", display: "flex", borderRadius: "15px", flexDirection: "column", width: { xs: "100%", sm: "50%" }, paddingBlock: 4 }}>
                   <Typography variant="h6" sx={{ fontWeight: 700 }} component={"p"}>
                     Agent
                   </Typography>
@@ -141,7 +163,7 @@ export default function Login() {
                 </Button>
               </Stack>
 
-              <Button variant="contained" sx={{ paddingBlock: 1.5, bgcolor: "rgb(255 138 0)" }}>
+              <Button type="submit" variant="contained" sx={{ paddingBlock: 1.5, bgcolor: "rgb(255 138 0)" }}>
                 Login
               </Button>
             </Stack>

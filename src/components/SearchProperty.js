@@ -19,7 +19,7 @@ export default function SearchProperty() {
   }
 
   return (
-    <Stack sx={{ alignItems: "center", width: "50%" }}>
+    <Stack sx={{ alignItems: "center"}}  maxWidth={{ sm: '100%', md: '70%' }} >
       <ButtonGroup
         value={propertySearch}
       >
@@ -28,17 +28,17 @@ export default function SearchProperty() {
         <Button disableRipple variant="contained" sx={{ padding: "10px 20px", borderBottomRightRadius: 0, border: "none", fontWeight: 600, ...BgColor2 }} onClick={() => setPropertySearch("For Sale")}>For Sale</Button>
       </ButtonGroup>
 
-      <Paper sx={{ padding: 4, borderRadius: "10px", width: "100%", padding: "20px 30px" }}>
-        <Stack direction={"row"} spacing={2}>
+      <Paper sx={{ borderRadius: "10px", padding: "20px 30px" }} >
+        <Stack direction={"row"} alignItems={'center'} justifyContent={'space-between'} display={'flex'} flexWrap={'wrap'} gap={2}>
 
-          <TextField variant="outlined" label="Enter Keyword" />
+          <TextField variant="outlined" label="Enter Keyword" sx={{width: {xs: "100%", md: "31%"}}}  />
 
-          <Select value={property} sx={{ flexGrow: 1, textAlign: "left" }} onChange={handlePropertyChange}>
+          <Select value={property} sx={{ width: {xs:"100%",md:"31%"}, textAlign: "left" }} onChange={handlePropertyChange}>
             <MenuItem value=" " disabled>Select property Type</MenuItem>
             {properties.map(property => <MenuItem key={property} value={property}>{property}</MenuItem>)}
           </Select>
 
-          <Button sx={{ bgcolor: "#faa61f", color: "white", padding: "10px 30px" }} endIcon={<SearchIcon sx={{ fontWeight: 900 }} />}>
+          <Button sx={{ bgcolor: "#faa61f", color: "white", padding: "15px 10px", width:{xs: "100%", md: "31%"} }} endIcon={<SearchIcon sx={{ fontWeight: 900 }}/>}>
             Search Now
           </Button>
         </Stack>
