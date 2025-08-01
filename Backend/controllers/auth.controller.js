@@ -101,14 +101,13 @@ export function loginUser() {
 
 export function logoutUser() {
   return tryCatchWrapper(async (req, res, next) => {
-    const user = await userModel.findById(req.user.id);
+    const user = await userModel.findById(req.user?.id);
     if (!user) {
-      return next(PostError("User not found", 404));
+      return next(PostError("User is already not loggedIn", 404));
     }
     user.refreshToken = null;
     await user.save();
     return res
-      .clearCookie("EastMls")
       .status(200)
       .json({ message: "logged out successfully", status: "success" });
   })
@@ -143,7 +142,6 @@ export function softDeleteUser() {
     await user.save();
 
     return res
-      .clearCookie("EastMls")
       .status(200)
       .json({ message: "User soft deleted successfully" });
   });

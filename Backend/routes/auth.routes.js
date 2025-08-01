@@ -12,7 +12,7 @@ router.post("/", regiterUser());
 
 router.post("/login", loginUser());
 
-router.get("/", authenticateUser, logoutUser());
+router.get("/", logoutUser());
 
 router.put("/", authenticateUser, updateUserDetails());
 

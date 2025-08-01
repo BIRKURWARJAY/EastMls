@@ -1,12 +1,19 @@
 import { create } from "zustand";
 
-const eastmlsStore = create((set) => ({
+const useEastmlsStore = create((set) => ({
   isLoggedIn: false,
-  setIsLoggedIn: (status) => {
-    if (typeof window !== "undefined") {
-      set({ isLoggedIn: status }); 
+  logout: () => {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem("EastMls");
+      set({ isLoggedIn: false });
+    }
+  },
+  setIsLoggedIn: () => {
+    if (typeof window !== 'undefined') {
+      const token = JSON.parse(localStorage.getItem("EastMls") || '{}')?.token;
+      set({ isLoggedIn: Boolean(token) });
     }
   }
 }));
 
-export default eastmlsStore;
+export default useEastmlsStore;

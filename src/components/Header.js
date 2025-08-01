@@ -16,9 +16,8 @@ import { useRouter } from 'next/navigation';
 
 function Header() {
   const [drawerOpen, setDrawerOpen] = React.useState(false);
-
-  const isLoggedIn = eastmlsStore(state => state.isLoggedIn);
-  const setIsLoggedIn = eastmlsStore(state => state.setIsLoggedIn);
+  const isLoggedIn = eastmlsStore(s => s.isLoggedIn);
+  const logout = eastmlsStore(s => s.logout);
 
   const router = useRouter();
 
@@ -40,11 +39,10 @@ function Header() {
       console.log("Logout response:", res.data);
       if (res.data.status === "success") {
         router.push("/login");
-        document.cookie = "EastMls=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-        setIsLoggedIn(false);
+        logout();
       }
     } catch (error) {
-      router.push("/login")
+      console.error("Error logging out...")
     }
   }
 
