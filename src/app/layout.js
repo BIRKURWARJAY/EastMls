@@ -1,17 +1,18 @@
-// import Header from "../components/Header";
 import Header from "@/components/Header";
 import "./globals.css";
-import eastmlsStore from "@/store/eastmlsStore";
-// import Api from "@/utils/api";
-import { cookies } from 'next/headers'
+import useEastmlsStore from "@/store/eastmlsStore";
+
 
 
 export default async function RootLayout({ children }) {
 
-  const cookiesdata = await cookies()
-  const token = cookiesdata.get('Eastmls')?.value || '';
+  // const setToken = useEastmlsStore(s => s.setToken);
 
-  return (
+  // if (typeof window !== undefined) {
+  //   setToken(JSON.parse(localStorage.getItem("EastMls"))?.token);
+  // }
+
+  return ( 
     <html lang="en">
       <head>
         <link rel="icon" href="/favicon.webp" type="image/webp" />
@@ -19,7 +20,6 @@ export default async function RootLayout({ children }) {
       <body
         style={{ margin: 0 }}
       >
-        {/* <Api token={token}/> */}
         <Header />
         {children}
       </body>

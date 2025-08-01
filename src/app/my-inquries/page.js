@@ -1,7 +1,9 @@
 import { Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
 import React from 'react'
+import { jwtDecode } from "jwt-decode";
 
 function page() {
+  const decode = jwtDecode()
 
     const temp = [
         {

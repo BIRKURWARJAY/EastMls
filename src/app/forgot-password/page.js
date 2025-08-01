@@ -22,10 +22,10 @@ export default function ForgotPassword() {
         email
       });
       if (res.data.status === "success") {
-        alert("email validated");
+        return alert("email validated");
       }
       if (res.data.status === 404) {
-        alert("invalid Email")
+        return alert("invalid Email")
       }
     } catch (error) {
       console.error(error.message);

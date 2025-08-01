@@ -2,7 +2,7 @@ import { PostError } from "../utils/ErrorHandler.js";
 import jwt from "jsonwebtoken";
 
 export const authenticateUser = (req, res, next) => {
-  const token = req.headers.authorization?.split(" ")[1] || undefined;
+  const token = req.headers.authorization?.split("Bearer ")[1] || undefined;
   if (!token) {
     return next(PostError("Unauthorized", 401));
   }

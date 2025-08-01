@@ -10,5 +10,5 @@ export const userValidator = Yup.object().shape({
   
 export const userLoginValidationSchema = Yup.object().shape({
     email: Yup.string().email('invalid Email').required('Email is required'),
-    password: Yup.string().trim('password is required').min(6, 'password length must be > 6').required('password is required')
+  password: Yup.string().trim('password is required').min(6, 'password length must be > 6').required('password is required'),
 })
