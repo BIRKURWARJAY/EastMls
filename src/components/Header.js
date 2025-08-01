@@ -17,9 +17,6 @@ import { useRouter } from 'next/navigation';
 function Header() {
   const [drawerOpen, setDrawerOpen] = React.useState(false);
 
-  const isLoggedIn = eastmlsStore(state => state.isLoggedIn);
-  const setIsLoggedIn = eastmlsStore(state => state.setIsLoggedIn);
-
   const router = useRouter();
 
   const toggleDrawer = (open) => (event) => {
@@ -33,15 +30,13 @@ function Header() {
   };
 
 
-  const handleLogout = async() => {
+  const handleLogout = async () => {
     try {
       console.log("Logging out...");
       const res = await axios.get("/auth");
       console.log("Logout response:", res.data);
       if (res.data.status === "success") {
         router.push("/login");
-        document.cookie = "EastMls=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-        setIsLoggedIn(false);
       }
     } catch (error) {
       router.push("/login")
@@ -72,9 +67,9 @@ function Header() {
   ]
 
   return (
-    <AppBar position="static" sx={{ bgcolor: 'white', color: 'black', width: "100%" }}>
-      <Container sx={{ width: "100%", height: "12vh", display: "flex", zIndex: "500", minHeight: "5rem" }}>
-        <Toolbar disableGutters sx={{ justifyContent: 'space-between', width: "100%" }}>
+    <AppBar position="sticky" sx={{ bgcolor: 'white', color: 'black', width: "100%", position: "relative" }}>
+      <Container sx={{ width: "100%", height: "12vh", display: "flex", zIndex: "500", minHeight: "5rem", justifyContent: "space-between", alignItems: "center" }}>
+        <Toolbar sx={{ justifyContent: 'space-between', width: "100%" }}>
 
           <Box sx={{ display: { xs: 'flex', lg: 'none' } }}>
             <IconButton onClick={toggleDrawer(true)} color="inherit">
@@ -93,30 +88,23 @@ function Header() {
             sx={{
               flexGrow: 1,
               display: { xs: 'none', lg: 'flex' },
-              justifyContent: 'space-between',
+              justifyContent: 'center',
               maxWidth: "80%",
               alignItems: "center",
               justifySelf: "center"
             }}
           >
 
-            <Stack direction={"row"} gap={5} >
+            <Stack direction={"row"} gap={5} justifyContent={'center'} display={'flex'}>
 
               {
                 links.map(link => (
-                  <Link key={link.href} href={link.href} style={{ color: "#faa61f", textDecoration: "none" }}>{link.text}</Link>
+                  <Link key={link.href} href={link.href} style={{ color: 'black', textDecoration: "none" }}>{link.text}</Link>
                 ))
               }
 
             </Stack>
 
-            <Stack direction={"row"} alignItems={"center"}>
-
-              <Button sx={{ bgcolor: "orange", color: "white", mr: "1rem" }} >Sell property</Button>
-              {
-                !isLoggedIn ? <Link href="/login" style={{ color: "#faa61f", textDecoration: "none" }}>Login</Link> : <Link href="/" onClick={handleLogout} style={{ color: "#faa61f", textDecoration: "none" }}>Logout</Link>
-              }
-            </Stack>
 
           </Box>
 
@@ -142,6 +130,11 @@ function Header() {
             </Box>
           </Drawer>
         </Toolbar>
+        <Stack direction={"row"} alignItems={"center"} sx={{ position: "absolute", right: "20px", display: { xs: 'none', lg: 'flex' } }}>
+
+          <Button sx={{ bgcolor: "orange", color: "white", mr: "1rem" }} >Sell property</Button>
+          <Link href="/login" style={{ color: "#faa61f", textDecoration: "none" }}>Login</Link>
+        </Stack>
       </Container>
     </AppBar>
   );

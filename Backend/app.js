@@ -9,18 +9,24 @@ import { errorHandler } from "./utils/ErrorHandler.js";
 import userRouter from "./routes/user.routes.js";
 import autoRefreshToken from "./utils/autoRefreshToken.js";
 import { authenticateUser } from "./middlewares/auth.js";
+import inquiryRouter from "./routes/inquiry.routes.js";
 
 
 const app = express();
 
 configDotenv();
 connect()
+app.use(cors({
+  origin: "http://localhost:3000",
+  credentials: true
+}))
 
-
-
+app.use(cookieParser());
+app.use(express.json());
 // app.get("/", authenticateUser)
 
 app.use("/property", propertyRouter);
+app.use("/inquiry", inquiryRouter);
 app.use("/api/auth", authRouter);
 // app.use("/api/user", userRouter);
 

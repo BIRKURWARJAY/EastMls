@@ -39,8 +39,6 @@ export default function Login() {
         });
         if (res.status === 200) {
           const expires = new Date();
-          expires.setDate(expires.getDate() + 7); 
-          document.cookie = `EastMls=${JSON.stringify({ token: res.data.token })}; path=/; expires=${expires}; `
         };
         router.push("/buy-property");
       } catch (error) {
@@ -51,7 +49,7 @@ export default function Login() {
 
 
   return (
-    <Stack id="loginPage" sx={{ height: "auto", minHeight: "calc(100vh - 5.6rem)",  backgroundImage: 'url(/eastmls/registerbg.webp)' }} display={'flex'} justifyContent={'center'} alignItems={'center'}>
+    <Stack id="loginPage" sx={{ height: "88vh",minHeight:"50rem",  backgroundImage: 'url(/eastmls/registerbg.webp)' }} display={'flex'} justifyContent={'center'} alignItems={'center'}>
 
       <Card className="Login-modal" sx={{ maxWidth: "50rem", marginBlock: 2, bgcolor: "#e2e2e2cc", borderRadius: "20px", padding: 4, paddingInline: 2, alignItems: "center", justifyContent: "center", display: "flex", flexDirection: "column", gap: 2 }}>
         <Typography variant="h1" sx={{ fontSize: 30, fontWeight: 800 }}>
@@ -96,10 +94,10 @@ export default function Login() {
                 />
               </Stack>
 
-              <Stack direction={"row"} sx={{ gap: 2 }}>
+              <Stack  sx={{ gap: 2 }} direction={{xs:'column', sm:"row"}}>
                 <Button variant="contained"
                   onClick={() => setToggleButton("user")}
-                  sx={{ bgcolor: toggleButton === "user" ? "rgb(255 138 0)" : "white", color: toggleButton === "user" ? "white" : "black", borderRadius: "15px", display: "flex", flexDirection: "column", width: "50%", paddingBlock: 4 }}
+                  sx={{ bgcolor: toggleButton === "user" ? "rgb(255 138 0)" : "white", color: toggleButton === "user" ? "white" : "black", borderRadius: "15px", display: "flex", flexDirection: "column", width: "100%", paddingBlock: 4 }}
                   disableRipple
                 >
                   <Typography variant="h6" sx={{ fontWeight: 700 }} component={"p"}>
@@ -116,7 +114,7 @@ export default function Login() {
                     formik.resetForm()
                   }}
                   disableRipple
-                  sx={{ bgcolor: toggleButton === "agent" ? "rgb(255 138 0)" : "white", color: toggleButton === "agent" ? "white" : "black", display: "flex", borderRadius: "15px", flexDirection: "column", width: "50%", paddingBlock: 2 }}>
+                  sx={{ bgcolor: toggleButton === "agent" ? "rgb(255 138 0)" : "white", color: toggleButton === "agent" ? "white" : "black", display: "flex", borderRadius: "15px", flexDirection: "column", width: "100%", paddingBlock: 2 }}>
                   <Typography variant="h6" sx={{ fontWeight: 700 }} component={"p"}>
                     Agent
                   </Typography>

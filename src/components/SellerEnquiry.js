@@ -1,26 +1,87 @@
-import { Box, Button, Stack, TextareaAutosize, TextField, Typography } from '@mui/material'
-import React from 'react'
+'use client';
+import { Box, Button, Stack, TextareaAutosize, TextField, Typography } from '@mui/material';
+import axios from 'axios';
+import React, { useState } from 'react';
 
-function SellerEnquiry() {
+function SellerEnquiry({ data }) {
+    const defaultInquiry = {
+        name: '',
+        phone: '',
+        email: '',
+        message: '',
+        propertyId: data?._id || '',
+        agentId: data?.agentId,
+        userId: "688a3652f042eea828c8fa90", // Replace this with actual logged-in user ID
+        status: "new"
+    };
+
+    const [inquiry, setinqury] = useState(defaultInquiry);
+
+    const handleInquiry = async () => {
+        if (!inquiry.name || !inquiry.phone || !inquiry.email || !inquiry.message) {
+            alert("Please fill all fields");
+            return;
+        }
+
+        try {
+            const response = await axios.post('http://localhost:5000/inquiry', inquiry);
+            console.log(response);
+            setinqury(prev => ({ ...prev, name: '', phone: '', email: '', message: '' }));
+        } catch (error) {
+            console.error("Error sending inquiry:", error);
+        }
+    };
+
     return (
-        <>
-            <Stack gap={2} sx={{ m: "2rem",mt:"0px", border: "1px solid #e5e5e5",minWidth:"20rem", padding: "2rem", borderRadius: "10px", bgcolor: "#f9f9f9" }} height={'50%'}>
-                <Typography fontWeight={600} variant='h6'>Contact Seller</Typography>
-                <Box display={'flex'} gap={1} alignItems={'center'}>
-                    <img style={{ borderRadius: "100%", height: "4rem", width: "4rem", objectFit: "cover", objectPosition: "0rem 0rem" }} src="https://eastmls.net/_next/image?url=https%3A%2F%2Feastmls-media.s3.us-east-2.amazonaws.com%2F6858fd3eb1f932ffcdda32e4%2FIMG_0329.jpeg&w=256&q=75" alt="" />
-                    <Box>
-                        <Typography>Hussien ali</Typography>
-                        <Typography>liveagent1@yopmail.com</Typography>
-                    </Box>
+        <Stack gap={2} sx={{ m: "2rem", mt: "0px", border: "1px solid #e5e5e5", minWidth: "20rem", padding: "2rem", borderRadius: "10px", bgcolor: "#f9f9f9" }} height={'50%'}>
+            <Typography fontWeight={600} variant='h6'>Contact Seller</Typography>
+            <Box display={'flex'} gap={1} alignItems={'center'}>
+                <img
+                    style={{ borderRadius: "100%", height: "4rem", width: "4rem", objectFit: "cover" }}
+                    src="https://eastmls.net/_next/image?url=https%3A%2F%2Feastmls-media.s3.us-east-2.amazonaws.com%2F6858fd3eb1f932ffcdda32e4%2FIMG_0329.jpeg&w=256&q=75"
+                    alt="Agent"
+                />
+                <Box>
+                    <Typography>{data?.agentId?.username}</Typography>
+                    <Typography>{data?.agentId?.email}</Typography>
                 </Box>
-                <TextField variant='outlined' size='small' sx={{ bgcolor: "white" }} placeholder='Username' />
-                <TextField variant='outlined' size='small' sx={{ bgcolor: "white" }} placeholder='Phone number' />
-                <TextField variant='outlined' size='small' sx={{ bgcolor: "white" }} placeholder='Email' />
-                <TextareaAutosize minRows={3} variant='outlined' style={{ backgroundColor: "white", border: "1px solid #c4c4c4", borderRadius:"5px", padding:"1rem", paddingTop:"0.5rem" }} placeholder='Your message' />
-                <Button fullWidth sx={{bgcolor:"orange", color:"White", fontWeight:"600"} }>Send Enquiry</Button>
-            </Stack>
-        </>
-    )
+            </Box>
+            <TextField
+                value={inquiry.name}
+                onChange={(e) => setinqury(prev => ({ ...prev, name: e.target.value }))}
+                variant='outlined'
+                size='small'
+                sx={{ bgcolor: "white" }}
+                placeholder='Username'
+            />
+            <TextField
+                value={inquiry.phone}
+                onChange={(e) => setinqury(prev => ({ ...prev, phone: e.target.value }))}
+                variant='outlined'
+                size='small'
+                sx={{ bgcolor: "white" }}
+                placeholder='Phone number'
+            />
+            <TextField
+                value={inquiry.email}
+                onChange={(e) => setinqury(prev => ({ ...prev, email: e.target.value }))}
+                variant='outlined'
+                size='small'
+                sx={{ bgcolor: "white" }}
+                placeholder='Email'
+            />
+            <TextareaAutosize
+                value={inquiry.message}
+                onChange={(e) => setinqury(prev => ({ ...prev, message: e.target.value }))}
+                minRows={3}
+                style={{ backgroundColor: "white", border: "1px solid #c4c4c4", borderRadius: "5px", padding: "1rem", paddingTop: "0.5rem" }}
+                placeholder='Your message'
+            />
+            <Button onClick={handleInquiry} fullWidth sx={{ bgcolor: "orange", color: "White", fontWeight: "600" }}>
+                Send Enquiry
+            </Button>
+        </Stack>
+    );
 }
 
-export default SellerEnquiry
+export default SellerEnquiry;

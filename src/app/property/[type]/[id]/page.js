@@ -89,7 +89,7 @@ function page() {
               <Propertydetails data={prop} />
             </Box>
           </Box>
-          <SellerEnquiry />
+          <SellerEnquiry data={prop} />
         </Stack>
       </Box>
     </>

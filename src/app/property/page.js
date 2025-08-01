@@ -1,7 +1,6 @@
 "use client"
 
 import PropertyListingCard from '@/components/PropertyListingCard'
-import { api } from '../../utils/api.js'
 import { Box, Button, FormControl, InputLabel, MenuItem, NativeSelect, Select, Stack, TextField, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material'
 import { flexbox, style } from '@mui/system'
 import axios from 'axios'
