@@ -3,38 +3,27 @@
 import PropertyListingCard from '@/components/PropertyListingCard'
 import { api } from '../../utils/api.js'
 import { Box, Button, FormControl, InputLabel, MenuItem, NativeSelect, Select, Stack, TextField, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material'
-import { useRouter } from 'next/navigation'
-import React, { useState } from 'react'
+import { flexbox, style } from '@mui/system'
+import axios from 'axios'
+import { useParams, useRouter } from 'next/navigation'
+import React, { useEffect, useState } from 'react'
 
 function page() {
-
-
-
-    const demo = [
-        {
-            id: "1",
-            image: "https://eastmls-media.s3.us-east-2.amazonaws.com/6858fd3eb1f932ffcdda32e4/properties/68755e5ded97ed8b3feb74e8/images/IMG_0607.jpeg",
-            name: "Villa in killimani",
-            location: "house in killimani",
-            price: "80000000",
-            typeof: "for sale",
-
-        },
-        {
-            id: "2",
-            image: "https://eastmls-media.s3.us-east-2.amazonaws.com/6858fd3eb1f932ffcdda32e4/properties/68755e5ded97ed8b3feb74e8/images/IMG_0607.jpeg",
-            name: "Villa in killimani",
-            location: "house in killimani",
-            price: "80000000",
-            typeof: "for sale",
-
-        },
-    ]
-
+     const params = useParams()
     const [value, setvalue] = useState([])
+    const [prop, setprop] = useState()
     const [type, settype] = useState('Property type')
 
-  const router = useRouter()
+    const router = useRouter()
+
+      useEffect(() => {
+    const fetchprop = async () => {
+      const response = await axios.get(`http://localhost:5000/properties`)
+      console.log(response.data);
+      setprop(response.data.propertydetails)
+    }
+    fetchprop()
+  }, [])
 
     return (
         <>
@@ -76,7 +65,7 @@ function page() {
             </Stack>
 
             <Stack sx={{ mt: "3rem" }} padding={2}>
-                <PropertyListingCard data={demo} title={'Property listing'} />
+                <PropertyListingCard data={prop} title={'Property listing'} />
             </Stack>
         </>
     )
