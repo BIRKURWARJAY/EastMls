@@ -80,7 +80,7 @@ const getproperty = async (req, res) => {
         const { id } = req.params
         console.log(id);
 
-        const propertydetails = await Property.findById(id).populate("agentId","-password",userModel)
+        const propertydetails = await Property.findById(id).populate("agentId", "-password", userModel)
         if (!propertydetails) {
             res.status(500).json({
                 message: "Error in fetch property",
@@ -234,7 +234,7 @@ const deleteproperty = async (req, res) => {
 const allproperties = async (req, res) => {
     try {
         console.log("called");
-        
+
         const allprop = await Property.find()
         if (!allprop) {
             return res.status(500).json({
@@ -257,4 +257,51 @@ const allproperties = async (req, res) => {
     }
 }
 
-export { addProperty, getproperty, updateproperty, deleteproperty, allproperties } 
+const searchproperty = async (req, res) => {
+    try {
+        const { propertyType, title } = req.query;
+
+        const matchStage = {};
+
+        if (propertyType) {
+            matchStage.propertyType = propertyType;
+        }
+
+        if (title) {
+            matchStage.title = {
+                $regex: title,
+                $options: "i"
+            };
+        }
+
+        const pipeline = [
+            {
+                $match: matchStage
+            },
+    
+        ];
+
+        const propertydetails = await Property.aggregate(pipeline);
+
+        if (!propertydetails || propertydetails.length === 0) {
+            return res.status(404).json({
+                message: "No properties found",
+            });
+        }
+
+        res.status(200).json({
+            message: "Properties fetched successfully",
+            propertydetails
+        });
+
+    } catch (error) {
+        console.error("Search Property Error:", error);
+        res.status(500).json({
+            message: "Error fetching properties",
+            error: error.message,
+        });
+    }
+};
+
+
+export { addProperty, getproperty, updateproperty, deleteproperty, allproperties, searchproperty } 

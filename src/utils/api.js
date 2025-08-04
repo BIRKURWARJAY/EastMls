@@ -10,7 +10,7 @@ api.interceptors.request.use(
   config => {
     if (typeof window !== 'undefined') {
       const token = localStorage.getItem("EastMls");
-      console.log(token);
+    //   console.log(token);
       
       config.headers = {
         ...config.headers,

@@ -15,7 +15,7 @@ import axios from 'axios';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 
-const token = JSON.parse(localStorage.getItem("EastMls") || "{}")?.token;
+// const token = JSON.parse(localStorage.getItem("EastMls") || "{}")?.token;
 
 function Page() {
   const [value, setvalue] = useState(10);
@@ -27,7 +27,7 @@ function Page() {
     const fetchagent = async()=>{
       const response = await api.get('/agent')
       console.log(response,data);
-      setdata(response.data)
+      setdata(response.data.agents)
     }
     fetchagent()
 

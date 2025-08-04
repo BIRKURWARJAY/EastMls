@@ -16,13 +16,23 @@ function AgentCard({ temp }) {
     return (
         <div className=' w-[100%] '>
 
-            {temp && temp.map((data, index) => (
+            {temp && temp?.map((data, index) => (
 
-                <Stack onClick={() => router.push(`/agents/${data.id}`)} key={index} sx={{ cursor: "pointer", width: "100%" }} display={'flex'} flexWrap={'wrap'} gap={3} mb={4} flexDirection={'row'} p={2} boxShadow={'0px 0px 10px 0px #dbdbdb'} borderRadius={5} width={'65%'}>
+                <Stack onClick={() => router.push(`/agents/${data.id}`)} key={index} sx={{ cursor: "pointer", width: "100%" }} display={'flex'} alignItems={'center'} flexWrap={'wrap'} gap={3} mb={4} flexDirection={'row'} p={2} boxShadow={'0px 0px 10px 0px #dbdbdb'} borderRadius={5} width={'65%'}>
 
-                        <img height={2000} width={300} style={{ height: "15rem !important", objectFit: "cover", borderRadius: "10px", minWidth: "20rem" }} src={data.image} alt="hello" />
+                    <img
+                        style={{
+                            height: "15rem",
+                            width: "20rem",
+                            objectFit: "cover",
+                            borderRadius: "10px"
+                        }}
+                        src={data.profileImage}
+                        alt="Profile"
+                    />
+
                     <Box display={'flex'} flexDirection={'column'} justifyContent={'start'} alignItems={'stretch'} gap={0.5}>
-                        <Typography variant='h5' fontWeight={700}>{data.name}</Typography>
+                        <Typography variant='h5' fontWeight={700}>{data.username}</Typography>
                         <Typography variant='body1'>{data.role}</Typography>
 
                         <Box display={'flex'} gap={1} mt={3}>
