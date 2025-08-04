@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { api } from '@/utils/api'
 import decodeToken from '@/utils/decodeToken'
 import { useRouter } from 'next/navigation'
+import LoadingComponent from '@/components/loading'
 
 function page() {
   const router = useRouter();
@@ -12,11 +13,15 @@ function page() {
 
 
   useEffect(() => {
+    const tokenRes = decodeToken("user", router);
+
     const getinq = async () => {
       try {
-        setLoading(true);
-        decodeToken("user", setLoading, router);
-        const response = await api.get('/inquiry');
+        const response = await api.get('/inquiry', {
+          headers: {
+            email: tokenRes.decodedToken.email
+          }
+        });
         console.log(response.data);
         setinquries(response.data.allInq);
         setLoading(false);
@@ -25,7 +30,7 @@ function page() {
         setLoading(false);
       }
     }
-    getinq();
+    tokenRes && getinq();
   }, []);
 
   if (isLoading) {
@@ -39,7 +44,7 @@ function page() {
   return (
     <>
       {
-        !isLoading && <Stack p={{ xs: "1rem", md: "2rem" }} mt={2}>
+        isLoading ? <LoadingComponent /> : <Stack p={{ xs: "1rem", md: "2rem" }} mt={2}>
           <Typography variant='h3' fontWeight={600}>My Inquiries</Typography>
           <Typography variant='body1' >There Are Currently {inquries?.length} Results</Typography>
 

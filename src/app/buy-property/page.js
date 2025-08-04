@@ -6,6 +6,7 @@ import { api } from '@/utils/api'
 import axios from 'axios'
 import decodeToken from '@/utils/decodeToken'
 import { useRouter } from 'next/navigation'
+import LoadingComponent from '@/components/loading'
 
 function page() {
   const [type, settype] = useState('')
@@ -27,7 +28,7 @@ function page() {
       console.log(response.data, "hello");
       setprop(response.data.allprop)
     }
-    fetchProp()
+    tokenRes && fetchProp();
   }, [])
 
   const changeHandler = (e) => {

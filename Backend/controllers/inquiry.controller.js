@@ -2,15 +2,8 @@ import Inquiry from "../models/inquiry.model.js";
 import Property from "../models/property.model.js";
 
 const getInquiry = async (req, res) => {
-    try {
-        const { email } = req.cookies;
-        console.log("Email from cookie:", email);
-
-        if (!email) {
-            return res.status(400).json({ message: "No email found in cookies" });
-        }
-
-        const allInq = await Inquiry.find({ email }).populate("propertyId", "title", Property);
+  try {
+        const allInq = await Inquiry.find({ email: req.user.email }).populate("propertyId", "title", Property);
 
         return res.status(200).json({
             message: allInq.length ? "All inquiries fetched" : "No inquiries found",

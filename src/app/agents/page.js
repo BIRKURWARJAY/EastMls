@@ -15,6 +15,7 @@ import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import decodeToken from '@/utils/decodeToken';
 import { useRouter } from 'next/navigation';
+import LoadingComponent from '@/components/loading';
 
 
 function Page() {
@@ -25,10 +26,11 @@ function Page() {
 
 
   useEffect(() => {
+    const tokenRes = decodeToken("user", router);
+
     const fetchagent = async () => {
       try {
         setLoading(true);
-        decodeToken("user", setLoading, router);
         const response = await api.get('/agent')
         console.log(response, data);
         setdata(response.data.agents)
@@ -38,7 +40,7 @@ function Page() {
         setLoading(false);
       }
     }
-    fetchagent()
+    tokenRes && fetchagent()
   }, [])
 
 
@@ -53,7 +55,7 @@ function Page() {
 
   return (
     <>
-      {!isLoading && <Stack display="flex" px={{ xs: 2, md: 5 }} pt={{ xs: 4, md: 8 }}>
+      {isLoading ? <LoadingComponent /> : <Stack display="flex" px={{ xs: 2, md: 5 }} pt={{ xs: 4, md: 8 }}>
         <BreadCrumbs array={breadcrumbs} />
         <Typography variant="h3" mt={5} fontSize={{ xs: '2rem', md: '3rem' }}>
           Agents

@@ -16,6 +16,7 @@ import SellerEnquiry from '@/components/SellerEnquiry';
 import { api } from '@/utils/api';
 import useEastmlsStore from '@/store/eastmlsStore';
 import decodeToken from '@/utils/decodeToken';
+import LoadingComponent from '@/components/loading';
 
 function page() {
   const router = useRouter();
@@ -42,13 +43,12 @@ function page() {
     </Typography>,
   ];
 
-  decodeToken("user", setLoading, router);
 
   useEffect(() => {
+        const tokenRes = decodeToken("user", router);
+
     const fetchprop = async () => {
       try {
-        setLoading(true);
-        decodeToken("user", setLoading, router);
         const response = await api.get(`/property/${params.id}`)
         console.log(response.data);
         setprop(response.data.propertydetails);
@@ -58,12 +58,12 @@ function page() {
         setLoading(false);
       }
     }
-    fetchprop()
+    tokenRes && fetchprop()
   }, [])
 
   return (
     <>
-      {!isLoading && <Box px={6} gap={10} pt={7}>
+      {isLoading ? <LoadingComponent /> : <Box px={6} gap={10} pt={7}>
 
         <BreadCrumbs array={breadcrumbs} />
 

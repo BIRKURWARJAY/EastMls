@@ -4,7 +4,7 @@ import { authenticateUser } from "../middlewares/auth.js";
 
 const inquiryRouter = Router();
 
-inquiryRouter.get('/', getInquiry)
+inquiryRouter.get('/',authenticateUser, getInquiry)
 
 inquiryRouter.post("/", authenticateUser, addInquiry)
 // inquiryRouter.get('/:id', getproperty);

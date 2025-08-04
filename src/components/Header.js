@@ -16,8 +16,9 @@ import { api } from '@/utils/api';
 
 function Header() {
   const [drawerOpen, setDrawerOpen] = React.useState(false);
-  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
   const router = useRouter();
+  const isLoggedIn = eastMlsStore(s => s.isLoggedIn);
+  const setIsLoggedIn = eastMlsStore(s => s.setIsLoggedIn);
 
   useEffect(() => {
     if(typeof window !== "undefined"){
@@ -41,6 +42,8 @@ function Header() {
       const res = await api.get("/auth");
       console.log("Logout response:", res.data);
       if (res.data.status === "success") {
+        localStorage.removeItem("EastMls");
+        setIsLoggedIn(false);
         router.push("/login");
       }
     } catch (error) {
