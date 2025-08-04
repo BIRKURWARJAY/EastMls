@@ -10,8 +10,7 @@ api.interceptors.request.use(
   config => {
     if (typeof window !== 'undefined') {
       const token = localStorage.getItem("EastMls") || undefined;
-      console.log(token);
-      
+
       config.headers = {
         ...config.headers,
         Authorization:` Bearer ${token}`
