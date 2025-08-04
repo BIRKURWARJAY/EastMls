@@ -2,7 +2,7 @@
 import BreadCrumbs from '@/components/BreadCrumbs';
 import { Box, IconButton, Stack, Typography } from '@mui/material';
 import Link from 'next/link';
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import MapOutlinedIcon from '@mui/icons-material/MapOutlined';
 import DateRangeOutlinedIcon from '@mui/icons-material/DateRangeOutlined';
@@ -14,11 +14,13 @@ import Overview from '@/components/Overview';
 import Propertydetails from '@/components/Propertydetails';
 import SellerEnquiry from '@/components/SellerEnquiry';
 import { api } from '@/utils/api';
+import useEastmlsStore from '@/store/eastmlsStore';
+import decodeToken from '@/utils/decodeToken';
 
 function page() {
-
+  const router = useRouter();
   const params = useParams()
-  // console.log(params);
+  const [isLoading, setLoading] = useState(true);
 
   const [prop, setprop] = useState()
 
@@ -30,7 +32,7 @@ function page() {
       underline="hover"
       key="2"
       color="inherit"
-      href="/material-ui/getting-started/installation/"
+      href="/buy-property"
 
     >
       property
@@ -40,18 +42,28 @@ function page() {
     </Typography>,
   ];
 
+  decodeToken("user", setLoading, router);
+
   useEffect(() => {
     const fetchprop = async () => {
-      const response = await api.get(`/property/${params.id}`)
-      console.log(response.data);
-      setprop(response.data.propertydetails)
+      try {
+        setLoading(true);
+        decodeToken("user", setLoading, router);
+        const response = await api.get(`/property/${params.id}`)
+        console.log(response.data);
+        setprop(response.data.propertydetails);
+        setLoading(false);
+      } catch (error) {
+        console.error(error);
+        setLoading(false);
+      }
     }
     fetchprop()
   }, [])
 
   return (
     <>
-      <Box px={6} gap={10} pt={7}>
+      {!isLoading && <Box px={6} gap={10} pt={7}>
 
         <BreadCrumbs array={breadcrumbs} />
 
@@ -91,7 +103,7 @@ function page() {
           </Box>
           <SellerEnquiry data={prop} />
         </Stack>
-      </Box>
+      </Box>}
     </>
   )
 }

@@ -2,7 +2,6 @@
 import PropertyListingCard from '@/components/PropertyListingCard'
 import { Box, Button, FormControl, InputLabel, MenuItem, Select, Stack, TextField } from '@mui/material'
 import React, { useEffect, useState } from 'react'
-import useEastmlsStore from '@/store/eastmlsStore'
 import { api } from '@/utils/api'
 import axios from 'axios'
 
@@ -14,13 +13,13 @@ function page() {
   const [prop, setprop] = useState()
 
   useEffect(() => {
+    decodeToken("user", router);
     const fetchProp = async () => {
       const response = await api.get(`/property/all`)
       console.log(response.data, "hello");
       setprop(response.data.allprop)
     }
     fetchProp()
-
   }, [])
 
   const changeHandler = (e) => {
