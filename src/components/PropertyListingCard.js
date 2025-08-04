@@ -14,9 +14,9 @@ function PropertyListingCard({ data, title }) {
     return (
         <>
             <Typography variant='h4' fontWeight={750} fontSize={30}>{title}</Typography>
-            <Typography variant='h6' fontSize={10}>There Are Currently 1 Results</Typography>
+            <Typography variant='h6' fontSize={10}>There Are Currently {data?.length} Results</Typography>
 
-            <Stack justifyContent={'center'} gap={2} direction={'row'} alignItems={'start'} mt={6} flexWrap={'wrap'}>
+            <Stack justifyContent={'center'} gap={2} direction={'row'} alignItems={'start'} mt={8} flexWrap={'wrap'}>
                 {data && data.map((prop,index) =>
                     <Link href={`/property/${prop?.title?.replaceAll(' ','_')}/${prop._id}`} key={index}>
                         <Card  variant='outlined' sx={{ maxWidth: "32rem", position: "relative" }}  >

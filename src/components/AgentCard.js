@@ -16,7 +16,7 @@ function AgentCard({ temp }) {
     return (
         <div className=' w-[100%] '>
 
-            {temp && temp.map((data, index) => (
+            {temp?.length > 0 && temp?.map((data, index) => (
 
                 <Stack onClick={() => router.push(`/agents/${data.id}`)} key={index} sx={{ cursor: "pointer", width: "100%" }} display={'flex'} flexWrap={'wrap'} gap={3} mb={4} flexDirection={'row'} p={2} boxShadow={'0px 0px 10px 0px #dbdbdb'} borderRadius={5} width={'65%'}>
 

@@ -3,6 +3,7 @@ import City from "../models/city.model.js";
 import Country from "../models/country.model.js";
 import { propertyValidator } from "../validators/property.validator.js";
 import Property from "../models/property.model.js";
+import userModel from "../models/user.model.js";
 
 const addProperty = async (req, res) => {
     try {
@@ -79,7 +80,7 @@ const getproperty = async (req, res) => {
         const { id } = req.params
         console.log(id);
 
-        const propertydetails = await Property.findById(id)
+        const propertydetails = await Property.findById(id).populate("agentId","-password",userModel)
         if (!propertydetails) {
             res.status(500).json({
                 message: "Error in fetch property",

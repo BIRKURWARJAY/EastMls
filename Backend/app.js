@@ -7,7 +7,8 @@ import authRouter from "./routes/auth.routes.js";
 import { errorHandler } from "./utils/ErrorHandler.js";
 import userRouter from "./routes/user.routes.js";
 import agentRouter from "./routes/agent.routes.js";
-
+import inquiryRouter from "./routes/inquiry.routes.js";
+import cookieParser from "cookie-parser";
 
 
 const app = express();
@@ -22,7 +23,12 @@ app.use(express.json());
 
 
 
-app.use("/property", propertyRouter);
+app.use(cookieParser());
+app.use(express.json());
+// app.get("/", authenticateUser)
+
+app.use("/api/property", propertyRouter);
+app.use("/api/inquiry", inquiryRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 app.use("/api/agent", agentRouter);

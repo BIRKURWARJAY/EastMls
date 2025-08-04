@@ -1,38 +1,19 @@
 'use client'
 import PropertyListingCard from '@/components/PropertyListingCard'
 import { Button, FormControl, InputLabel, MenuItem, Select, Stack, TextField } from '@mui/material'
-import axios from 'axios'
 import React, { useEffect, useState } from 'react'
+import useEastmlsStore from '@/store/eastmlsStore'
+import { api } from '@/utils/api'
 
 function page() {
-
+  const isLoggedIn = useEastmlsStore(s => s.isLoggedIn);
+  console.log(isLoggedIn);
   const [type, settype] = useState('Property type')
   const [prop, setprop] = useState()
 
-  const demo = [
-    {
-      id: "1",
-      image: "https://eastmls-media.s3.us-east-2.amazonaws.com/6858fd3eb1f932ffcdda32e4/properties/68755e5ded97ed8b3feb74e8/images/IMG_0607.jpeg",
-      name: "Villa in killimani",
-      location: "house in killimani",
-      price: "80000000",
-      typeof: "for sale",
-
-    },
-    {
-      id: "2",
-      image: "https://eastmls-media.s3.us-east-2.amazonaws.com/6858fd3eb1f932ffcdda32e4/properties/68755e5ded97ed8b3feb74e8/images/IMG_0607.jpeg",
-      name: "Villa in killimani",
-      location: "house in killimani",
-      price: "80000000",
-      typeof: "for sale",
-
-    },
-  ]
-
   useEffect(() => {
     const fetchProp = async () => {
-      const response = await axios.get(`http://localhost:5000/property/all`)
+      const response = await api.get(`/property/all`)
       console.log(response.data);
       setprop(response.data.allprop)
     }

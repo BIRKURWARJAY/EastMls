@@ -27,6 +27,7 @@ import {
   Image as ImageIcon,
   Videocam as VideocamIcon,
 } from '@mui/icons-material';
+import { jwtDecode } from 'jwt-decode';
 
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -36,14 +37,31 @@ import { useFormik } from 'formik';
 import * as Yup from "yup";
 import ErrorText from '@/components/ErrorText';
 import { useEffect, useState } from 'react';
+import useEastmlsStore from '@/store/eastmlsStore';
 
 
 export default function CreateAgentProperty() {
+    const token = useEastmlsStore(s => s.token);
   const [images, setImages] = useState([]);
   const [videos, setVideos] = useState([]);
+  const [loading, setLoading] = useState(true);
   const leaseTypes = ['Sell', 'Rent'];
   const propertyTypes = ['Apartment', 'House', 'Condo', 'Villa', 'Commercial'];
   const statusArr = ['Available', 'Pending', 'Sold', 'Rented'];
+
+  useEffect(() => {
+      setLoading(true);
+      const decode = jwtDecode(token);
+      if (!decode) {
+        console.log("token not found or invalid");
+        router.push("/login");
+      }
+      if (decode.role !== "agent") {
+        console.log("not allowed");
+        router.push(-1)
+      }
+      setLoading(false);
+    }, [])
 
   useEffect(() => {
     formik.setFieldValue('images', images);
@@ -112,7 +130,8 @@ export default function CreateAgentProperty() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Grid container spacing={4} sx={{
+      {
+        !loading &&  <Grid container spacing={4} sx={{
         bgcolor: "#abb0b445",
         padding: 2,
         justifyContent: 'space-between'
@@ -525,6 +544,7 @@ export default function CreateAgentProperty() {
           </FormControl>
         </Grid>
       </Grid>
+     }
     </LocalizationProvider>
   );
 }

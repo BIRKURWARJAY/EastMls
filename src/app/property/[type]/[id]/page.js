@@ -13,7 +13,7 @@ import { IosShareOutlined } from '@mui/icons-material';
 import Overview from '@/components/Overview';
 import Propertydetails from '@/components/Propertydetails';
 import SellerEnquiry from '@/components/SellerEnquiry';
-import axios from 'axios';
+import { api } from '@/utils/api';
 
 function page() {
 
@@ -42,7 +42,7 @@ function page() {
 
   useEffect(() => {
     const fetchprop = async () => {
-      const response = await axios.get(`http://localhost:5000/property/${params.id}`)
+      const response = await api.get(`/property/${params.id}`)
       console.log(response.data);
       setprop(response.data.propertydetails)
     }
@@ -89,7 +89,7 @@ function page() {
               <Propertydetails data={prop} />
             </Box>
           </Box>
-          <SellerEnquiry />
+          <SellerEnquiry data={prop} />
         </Stack>
       </Box>
     </>
