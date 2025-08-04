@@ -25,7 +25,7 @@ function Page() {
     const fetchagent = async()=>{
       const response = await api.get('/agent')
       console.log(response,data);
-      setdata(response.data)
+      setdata(response.data.agents)
     }
     fetchagent()
 
