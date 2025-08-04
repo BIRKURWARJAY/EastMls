@@ -4,6 +4,7 @@ import Country from "../models/country.model.js";
 import { propertyValidator } from "../validators/property.validator.js";
 import Property from "../models/property.model.js";
 import userModel from "../models/user.model.js";
+import mongoose from "mongoose";
 
 const addProperty = async (req, res) => {
     try {
@@ -311,8 +312,42 @@ const searchproperty = async (req, res) => {
     }
 };
 
+const agentProperty = async (req, res) => {
+    try {
+        const { agentId } = req.cookies;
+        console.log("cookie",agentId);
+        
+
+        if (!agentId) {
+            return res.status(400).json({
+                message: "Agent ID is missing in cookies",
+            });
+        }
+
+        const allprop = await Property.find({ agentId });
+
+        if (allprop.length === 0) {
+            return res.status(400).json({
+                message: "No properties found for this agent"
+            });
+        }
+
+        return res.status(200).json({
+            message: "All properties fetched successfully",
+            allprop
+        });
+
+    } catch (error) {
+        console.error("Error in agentProperty:", error);
+        return res.status(500).json({
+            message: "Server error while fetching properties",
+            error: error.message
+        });
+    }
+};
 
 
 
 
-export { addProperty, getproperty, updateproperty, deleteproperty, allproperties, searchproperty } 
+
+export { addProperty, getproperty, updateproperty, deleteproperty, allproperties, searchproperty, agentProperty } 

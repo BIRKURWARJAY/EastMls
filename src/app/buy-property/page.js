@@ -4,16 +4,24 @@ import { Box, Button, FormControl, InputLabel, MenuItem, Select, Stack, TextFiel
 import React, { useEffect, useState } from 'react'
 import { api } from '@/utils/api'
 import axios from 'axios'
+import decodeToken from '@/utils/decodeToken'
+import { useRouter } from 'next/navigation'
 
 function page() {
-  // const isLoggedIn = useEastmlsStore(s => s.isLoggedIn);
-  // console.log(isLoggedIn);
   const [type, settype] = useState('')
   const [keyword, setkeyword] = useState('')
   const [prop, setprop] = useState()
 
+  const router = useRouter()
+
+  
+  
   useEffect(() => {
-    decodeToken("user", router);
+    const tok = decodeToken("user");
+    if (tok.role === 'user') {
+      console.log("from code",tok.role);
+      router.push('/')
+    }
     const fetchProp = async () => {
       const response = await api.get(`/property/all`)
       console.log(response.data, "hello");
@@ -26,7 +34,7 @@ function page() {
     console.log(">> change >", e)
     settype(e.target.value)
   }
-  
+
   const serachProp = async () => {
     try {
       console.log(type);
@@ -45,7 +53,7 @@ function page() {
     <>
       <Box boxShadow={"0px 1px 10px 1px #d6d6d6"} padding={2} display={'flex'} justifyContent={'center'}>
 
-        <Stack  minWidth={'80%'}  flexDirection={{ xs: "column", sm: "row" }} justifyContent={'center'} alignItems={'center'}  gap={3}>
+        <Stack minWidth={'80%'} flexDirection={{ xs: "column", sm: "row" }} justifyContent={'center'} alignItems={'center'} gap={3}>
 
 
           <TextField id="outlined-basic" value={keyword} onChange={(e) => setkeyword(e.target.value)} placeholder="Enter keyword" variant="outlined" sx={{ width: "45%", minWidth: "200px" }} />
@@ -60,7 +68,7 @@ function page() {
             >
 
               <MenuItem disabled value={'Property type'}>Property type</MenuItem>
-              <MenuItem value={'flat'}>flat</MenuItem>    
+              <MenuItem value={'flat'}>flat</MenuItem>
               <MenuItem value={'villa'}>villa</MenuItem>
               <MenuItem value={'house'}>house</MenuItem>
             </Select>
@@ -69,9 +77,9 @@ function page() {
         </Stack>
 
       </Box>
-        <Stack sx={{ mt: "3rem" }} padding={2}>
-          <PropertyListingCard data={prop} title={'Buy Property listing'} />
-        </Stack>
+      <Stack sx={{ mt: "3rem" }} padding={2}>
+        <PropertyListingCard data={prop} title={'Buy Property listing'} />
+      </Stack>
     </>
   )
 }

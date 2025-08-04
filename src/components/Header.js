@@ -12,6 +12,7 @@ import Image from 'next/image';
 import { Button, List, ListItem, ListItemText } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
+import { api } from '@/utils/api';
 
 function Header() {
   const [drawerOpen, setDrawerOpen] = React.useState(false);
@@ -43,7 +44,7 @@ function Header() {
         router.push("/login");
       }
     } catch (error) {
-      console.error("Error logging out...");
+      console.error("Error logging out...",error);
     }
   };
 
