@@ -10,14 +10,22 @@ import Stack from '@mui/material/Stack';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button, List, ListItem, ListItemText } from '@mui/material';
-import useEastmlsStore from '@/store/eastmlsStore';
 import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 function Header() {
   const [drawerOpen, setDrawerOpen] = React.useState(false);
-  const isLoggedIn = useEastmlsStore(s => s.isLoggedIn);
-  const logout = useEastmlsStore(s => s.logout);
+  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    if(typeof window !== "undefined"){
+      const token = localStorage.getItem("EastMls");
+      if(token){
+        setIsLoggedIn(true);
+      }
+    }
+  }, [])
 
   const toggleDrawer = (open) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -29,11 +37,10 @@ function Header() {
   const handleLogout = async () => {
     try {
       console.log("Logging out...");
-      const res = await api.get("/auth"); // Ensure 'api' is correctly set up
+      const res = await api.get("/auth");
       console.log("Logout response:", res.data);
       if (res.data.status === "success") {
         router.push("/login");
-        logout();
       }
     } catch (error) {
       console.error("Error logging out...");

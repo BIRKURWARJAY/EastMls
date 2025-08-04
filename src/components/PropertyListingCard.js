@@ -8,9 +8,6 @@ import Link from 'next/link';
 
 function PropertyListingCard({ data, title }) {
 
-    console.log(data);
-
-
     return (
         <>
             <Typography variant='h4' fontWeight={750} fontSize={30}>{title}</Typography>

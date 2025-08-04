@@ -9,7 +9,6 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import ErrorText from "@/components/ErrorText";
 import { useRouter } from "next/navigation";
-import useEastmlsStore from "../../store/eastmlsStore.js";
 import { api } from "@/utils/api.js";
 
 
@@ -17,7 +16,6 @@ export default function Login() {
   const router = useRouter();
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [toggleButton, setToggleButton] = useState("user");
-  const setIsLoggedIn = useEastmlsStore(s => s.setIsLoggedIn);
 
   const Adornment = passwordVisible ? <VisibilityOffIcon /> : <VisibilityIcon />
 
@@ -40,7 +38,6 @@ export default function Login() {
           role: toggleButton
         });
         if (res.status === 200) {
-          setIsLoggedIn(true);
           router.push("/buy-property")
           localStorage.setItem("EastMls", JSON.stringify(res.data.token));
         };

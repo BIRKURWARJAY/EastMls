@@ -1,55 +1,70 @@
 'use client'
 import PropertyListingCard from '@/components/PropertyListingCard'
-import { Button, FormControl, InputLabel, MenuItem, Select, Stack, TextField } from '@mui/material'
+import { Button, FormControl, MenuItem, Select, Stack, TextField } from '@mui/material'
 import React, { useEffect, useState } from 'react'
-import useEastmlsStore from '@/store/eastmlsStore'
 import { api } from '@/utils/api'
+import decodeToken from '@/utils/decodeToken'
+import { useRouter } from 'next/navigation'
 
 function page() {
-  const isLoggedIn = useEastmlsStore(s => s.isLoggedIn);
-  console.log(isLoggedIn);
+  const router = useRouter();
   const [type, settype] = useState('Property type')
-  const [prop, setprop] = useState()
+  const [prop, setprop] = useState();
+  const [isLoading, setLoading] = useState(true);
+
 
   useEffect(() => {
+    decodeToken("user", router);
     const fetchProp = async () => {
-      const response = await api.get(`/property/all`)
-      console.log(response.data);
-      setprop(response.data.allprop)
+      try {
+        const response = await api.get(`/property/all`)
+        console.log(response.data);
+        setprop(response.data.allprop)
+        // setLoading(false);
+      } catch (error) {
+        console.log(error);
+        setLoading(false);
+      }
     }
     fetchProp()
-
   }, [])
+
 
 
   return (
     <>
-      <Stack direction={"row"} boxShadow={"0px 1px 10px 1px #d6d6d6"} padding={2} gap={3}>
+      {
+        !isLoading && (
+          <>
+          <Stack direction={"row"} boxShadow={"0px 1px 10px 1px #d6d6d6"} padding={2} gap={3}>
 
 
-        <TextField id="outlined-basic" placeholder="Enter keyword" variant="outlined" sx={{ width: "45%" }} />
+            <TextField id="outlined-basic" placeholder="Enter keyword" variant="outlined" sx={{ width: "45%" }} />
 
-        <FormControl sx={{ width: '45%' }}>
-          <Select
-            labelId="Property type"
-            id="demo-simple-select-helper"
-            value={type}
+            <FormControl sx={{ width: '45%' }}>
+              <Select
+                labelId="Property type"
+                id="demo-simple-select-helper"
+                value={type}
 
-            onChange={(e) => settype(e.target.value)}
-          >
+                onChange={(e) => settype(e.target.value)}
+              >
 
-            <MenuItem disabled value={'Property type'}>Property type</MenuItem>
-            <MenuItem value={'villa'}>villa</MenuItem>
-            <MenuItem value={'home'}>home</MenuItem>
-            <MenuItem value={'flat'}>flat</MenuItem>
-          </Select>
-        </FormControl>
-        <Button variant="contained" sx={{ backgroundColor: "orange", width: "10%" }} >Search</Button>
-      </Stack>
+                <MenuItem disabled value={'Property type'}>Property type</MenuItem>
+                <MenuItem value={'villa'}>villa</MenuItem>
+                <MenuItem value={'home'}>home</MenuItem>
+                <MenuItem value={'flat'}>flat</MenuItem>
+              </Select>
+            </FormControl>
+            <Button variant="contained" sx={{ backgroundColor: "orange", width: "10%" }} >Search</Button>
+          </Stack>
 
-      <Stack sx={{ mt: "3rem" }} padding={2}>
-        <PropertyListingCard data={prop} title={'Buy Property listing'} />
-      </Stack>
+          <Stack sx={{ mt: "3rem" }} padding={2}>
+            <PropertyListingCard data={prop} title={'Buy Property listing'} />
+          </Stack>
+          </>
+            )
+      }
     </>
   )
 }

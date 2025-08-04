@@ -19,3 +19,14 @@ api.interceptors.request.use(
     return config;
   }
 )
+
+api.interceptors.response.use(
+  res => {
+    if (res.status === 401) {
+      localStorage.removeItem("EastMls");
+      window.location.href = "/login";
+      return;
+    }
+    return res;
+  }
+)

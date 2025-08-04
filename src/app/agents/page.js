@@ -13,23 +13,34 @@ import {
 } from '@mui/material';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
+import decodeToken from '@/utils/decodeToken';
+import { useRouter } from 'next/navigation';
 
 
 function Page() {
+  const router = useRouter();
   const [value, setvalue] = useState(10);
-  const [data,setdata] = useState()
+  const [data, setdata] = useState();
+  const [isLoading, setLoading] = useState(true);
 
 
-  useEffect(()=>{
-
-    const fetchagent = async()=>{
-      const response = await api.get('/agent')
-      console.log(response,data);
-      setdata(response.data.agents)
+  useEffect(() => {
+    const fetchagent = async () => {
+      try {
+        setLoading(true);
+        decodeToken("user", setLoading, router);
+        const response = await api.get('/agent')
+        console.log(response, data);
+        setdata(response.data.agents)
+        setLoading(false);
+      } catch (error) {
+        console.log(error);
+        setLoading(false);
+      }
     }
     fetchagent()
+  }, [])
 
-  },[])
 
   const breadcrumbs = [
     <Link key="1" color="inherit" href="/">
@@ -41,59 +52,62 @@ function Page() {
   ];
 
   return (
-    <Stack display="flex" px={{ xs: 2, md: 5 }} pt={{ xs: 4, md: 8 }}>
-      <BreadCrumbs array={breadcrumbs} />
-      <Typography variant="h3" mt={5} fontSize={{ xs: '2rem', md: '3rem' }}>
-        Agents
-      </Typography>
+    <>
+      {!isLoading && <Stack display="flex" px={{ xs: 2, md: 5 }} pt={{ xs: 4, md: 8 }}>
+        <BreadCrumbs array={breadcrumbs} />
+        <Typography variant="h3" mt={5} fontSize={{ xs: '2rem', md: '3rem' }}>
+          Agents
+        </Typography>
 
-      <Box
-        display="flex"
-        flexDirection={{ xs: 'column', md: 'row' }}
-        justifyContent="center"
-        alignItems="flex-start"
-        mt={5}
-        gap={4}
-      >
-        <Box flex={1}>
-          <AgentCard temp={data} />
-        </Box>
-
-        <Stack
-          p={3}
-          width={{ xs: '100%', md: '40%' }}
-          bgcolor="rgb(250 250 250)"
-          borderRadius={3}
-          border="1px solid #dbdbdb"
-          gap={2}
+        <Box
+          display="flex"
+          flexDirection={{ xs: 'column', md: 'row' }}
+          justifyContent="center"
+          alignItems="flex-start"
+          mt={5}
+          gap={4}
         >
-          <Typography variant="h6">Agent search</Typography>
+          <Box flex={1}>
+            <AgentCard temp={data} />
+          </Box>
 
-          <TextField
-            size="small"
-            placeholder="Agent name"
-            sx={{ bgcolor: 'white' }}
-            fullWidth
-          />
+          <Stack
+            p={3}
+            width={{ xs: '100%', md: '40%' }}
+            bgcolor="rgb(250 250 250)"
+            borderRadius={3}
+            border="1px solid #dbdbdb"
+            gap={2}
+          >
+            <Typography variant="h6">Agent search</Typography>
 
-          <FormControl fullWidth>
-            <Select
-              labelId="agent-filter-label"
-              id="agent-filter"
-              value={value}
+            <TextField
               size="small"
-              onChange={(e) => setvalue(e.target.value)}
+              placeholder="Agent name"
               sx={{ bgcolor: 'white' }}
-            >
-              <MenuItem value={10}>Ten</MenuItem>
-              <MenuItem value={20}>Twenty</MenuItem>
-              <MenuItem value={30}>Thirty</MenuItem>
-            </Select>
-          </FormControl>
-        </Stack>
-      </Box>
-    </Stack>
-  );
+              fullWidth
+            />
+
+            <FormControl fullWidth>
+              <Select
+                labelId="agent-filter-label"
+                id="agent-filter"
+                value={value}
+                size="small"
+                onChange={(e) => setvalue(e.target.value)}
+                sx={{ bgcolor: 'white' }}
+              >
+                <MenuItem value={10}>Ten</MenuItem>
+                <MenuItem value={20}>Twenty</MenuItem>
+                <MenuItem value={30}>Thirty</MenuItem>
+              </Select>
+            </FormControl>
+          </Stack>
+        </Box>
+      </Stack>
+      }
+    </>
+  )
 }
 
 export default Page;
