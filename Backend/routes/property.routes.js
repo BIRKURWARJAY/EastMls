@@ -1,8 +1,9 @@
 import { Router } from "express";
-import { addProperty, allproperties, deleteproperty, getproperty, searchproperty, updateproperty } from "../controllers/property.controller.js";
+import { addProperty, agentProperty, allproperties, deleteproperty, getproperty, searchproperty, updateproperty } from "../controllers/property.controller.js";
 
 const propertyRouter = Router();
 
+propertyRouter.get("/agent", agentProperty)
 propertyRouter.get('/all', allproperties)
 
 propertyRouter.post("/", addProperty)

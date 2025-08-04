@@ -4,6 +4,7 @@ import Country from "../models/country.model.js";
 import { propertyValidator } from "../validators/property.validator.js";
 import Property from "../models/property.model.js";
 import userModel from "../models/user.model.js";
+import mongoose from "mongoose";
 
 const addProperty = async (req, res) => {
     try {
@@ -233,7 +234,6 @@ const deleteproperty = async (req, res) => {
 
 const allproperties = async (req, res) => {
     try {
-        console.log("called");
 
         const allprop = await Property.find()
         if (!allprop) {
@@ -259,33 +259,42 @@ const allproperties = async (req, res) => {
 
 const searchproperty = async (req, res) => {
     try {
-        const { propertyType, title } = req.query;
+
+        console.log("propertyType", req.query)
+        let { propertyType, leaseType, title } = req.query;
+
 
         const matchStage = {};
 
-        if (propertyType) {
+        if (leaseType) {
+            leaseType = Array.isArray(leaseType)
+                ? leaseType
+                : leaseType.split(',');
+
+            if (leaseType.length > 0) {
+                matchStage.leaseType = { $in: leaseType };
+            }
+        }
+
+        if (propertyType && propertyType !== '') {
             matchStage.propertyType = propertyType;
         }
 
-        if (title) {
+        if (title && title.trim() !== '') {
             matchStage.title = {
-                $regex: title,
+                $regex: title.trim(),
                 $options: "i"
             };
         }
 
-        const pipeline = [
-            {
-                $match: matchStage
-            },
-    
-        ];
+        const pipeline = [{ $match: matchStage }];
 
         const propertydetails = await Property.aggregate(pipeline);
 
-        if (!propertydetails || propertydetails.length === 0) {
-            return res.status(404).json({
+        if (!propertydetails.length) {
+            return res.status(200).json({
                 message: "No properties found",
+                propertydetails: []
             });
         }
 
@@ -303,5 +312,42 @@ const searchproperty = async (req, res) => {
     }
 };
 
+const agentProperty = async (req, res) => {
+    try {
+        const { agentId } = req.cookies;
+        console.log("cookie",agentId);
+        
 
-export { addProperty, getproperty, updateproperty, deleteproperty, allproperties, searchproperty } 
+        if (!agentId) {
+            return res.status(400).json({
+                message: "Agent ID is missing in cookies",
+            });
+        }
+
+        const allprop = await Property.find({ agentId });
+
+        if (allprop.length === 0) {
+            return res.status(400).json({
+                message: "No properties found for this agent"
+            });
+        }
+
+        return res.status(200).json({
+            message: "All properties fetched successfully",
+            allprop
+        });
+
+    } catch (error) {
+        console.error("Error in agentProperty:", error);
+        return res.status(500).json({
+            message: "Server error while fetching properties",
+            error: error.message
+        });
+    }
+};
+
+
+
+
+
+export { addProperty, getproperty, updateproperty, deleteproperty, allproperties, searchproperty, agentProperty } 

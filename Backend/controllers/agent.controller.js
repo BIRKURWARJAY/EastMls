@@ -56,3 +56,7 @@ export function getAgent() {
     })
   })
 }
+
+export function searchAgent (){
+  
+}

@@ -49,7 +49,7 @@ function Header() {
         router.push("/login");
       }
     } catch (error) {
-      console.error("Error logging out...");
+      console.error("Error logging out...",error);
     }
   };
 
@@ -62,7 +62,7 @@ function Header() {
   ];
 
   return (
-    <AppBar position="sticky" sx={{ bgcolor: 'white', color: 'black', width: "100%", position: "relative" }}>
+    <AppBar position="sticky" sx={{ bgcolor: 'white', color: 'black', width: "100%", position: "relative", boxShadow:"0px 0px 10px #dbdbdb !important" }}>
       <Container sx={{ width: "100%", height: "12vh", display: "flex", zIndex: "500", minHeight: "5rem", justifyContent: "space-between", alignItems: "center" }}>
         <Toolbar sx={{ justifyContent: 'space-between', width: "100%" }}>
 
@@ -75,7 +75,7 @@ function Header() {
           <Image src="/eastmls/logo.webp" alt="Logo" width={80} height={80} />
 
           <Box sx={{ flexGrow: 1, display: { xs: 'none', lg: 'flex' }, justifyContent: 'center', maxWidth: "80%", alignItems: "center", justifySelf: "center" }}>
-            <Stack direction={"row"} gap={5} justifyContent={'center'} display={'flex'}>
+            <Stack direction={"row"}  justifyContent={'center'} display={'flex'}>
               {links.map(link => (
                 <Link key={link.href} href={link.href} style={{ color: 'black', textDecoration: "none" }}>
                   <ListItem sx={{ color: 'black' }}>
