@@ -10,8 +10,7 @@ import * as Yup from "yup";
 import ErrorText from "@/components/ErrorText";
 import { useRouter } from "next/navigation";
 import useEastmlsStore from "../../store/eastmlsStore.js";
-// import { api } from "@/utils/api.js";
-import axios from "axios";
+import { api } from "@/utils/api.js";
 
 
 export default function Login() {
@@ -35,7 +34,7 @@ export default function Login() {
     validationSchema: YupValidation,
     onSubmit: async (values) => {
       try {
-        const res = await axios.post("http://localhost:5000/api/auth/login", {
+        const res = await api.post("/auth/login", {
           email: values.email,
           password: values.password,
           role: toggleButton

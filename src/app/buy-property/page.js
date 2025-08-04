@@ -1,17 +1,19 @@
 'use client'
 import PropertyListingCard from '@/components/PropertyListingCard'
 import { Button, FormControl, InputLabel, MenuItem, Select, Stack, TextField } from '@mui/material'
-import axios from 'axios'
 import React, { useEffect, useState } from 'react'
+import useEastmlsStore from '@/store/eastmlsStore'
+import { api } from '@/utils/api'
 
 function page() {
-
+  const isLoggedIn = useEastmlsStore(s => s.isLoggedIn);
+  console.log(isLoggedIn);
   const [type, settype] = useState('Property type')
   const [prop, setprop] = useState()
 
   useEffect(() => {
     const fetchProp = async () => {
-      const response = await axios.get(`http://localhost:5000/property/all`)
+      const response = await api.get(`/property/all`)
       console.log(response.data);
       setprop(response.data.allprop)
     }

@@ -1,6 +1,6 @@
 'use client';
+import { api } from '@/utils/api';
 import { Box, Button, Stack, TextareaAutosize, TextField, Typography } from '@mui/material';
-import axios from 'axios';
 import React, { useState } from 'react';
 
 function SellerEnquiry({ data }) {
@@ -24,7 +24,7 @@ function SellerEnquiry({ data }) {
         }
 
         try {
-            const response = await axios.post('http://localhost:5000/inquiry', inquiry);
+            const response = await api.post('/inquiry', inquiry);
             console.log(response);
             setinqury(prev => ({ ...prev, name: '', phone: '', email: '', message: '' }));
         } catch (error) {

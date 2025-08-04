@@ -1,9 +1,9 @@
 "use client"
 
 import PropertyListingCard from '@/components/PropertyListingCard'
+import { api } from '@/utils/api'
 import { Box, Button, FormControl, InputLabel, MenuItem, NativeSelect, Select, Stack, TextField, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material'
 import { flexbox, style } from '@mui/system'
-import axios from 'axios'
 import { useParams, useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
@@ -17,7 +17,7 @@ function page() {
     useEffect(() => {
        try {
          const fetchprop = async () => {
-             const response = await axios.get(`http://localhost:5000/property/all`)
+             const response = await api.get(`/property/all`)
              console.log(response.data);
              setprop(response.data.allprop)
          }

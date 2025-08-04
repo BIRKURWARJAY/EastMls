@@ -27,8 +27,8 @@ app.use(cookieParser());
 app.use(express.json());
 // app.get("/", authenticateUser)
 
-app.use("/property", propertyRouter);
-app.use("/inquiry", inquiryRouter);
+app.use("/api/property", propertyRouter);
+app.use("/api/inquiry", inquiryRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 app.use("/api/agent", agentRouter);
