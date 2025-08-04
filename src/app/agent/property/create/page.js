@@ -38,6 +38,7 @@ import ErrorText from '@/components/ErrorText';
 import { useEffect, useState } from 'react';
 import decodeToken from '@/utils/decodeToken';
 import { useRouter } from 'next/navigation';
+import LoadingComponent from '@/components/loading';
 
 export default function CreateAgentProperty() {
   const router = useRouter();
@@ -49,7 +50,8 @@ export default function CreateAgentProperty() {
   const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
-    decodeToken("agent", setLoading, router);
+    const tokenRes = decodeToken("agent", router);
+    tokenRes && setLoading(false);
 }, [])
 
   useEffect(() => {
@@ -120,7 +122,7 @@ export default function CreateAgentProperty() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       {
-        !isLoading && <Grid container spacing={4} sx={{
+        isLoading ? <LoadingComponent /> : <Grid container spacing={4} sx={{
           bgcolor: "#abb0b445",
           padding: 2,
           justifyContent: 'space-between'

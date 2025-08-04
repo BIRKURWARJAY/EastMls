@@ -6,6 +6,7 @@ import decodeToken from '@/utils/decodeToken'
 import { Box, Button, FormControl, MenuItem, Select, Stack, TextField, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import LoadingComponent from '@/components/loading'
 
 function page() {
   const router = useRouter();
@@ -16,10 +17,11 @@ function page() {
 
 
   useEffect(() => {
+        const tokenRes = decodeToken("user", router);
+
     const fetchprop = async () => {
       try {
         setLoading(true);
-        decodeToken("user", setLoading, router);
         const response = await api.get(`/property/all`)
         console.log(response.data);
         setprop(response.data.allprop)
@@ -29,14 +31,14 @@ function page() {
         setLoading(false);
       }
     }
-    fetchprop()
+    tokenRes && fetchprop()
 
   }, [])
 
   return (
     <>
       {
-        !isLoading && <>
+        isLoading ? <LoadingComponent /> : <>
           <Stack flexDirection={'row'} display={'flex'} justifyContent={'center'} flexWrap={'wrap'} boxShadow={"0px 1px 10px 1px #d6d6d6"} py={4} gap={2}>
             <ToggleButtonGroup
 

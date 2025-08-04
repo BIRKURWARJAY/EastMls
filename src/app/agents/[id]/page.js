@@ -7,6 +7,7 @@ import Link from 'next/link';
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { api } from '@/utils/api'
+import LoadingComponent from '@/components/loading';
 
 function page({ params }) {
   const router = useRouter();
@@ -14,10 +15,11 @@ function page({ params }) {
   const [agent, setAgent] = useState();
 
   useEffect(() => {
+    const tokenRes = decodeToken("user", router);
+    
     const fetchAgent = async () => {
       try {
         setLoading(true);
-        decodeToken("user", setLoading, router);
         const response = await api.get(`/agent/${params.id}`);
         setAgent(response.data.agent);
         setLoading(false);
@@ -26,7 +28,7 @@ function page({ params }) {
         setLoading(false);
       }
     }
-    fetchAgent();
+    tokenRes && fetchAgent();
   }, []);
 
   const { id } = params
@@ -57,7 +59,7 @@ function page({ params }) {
 
   return (
     <>
-      {!isLoading && <Stack px={5} pt={8} display={'flex'} >
+      {isLoading ? <LoadingComponent /> : <Stack px={5} pt={8} display={'flex'} >
         <BreadCrumbs array={breadcrumbs} />
 
 

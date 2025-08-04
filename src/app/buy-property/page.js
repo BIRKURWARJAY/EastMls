@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { api } from '@/utils/api'
 import decodeToken from '@/utils/decodeToken'
 import { useRouter } from 'next/navigation'
+import LoadingComponent from '@/components/loading'
 
 function page() {
   const router = useRouter();
@@ -14,19 +15,19 @@ function page() {
 
 
   useEffect(() => {
-    decodeToken("user", router);
+    const tokenRes = decodeToken("user", router);
     const fetchProp = async () => {
       try {
         const response = await api.get(`/property/all`)
         console.log(response.data);
         setprop(response.data.allprop)
-        // setLoading(false);
+        setLoading(false);
       } catch (error) {
         console.log(error);
         setLoading(false);
       }
     }
-    fetchProp()
+    tokenRes && fetchProp();
   }, [])
 
 
@@ -34,7 +35,7 @@ function page() {
   return (
     <>
       {
-        !isLoading && (
+        isLoading ? <LoadingComponent /> : (
           <>
           <Stack direction={"row"} boxShadow={"0px 1px 10px 1px #d6d6d6"} padding={2} gap={3}>
 

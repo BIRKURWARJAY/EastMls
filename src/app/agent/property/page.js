@@ -1,6 +1,7 @@
 'use client'
 
 import BreadCrumbs from "@/components/BreadCrumbs";
+import LoadingComponent from "@/components/loading";
 import decodeToken from "@/utils/decodeToken";
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
@@ -11,21 +12,22 @@ export default function AgentProperty() {
   const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
+    const tokenRes = decodeToken("agent", router);
+
     const fetchAgentProperty = async () => {
       try {
         setLoading(true);
-        decodeToken("agent", setLoading, router);
       } catch (error) {
         console.error(error);
         setLoading(false);
       }
     }
-    fetchAgentProperty();
+    tokenRes && fetchAgentProperty();
   }, []);
 
   return (
     <>
-      {!isLoading && <BreadCrumbs />}
+      {isLoading ? <LoadingComponent /> : <BreadCrumbs />}
     </>
   )
 }
