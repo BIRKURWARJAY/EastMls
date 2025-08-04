@@ -1,55 +1,78 @@
 'use client'
 import PropertyListingCard from '@/components/PropertyListingCard'
-import { Button, FormControl, InputLabel, MenuItem, Select, Stack, TextField } from '@mui/material'
+import { Box, Button, FormControl, InputLabel, MenuItem, Select, Stack, TextField } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import useEastmlsStore from '@/store/eastmlsStore'
 import { api } from '@/utils/api'
+import axios from 'axios'
 
 function page() {
-  const isLoggedIn = useEastmlsStore(s => s.isLoggedIn);
-  console.log(isLoggedIn);
-  const [type, settype] = useState('Property type')
+  // const isLoggedIn = useEastmlsStore(s => s.isLoggedIn);
+  // console.log(isLoggedIn);
+  const [type, settype] = useState('')
+  const [keyword, setkeyword] = useState('')
   const [prop, setprop] = useState()
 
   useEffect(() => {
     const fetchProp = async () => {
       const response = await api.get(`/property/all`)
-      console.log(response.data);
+      console.log(response.data, "hello");
       setprop(response.data.allprop)
     }
     fetchProp()
 
   }, [])
 
+  const changeHandler = (e) => {
+    console.log(">> change >", e)
+    settype(e.target.value)
+  }
+  
+  const serachProp = async () => {
+    try {
+      console.log(type);
+
+      const response = await api.get(`/property/search?propertyType=${type}&title=${keyword}`);
+      console.log(response.data.propertydetails);
+      setprop(response.data.propertydetails);
+    } catch (error) {
+      console.error('Search error:', error);
+    }
+  }
+
+
 
   return (
     <>
-      <Stack direction={"row"} boxShadow={"0px 1px 10px 1px #d6d6d6"} padding={2} gap={3}>
+      <Box boxShadow={"0px 1px 10px 1px #d6d6d6"} padding={2} display={'flex'} justifyContent={'center'}>
+
+        <Stack  minWidth={'80%'}  flexDirection={{ xs: "column", sm: "row" }} justifyContent={'center'} alignItems={'center'}  gap={3}>
 
 
-        <TextField id="outlined-basic" placeholder="Enter keyword" variant="outlined" sx={{ width: "45%" }} />
+          <TextField id="outlined-basic" value={keyword} onChange={(e) => setkeyword(e.target.value)} placeholder="Enter keyword" variant="outlined" sx={{ width: "45%", minWidth: "200px" }} />
 
-        <FormControl sx={{ width: '45%' }}>
-          <Select
-            labelId="Property type"
-            id="demo-simple-select-helper"
-            value={type}
+          <FormControl sx={{ width: '45%', minWidth: "200px" }}>
+            <Select
+              labelId="Property type"
+              id="demo-simple-select-helper"
+              value={type}
 
-            onChange={(e) => settype(e.target.value)}
-          >
+              onChange={changeHandler}
+            >
 
-            <MenuItem disabled value={'Property type'}>Property type</MenuItem>
-            <MenuItem value={'villa'}>villa</MenuItem>
-            <MenuItem value={'home'}>home</MenuItem>
-            <MenuItem value={'flat'}>flat</MenuItem>
-          </Select>
-        </FormControl>
-        <Button variant="contained" sx={{ backgroundColor: "orange", width: "10%" }} >Search</Button>
-      </Stack>
+              <MenuItem disabled value={'Property type'}>Property type</MenuItem>
+              <MenuItem value={'flat'}>flat</MenuItem>    
+              <MenuItem value={'villa'}>villa</MenuItem>
+              <MenuItem value={'house'}>house</MenuItem>
+            </Select>
+          </FormControl>
+          <Button variant="contained" size='large' onClick={() => serachProp()} sx={{ backgroundColor: "orange", width: "10%", height: "100%" }} >Search</Button>
+        </Stack>
 
-      <Stack sx={{ mt: "3rem" }} padding={2}>
-        <PropertyListingCard data={prop} title={'Buy Property listing'} />
-      </Stack>
+      </Box>
+        <Stack sx={{ mt: "3rem" }} padding={2}>
+          <PropertyListingCard data={prop} title={'Buy Property listing'} />
+        </Stack>
     </>
   )
 }

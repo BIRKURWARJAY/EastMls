@@ -15,9 +15,7 @@ function page() {
   const isLoading = useEastmlsStore(s => s.isLoading);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const localToken = localStorage.getItem("EastMls");
-    }
+
 
     if (isLoading) {
       console.log("Store is still loading, waiting...");
@@ -69,7 +67,6 @@ function page() {
 
   }, [token, isLoading, router]);
 
-  // Show loading spinner while store is initializing
   if (isLoading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="50vh">

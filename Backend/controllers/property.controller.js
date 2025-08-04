@@ -233,7 +233,6 @@ const deleteproperty = async (req, res) => {
 
 const allproperties = async (req, res) => {
     try {
-        console.log("called");
 
         const allprop = await Property.find()
         if (!allprop) {
@@ -259,33 +258,42 @@ const allproperties = async (req, res) => {
 
 const searchproperty = async (req, res) => {
     try {
-        const { propertyType, title } = req.query;
+
+        console.log("propertyType", req.query)
+        let { propertyType, leaseType, title } = req.query;
+
 
         const matchStage = {};
 
-        if (propertyType) {
+        if (leaseType) {
+            leaseType = Array.isArray(leaseType)
+                ? leaseType
+                : leaseType.split(',');
+
+            if (leaseType.length > 0) {
+                matchStage.leaseType = { $in: leaseType };
+            }
+        }
+
+        if (propertyType && propertyType !== '') {
             matchStage.propertyType = propertyType;
         }
 
-        if (title) {
+        if (title && title.trim() !== '') {
             matchStage.title = {
-                $regex: title,
+                $regex: title.trim(),
                 $options: "i"
             };
         }
 
-        const pipeline = [
-            {
-                $match: matchStage
-            },
-    
-        ];
+        const pipeline = [{ $match: matchStage }];
 
         const propertydetails = await Property.aggregate(pipeline);
 
-        if (!propertydetails || propertydetails.length === 0) {
-            return res.status(404).json({
+        if (!propertydetails.length) {
+            return res.status(200).json({
                 message: "No properties found",
+                propertydetails: []
             });
         }
 
@@ -302,6 +310,9 @@ const searchproperty = async (req, res) => {
         });
     }
 };
+
+
+
 
 
 export { addProperty, getproperty, updateproperty, deleteproperty, allproperties, searchproperty } 

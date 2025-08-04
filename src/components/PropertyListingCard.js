@@ -8,7 +8,7 @@ import Link from 'next/link';
 
 function PropertyListingCard({ data, title }) {
 
-    console.log(data);
+    // console.log(data);
 
 
     return (
@@ -18,8 +18,8 @@ function PropertyListingCard({ data, title }) {
 
             <Stack justifyContent={'center'} gap={2} direction={'row'} alignItems={'start'} mt={8} flexWrap={'wrap'}>
                 {data && data.map((prop,index) =>
-                    <Link href={`/property/${prop?.title?.replaceAll(' ','_')}/${prop._id}`} key={index}>
-                        <Card  variant='outlined' sx={{ maxWidth: "32rem", position: "relative" }}  >
+                    <Link href={`/property/${prop?.title?.replaceAll(' ','_')}/${prop._id}`} key={index} className=' w-xl'>
+                        <Card  variant='outlined' sx={{  position: "relative" }}  >
 
                             <Button sx={{ position: "absolute", left: "0.5rem", top: "0.5rem", bgcolor: "orange", color: "white", fontSize: "8px", fontWeight: "600", width: "1px", padding: "5px" }} >For sale</Button>
 
@@ -46,7 +46,7 @@ function PropertyListingCard({ data, title }) {
                                         {prop?.address}
                                     </Typography>
                                 </Box>
-                                <Stack flexDirection={'row'} alignItems={'center'} justifyContent={'space-between'} mt={2} display={'flex'} gap={0.5} color={'gray'}>
+                                <Stack flexDirection={'row'} alignItems={'center'} justifyContent={'space-between'} mt={2} flexWrap={'wrap'} display={'flex'} gap={0.5} color={'gray'}>
                                     <Box flexDirection={'row'} alignItems={'center'} display={'flex'} gap={0.5} color={'gray'}>
                                         <BedIcon ></BedIcon>
                                         <Typography>Bed {prop?.bedrooms}</Typography>
