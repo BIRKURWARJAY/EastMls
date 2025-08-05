@@ -14,11 +14,6 @@ const countrySchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    countryStatus: {
-        type: Boolean,
-        required: true,
-        default: false
-    },
 
 }, { timestamps: true });
 

@@ -14,7 +14,6 @@ import Overview from '@/components/Overview';
 import Propertydetails from '@/components/Propertydetails';
 import SellerEnquiry from '@/components/SellerEnquiry';
 import { api } from '@/utils/api';
-import useEastmlsStore from '@/store/eastmlsStore';
 import decodeToken from '@/utils/decodeToken';
 import LoadingComponent from '@/components/loading';
 
@@ -58,7 +57,7 @@ function page() {
         setLoading(false);
       }
     }
-    tokenRes && fetchprop()
+    tokenRes?.status && fetchprop()
   }, [])
 
   return (

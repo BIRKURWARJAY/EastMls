@@ -9,41 +9,42 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { useEffect } from 'react';
-import axios from 'axios';
 import { useState } from 'react';
 import { DeleteOutlineOutlined, EditCalendarOutlined, RemoveRedEyeOutlined } from '@mui/icons-material';
 import { IconButton } from '@mui/material';
+import { api } from '@/utils/api';
+import decodeToken from '@/utils/decodeToken';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 
 export default function BasicTable() {
 
-  const [prop, setprop] = useState()
+  const [prop, setprop] = useState();
+  const [isLoading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     const tokenRes = decodeToken("agent", router);
 
     const fetchAgentProperty = async () => {
       try {
-        setLoading(true);
+        const response = await api.get('/property/agent')
+        console.log(response.data);
+        setprop(response.data.allprop)
+        setLoading(false);
       } catch (error) {
         console.error(error);
         setLoading(false);
       }
     }
-    tokenRes && fetchAgentProperty();
+    tokenRes?.status && fetchAgentProperty();
   }, []);
-    const getprop = async () => {
-      const response = await axios.get('http://localhost:5000/api/property/agent', { withCredentials: true })
-      console.log(response.data);
-      setprop(response.data.allprop)
 
-    }
-    getprop()
-  }, [])
 
   return (
     <>
-      <TableContainer component={Paper}>
+      {isLoading ? <LoadingComponent /> : <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
@@ -59,8 +60,8 @@ export default function BasicTable() {
             {prop?.map((row, index) => (
               <TableRow
                 key={index}
-                // sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-               
+              // sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+
               >
                 <TableCell component="th" scope="row">
                   {row.title}
@@ -71,20 +72,22 @@ export default function BasicTable() {
                 <TableCell align="right">{row.status}</TableCell>
                 <TableCell align="right">
                   <IconButton aria-label="fingerprint" color="success">
-                    <RemoveRedEyeOutlined  sx={{color:"orange"}} />
+                    <RemoveRedEyeOutlined sx={{ color: "orange" }} />
                   </IconButton>
+                  <Link href={`/agent/property/edit/${row._id}`}>
                   <IconButton aria-label="fingerprint" color="success">
-                    <EditCalendarOutlined  sx={{color:"orange"}} />
+                    <EditCalendarOutlined sx={{ color: "orange" }} />
                   </IconButton>
+                  </Link>
                   <IconButton aria-label="fingerprint" color="success">
-                    <DeleteOutlineOutlined  sx={{color:"red"}} />
+                    <DeleteOutlineOutlined sx={{ color: "red" }} />
                   </IconButton>
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
-      </TableContainer>
+      </TableContainer>}
     </>
   );
 }

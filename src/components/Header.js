@@ -14,6 +14,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { api } from '@/utils/api';
 import {eastMlsStore} from "../store/eastMlsStore.js"
+import { InvalidTokenError, jwtDecode } from 'jwt-decode';
 
 
 function Header() {
@@ -25,8 +26,25 @@ function Header() {
   useEffect(() => {
     if(typeof window !== "undefined"){
       const token = localStorage.getItem("EastMls");
-      if(token){
-        setIsLoggedIn(true);
+      
+      if (!token) {
+        console.log("No token found, redirecting to login");
+        router.replace("/login");
+        return;
+      }
+
+      try {
+        const decoded = jwtDecode(token);
+
+        if (decoded instanceof InvalidTokenError || decoded.exp <= Date.now() / 1000) {
+          console.log("Token is expired please login");
+          router.replace("/login");
+          return;
+        }
+        setIsLoggedIn(true)
+      } catch (error) {
+        console.log("Invalid token, redirecting to login");
+        router.replace("/login");
       }
     }
   }, [])

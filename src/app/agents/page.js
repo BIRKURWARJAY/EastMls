@@ -40,7 +40,7 @@ function Page() {
         setLoading(false);
       }
     }
-    tokenRes && fetchagent()
+    tokenRes?.status && fetchagent()
   }, [])
 
 

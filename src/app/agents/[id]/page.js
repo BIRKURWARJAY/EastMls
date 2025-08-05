@@ -28,7 +28,7 @@ function page({ params }) {
         setLoading(false);
       }
     }
-    tokenRes && fetchAgent();
+    tokenRes?.status && fetchAgent();
   }, []);
 
   const { id } = params

@@ -33,7 +33,7 @@ function page() {
         setLoading(false);
       }
     }
-    tokenRes && fetchprop()
+    tokenRes?.status && fetchprop()
 
   }, [])
   useEffect(() => {
