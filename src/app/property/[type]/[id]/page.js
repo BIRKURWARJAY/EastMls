@@ -44,7 +44,8 @@ function page() {
 
 
   useEffect(() => {
-    const tokenRes = decodeToken("user", router);
+    async function validate() {
+      const tokenRes = decodeToken("user", router);
 
     const fetchprop = async () => {
       try {
@@ -58,6 +59,8 @@ function page() {
       }
     }
     tokenRes?.status && fetchprop()
+    }
+    validate();
   }, [])
 
   return (

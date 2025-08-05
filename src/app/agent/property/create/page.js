@@ -92,11 +92,14 @@ export default function CreateAgentProperty() {
   ];
 
   // Currency options
-  const currencyOptions = ['$', '€', '£', '₹', '¥', '₦', 'KSh'];
+  const currencyOptions = ['USD', "EURO", 'POUND', 'RUPEES', 'YEMEN', 'ND', 'KSh'];
 
   useEffect(() => {
-    const tokenRes = decodeToken("agent", router);
+    async function validate() {
+      const tokenRes = decodeToken("agent", router);
     tokenRes?.status && setLoading(false);
+    }
+    validate();
 }, [])
 
   useEffect(() => {
@@ -127,7 +130,7 @@ export default function CreateAgentProperty() {
     state: Yup.string('state must be a string').trim().required('state is required'),
     countryCode: Yup.number('countryCode must be a number').required('countryCode is required'),
     countryName: Yup.string('countryName must be a string').trim().required('countryName is required'),
-    postalCode: Yup.string('postalCode must be a string').trim().required('postalCode is required'),
+    postalCode: Yup.number('postalCode must be a string').required('postalCode is required'),
     title: Yup.string('title must be a string').trim().required('title is required'),
     currency: Yup.string('currency must be a string').required('currency is required'),
     features: Yup.array().min(1, 'At least one feature must be selected').required('features is required')
@@ -157,7 +160,7 @@ export default function CreateAgentProperty() {
       countryName: "",
       postalCode: "",
       title: "",
-      currency: "$",
+      currency: " ",
       features: []
     },
     validationSchema: YupValidation,
@@ -167,16 +170,7 @@ export default function CreateAgentProperty() {
         // Convert date objects to ISO strings and ensure numbers are properly typed
         const formData = {
           ...values,
-          yearOfBuild: Number(values.yearOfBuild),
-          availableFrom: values.availableFrom.toISOString(),
-          cityCode: Number(values.cityCode),
-          countryCode: Number(values.countryCode),
-          landArea: Number(values.landArea),
-          price: Number(values.price),
-          bedrooms: Number(values.bedrooms),
-          bathrooms: Number(values.bathrooms),
-          areaSqFt: Number(values.areaSqFt),
-          images: [...images.map(file => file[0].name)],
+          images: values?.images.map(image => image[0].name),
           coordinates: ["23","31"]
         };
         
@@ -358,6 +352,7 @@ export default function CreateAgentProperty() {
                       <TextField
                         placeholder="e.g., 380001"
                         name='postalCode'
+                        type='number'
                         value={formik.values?.postalCode}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -375,7 +370,7 @@ export default function CreateAgentProperty() {
                     <Select
                       multiple
                       name='features'
-                      value={formik.values.features || []}
+                      value={formik.values.features}
                       onChange={handleFeaturesChange}
                       onBlur={formik.handleBlur}
                       input={<OutlinedInput />}
@@ -387,6 +382,7 @@ export default function CreateAgentProperty() {
                         </Box>
                       )}
                     >
+                      <MenuItem value={[]} disabled>Features</MenuItem>
                       {propertyFeatures.map((feature) => (
                         <MenuItem key={feature} value={feature}>
                           {feature}
@@ -476,6 +472,7 @@ export default function CreateAgentProperty() {
                       onBlur={formik.handleBlur}
                       error={formik.touched.currency && formik.errors.currency}
                     >
+                      <MenuItem value={" "} disabled>Currency</MenuItem>
                       {currencyOptions.map((currency) => (
                         <MenuItem key={currency} value={currency}>
                           {currency}
@@ -560,6 +557,7 @@ export default function CreateAgentProperty() {
                       onChange={(date) => formik.setFieldValue('availableFrom', date)}
                       slotProps={{
                         textField: {
+                          name: "availableFrom",
                           error: formik.touched.availableFrom && formik.errors.availableFrom,
                           onBlur: formik.handleBlur,
                           helperText: <ErrorText helperText={formik.errors.availableFrom} />

@@ -1,46 +1,59 @@
-// import jwt from "jsonwebtoken";
+import jwt from "jsonwebtoken";
+import userModel from "../models/user.model.js";
 
-// export default async function autoRefreshToken(req, res, next) {
-//   try {
-//     const token = req.headers.authorization?.split(" ")[1] || undefined;
+export default async function autoRefreshToken(req, res, next) {
+  const cookieOptions = (maxAge) => {
+  return {
+    httpOnly: true,
+    secure: true,
+    origin: "http://localhost:3000",
+    sameSite: "none",
+    expires: new Date(Date.now() + maxAge)
+  }
+  };
+  
+  try {
+    console.log(req.cookies)
 
-//     if (!token) {
-//       return res.status(420).json({
-//         message: "token not found please login"
-//       })
-//     }
+    const token = req.cookies.refreshToken;
+    if (!token) {
+      return res.status(420).json({
+        message: "token not found please login"
+      })
+    }
     
-//     const decoded = jwt.decode(token);
-//     if (!decoded) {
-//       return res.status(420).json({ message: "Unauthorized" });
-//     }
+    const decodedToken = jwt.verify(token, process.env.JWTSECRET);
+    if (!decodedToken) {
+      return res.status(420).json({ message: "Unauthorized" });
+    }
 
-//     const user = await userModel.findById(decoded.id);
-//     if (!user) {
-//       return res.status(420).json({ message: "User not found" });
-//     }
+    const user = await userModel.findById(decodedToken.id);
+    if (!user) {
+      return res.status(420).json({ message: "User not found" });
+    }
 
-//     if(!jwt.verify(user.refreshToken, process.env.JWTSECRET)) {
-//       return res.status(420).json({ message: "please Login again" });
-//     }
+    if (token !== user?.refreshToken) {
+      return res.status(420).json({ meassge: "Invalid Refresh Token" });
+    }
 
-//     const accessToken = jwt.sign({
-//       email: decoded.email,
-//       id: decoded.id,
-//       role: decoded.role
-//     }, process.env.JWTSECRET, {
-//       algorithm: "HS256",
-//       expiresIn: "15m"
-//     })
+    const accessToken = jwt.sign({
+      id: decodedToken.id,
+      role: decodedToken.role
+    }, process.env.JWTSECRET, {
+      algorithm: "HS256",
+      expiresIn: "15m"
+    })
 
-//     return res.status(200).json({
-//       message: "Token refreshed successfully",
-//       token: accessToken
-//     });
-//   } catch (error) { 
-//     console.log(error);
-//     return res.status(401).json({
-//       message: error.message
-//     })
-//   }
-// }
+    return res.status(200)
+      .cookie("accessToken", accessToken, cookieOptions(1000 * 60 * 15))
+      .json({
+      message: "Token refreshed successfully",
+      token: accessToken
+    });
+  } catch (error) { 
+    console.log(error);
+    return res.status(420).json({
+      message: error.message
+    })
+  }
+}

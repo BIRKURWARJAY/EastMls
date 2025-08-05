@@ -18,7 +18,8 @@ function page({ params: paramsPromise }) {
   const params = React.use(paramsPromise);  
 
   useEffect(() => {
-    const tokenRes = decodeToken("user", router);
+    async function validate() {
+      const tokenRes = decodeToken("user", router);
 
     const fetchAgent = async () => {
       try {
@@ -36,6 +37,8 @@ function page({ params: paramsPromise }) {
       fetchAgent();
     }
     tokenRes?.status && fetchAgent();
+    }
+    validate();
   }, [params.id, router]);
 
 

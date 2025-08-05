@@ -3,7 +3,7 @@ import { Stack, Typography } from "@mui/material";
 
 
 
-export default function Home() {
+export default async function Home() {
 
   return (
     <>

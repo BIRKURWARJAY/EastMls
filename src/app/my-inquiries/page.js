@@ -13,7 +13,8 @@ function page() {
 
 
   useEffect(() => {
-    const tokenRes = decodeToken("user", router);
+    async function validate() {
+      const tokenRes = decodeToken("user", router);
 
     const getinq = async () => {
       try {
@@ -31,6 +32,8 @@ function page() {
       }
     }
     tokenRes?.status && getinq();
+    }
+    validate();
   }, []);
 
   if (isLoading) {

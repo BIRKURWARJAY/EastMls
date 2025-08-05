@@ -1,27 +1,37 @@
-import { jwtDecode } from "jwt-decode";
+import { InvalidTokenError, jwtDecode } from "jwt-decode";
 import { eastMlsStore } from "@/store/eastMlsStore";
 import toast from "react-hot-toast";
+import { getCookie } from "./setCookie";
+import { refreshAccessToken } from "./refreshAccessToken";
 
 
-const decodeToken = (role, router) => {
+const decodeToken = async (role, router) => {
   const setIsLoggedIn = eastMlsStore.getState().setIsLoggedIn;
 
   if (typeof window !== "undefined") {
-    const token = localStorage.getItem("EastMls");
+    const token = getCookie("EastMlsToken");
 
     if (!token) {
-      router.replace("/login");
-      toast.error('Please login')
+      toast.loading('refreshing Token')
+      await refreshAccessToken() ? toast.success("Token Refreshed") : toast.error('Please login')
       return;
     }
 
     try {
       const decoded = jwtDecode(token);
-      if (!decoded) {
+      if (decoded instanceof InvalidTokenError || !decoded) {
         toast.error('Token not valid')
         console.log("Token is invalid or not found.");
-        setIsLoggedIn(false);
-        router.replace("/login");
+        toast.loading('refreshing Token')
+        await refreshAccessToken() ? (toast.success("Token Refreshed"), setIsLoggedIn(true)) : toast.error('Please login')
+        return;
+      }
+
+      if (decoded.exp <= Date.now() / 1000) {
+        toast.error('Token is expired');
+        console.log("Token Expired");
+        toast.loading('refreshing Token')
+        await refreshAccessToken() ? (toast.success("Token Refreshed"), setIsLoggedIn(true)) : toast.error('Please login')
         return;
       }
 
@@ -31,7 +41,7 @@ const decodeToken = (role, router) => {
 
         router.replace("/");
         if (decoded.role === "agent") {
-          router.replace("/login");
+          router.replace("/agent/property");
         }
         return;
       }
@@ -40,12 +50,11 @@ const decodeToken = (role, router) => {
         decodedToken: decoded
       };
     } catch (error) {
-        toast.error('Token decoding error')
+      toast.error('Token decoding error')
 
       console.log("Error decoding token:", error);
       setIsLoggedIn(false);
       router.replace("/login");
-
     }
   }
 };

@@ -16,7 +16,6 @@ import { api } from '@/utils/api';
 import decodeToken from '@/utils/decodeToken';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import axios from 'axios';
 import toast from 'react-hot-toast';
 
 
@@ -27,7 +26,8 @@ export default function BasicTable() {
   const router = useRouter();
 
   useEffect(() => {
-    const tokenRes = decodeToken("agent", router);
+    async function validate() {
+      const tokenRes = await decodeToken("agent", router);
 
     const fetchAgentProperty = async () => {
       try {
@@ -42,7 +42,8 @@ export default function BasicTable() {
     }
 
     tokenRes?.status && fetchAgentProperty();
-    tokenRes?.status && fetchAgentProperty();
+    }
+    validate();
   }, [])
 
   const deleteproperty = async (id) => {

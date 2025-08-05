@@ -16,25 +16,25 @@ function page() {
 
   const router = useRouter()
 
-
-
-
-
   useEffect(() => {
-    const tokenRes = decodeToken("user", router);
+    async function fetchProp() {
+      const tokenRes = await decodeToken("user", router);
 
-    const fetchProp = async () => {
-      try {
-        const response = await api.get(`/property/all`)
-        // console.log(response.data, "hello");
-        setprop(response.data.allprop)
-      } catch (error) {
-        toast.error('Error in fetch property')
-        console.log(error);
+      const fetchProp = async () => {
+        try {
+          const response = await api.get(`/property/all`)
+          // console.log(response.data, "hello");
+          setprop(response.data.allprop);
+          setLoading(false);
+        } catch (error) {
+          toast.error('Error in fetch property')
+          console.log(error);
+          setLoading(false)
+        }
       }
+      tokenRes?.status && fetchProp();
     }
-    tokenRes?.status && fetchProp();
-    tokenRes?.status && fetchProp();
+    fetchProp();
   }, [])
 
 
@@ -60,7 +60,7 @@ function page() {
 
   return (
     <>
-      <Box boxShadow={"0px 1px 10px 1px #d6d6d6"} padding={2} display={'flex'} justifyContent={'center'} flexDirection={'column'}>
+      {isLoading ? <LoadingComponent /> : <Box boxShadow={"0px 1px 10px 1px #d6d6d6"} padding={2} display={'flex'} justifyContent={'center'} flexDirection={'column'}>
 
         <Stack minWidth={'80%'} flexDirection={{ xs: "column", sm: "row" }} justifyContent={'center'} alignItems={'center'} gap={3}>
 
@@ -73,7 +73,7 @@ function page() {
               id="demo-simple-select-helper"
               value={type}
 
-              onChange={(e)=>settype(e.target.value)}
+              onChange={(e) => settype(e.target.value)}
             >
 
               <MenuItem disabled value={'Property type'}>Property type</MenuItem>
@@ -89,7 +89,7 @@ function page() {
         <Stack sx={{ mt: "3rem" }} padding={2}>
           <PropertyListingCard data={prop} title={'Buy Property listing'} />
         </Stack>
-      </Box>
+      </Box>}
     </>
 
   )

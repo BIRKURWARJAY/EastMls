@@ -15,6 +15,8 @@ import { useEffect } from 'react';
 import { api } from '@/utils/api';
 import { eastMlsStore } from "../store/eastMlsStore.js"
 import { InvalidTokenError, jwtDecode } from 'jwt-decode';
+import { refreshAccessToken } from '@/utils/refreshAccessToken.js';
+import { deleteCookie } from '@/utils/setCookie.js';
 
 
 function Header() {
@@ -22,38 +24,6 @@ function Header() {
   const router = useRouter();
   const isLoggedIn = eastMlsStore(s => s.isLoggedIn);
   const setIsLoggedIn = eastMlsStore(s => s.setIsLoggedIn);
-
-  useEffect(() => {
-    const setLogin = async() => {
-      if (typeof window !== "undefined") {
-        const token = localStorage.getItem("EastMls");
-
-        if (!token) {
-          console.log("No token found");
-          router.replace("/login");
-          setIsLoggedIn(false);
-          return
-        }
-
-        try {
-          const decoded = jwtDecode(token);
-
-          if (decoded instanceof InvalidTokenError) {
-            router.replace("/login");
-            setIsLoggedIn(false);
-          }
-          setIsLoggedIn(true);
-
-        } catch (error) {
-          console.log("Invalid token, redirecting to login");
-          router.replace("/login");
-          setIsLoggedIn(false);
-        }
-      }
-    }
-
-    setLogin();
-  }, [])
 
   const toggleDrawer = (open) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -68,7 +38,7 @@ function Header() {
       const res = await api.get("/auth");
       console.log("Logout response:", res.data);
       if (res.data.status === "success") {
-        localStorage.removeItem("EastMls");
+        deleteCookie("EastMlsToken", "/");
         setIsLoggedIn(false);
         router.push("/login");
       }

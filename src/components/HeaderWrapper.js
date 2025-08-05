@@ -16,10 +16,10 @@ export default function HeaderWrapper() {
 
   if (!mounted) return null 
 
-  const shouldHideNavbar =
-    HIDDEN_ROUTES.includes(pathname) || pathname.startsWith('/agent')
+  // const shouldHideNavbar =
+  //   HIDDEN_ROUTES.includes(pathname) || pathname.startsWith('/')
 
-  if (shouldHideNavbar) return null
+  // if (shouldHideNavbar) return null
 
   return <Header />
 }

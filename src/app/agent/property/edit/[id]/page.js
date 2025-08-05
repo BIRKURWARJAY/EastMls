@@ -53,7 +53,7 @@ export default function EditAgentProperty() {
   const propertyTypes = ['Apartment', 'House', 'Condo', 'Villa', 'Commercial'];
   const statusArr = ['Available', 'Pending', 'Sold', 'Rented'];
   const [isLoading, setLoading] = useState(true);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState({});
   const params = useParams();
 
   // Property features options
@@ -99,7 +99,8 @@ export default function EditAgentProperty() {
 
 
   useEffect(() => {
-    const tokenRes = decodeToken("agent", router);
+    async function validate() {
+      const tokenRes = decodeToken("agent", router);
     async function getData() {
       try {
         const res = await api.get(`/property/${params.id}`)
@@ -110,14 +111,16 @@ export default function EditAgentProperty() {
           setVideos(res.data.videos);
           setData(res.data.propertydetails)
           setLoading(false);
-          console.log(res.data.propertydetails)
         }
       } catch (error) {
         console.error(error);
-        setLoading(false);
+        router.replace("/agent/property");
       }
     }
     tokenRes?.status && getData();
+    }
+
+    validate();
   }, [])
 
   useEffect(() => {
@@ -155,22 +158,20 @@ export default function EditAgentProperty() {
 
   const formik = useFormik({
     enableReinitialize: true,
-    initialValues: data,
+    initialValues: {
+      ...data,
+      ...data.country,
+      ...data.location,
+      ...data.city
+    },
     validationSchema: YupValidation,
     onSubmit: async (values) => {
       console.log('Submitting form with values:', values)
       try {
-        console.log(values.images)
         const formData = {
           ...values,
-          yearOfBuild: Number(values.yearOfBuild),
-          cityCode: Number(values.cityCode),
-          countryCode: Number(values.countryCode),
-          landArea: Number(values.landArea),
-          price: Number(values.price),
-          bedrooms: Number(values.bedrooms),
-          bathrooms: Number(values.bathrooms),
-          areaSqFt: Number(values.areaSqFt),
+          garageSize: 9,
+          garage: 1,
           coordinates: ["23", "31"]
         };
 
@@ -260,7 +261,7 @@ export default function EditAgentProperty() {
                     <TextareaAutosize
                       placeholder="Enter the complete property address"
                       name='address'
-                      value={formik.values?.address}
+                      value={formik.values?.address || ""}
                       style={{
                         resize: 'vertical',
                         width: '100%',
@@ -286,7 +287,7 @@ export default function EditAgentProperty() {
                         type="number"
                         placeholder="e.g., 382382"
                         name='cityCode'
-                        value={formik.values?.cityCode}
+                        value={formik.values?.cityCode || ""}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         helperText={formik.touched.cityCode && formik.errors.cityCode && <ErrorText helperText={formik.errors.cityCode} />}
@@ -299,7 +300,7 @@ export default function EditAgentProperty() {
                       <TextField
                         placeholder="e.g., Ahmedabad"
                         name='cityName'
-                        value={formik.values?.cityName}
+                        value={formik.values?.cityName || ""}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         helperText={formik.touched.cityName && formik.errors.cityName && <ErrorText helperText={formik.errors.cityName} />}
@@ -312,7 +313,7 @@ export default function EditAgentProperty() {
                       <TextField
                         placeholder="e.g., Gujarat"
                         name='state'
-                        value={formik.values?.state}
+                        value={formik.values?.state || ""}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         helperText={formik.touched.state && formik.errors.state && <ErrorText helperText={formik.errors.state} />}
@@ -328,7 +329,7 @@ export default function EditAgentProperty() {
                         type="number"
                         placeholder="e.g., 98"
                         name='countryCode'
-                        value={formik.values?.countryCode}
+                        value={formik.values?.countryCode || ""}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         helperText={formik.touched.countryCode && formik.errors.countryCode && <ErrorText helperText={formik.errors.countryCode} />}
@@ -341,7 +342,7 @@ export default function EditAgentProperty() {
                       <TextField
                         placeholder="e.g., India"
                         name='countryName'
-                        value={formik.values?.countryName}
+                        value={formik.values?.countryName || ""}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         helperText={formik.touched.countryName && formik.errors.countryName && <ErrorText helperText={formik.errors.countryName} />}
@@ -354,7 +355,7 @@ export default function EditAgentProperty() {
                       <TextField
                         placeholder="e.g., 380001"
                         name='postalCode'
-                        value={formik.values?.postalCode}
+                        value={formik.values?.postalCode || ""}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         helperText={formik.touched.postalCode && formik.errors.postalCode && <ErrorText helperText={formik.errors.postalCode} />}
@@ -371,7 +372,7 @@ export default function EditAgentProperty() {
                     <Select
                       multiple
                       name='features'
-                      value={formik.values.features || []}
+                      value={formik.values?.features || []}
                       onChange={handleFeaturesChange}
                       onBlur={formik.handleBlur}
                       input={<OutlinedInput />}
@@ -399,7 +400,7 @@ export default function EditAgentProperty() {
                     <FormLabel>Lease Type</FormLabel>
                     <Select
                       name='leaseType'
-                      value={formik.values?.leaseType || " "}
+                      value={formik.values.leaseType || ""}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       error={formik.touched.leaseType && formik.errors.leaseType}
@@ -424,7 +425,7 @@ export default function EditAgentProperty() {
                       placeholder="e.g., 2020"
                       min={dayjs().subtract(50, 'year').year()}
                       max={dayjs().add(5, 'year').year()}
-                      value={formik.values?.yearOfBuild}
+                      value={formik.values?.yearOfBuild || ""}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       helperText={formik.touched.yearOfBuild && formik.errors.yearOfBuild && <ErrorText helperText={formik.errors.yearOfBuild} />}
@@ -439,7 +440,7 @@ export default function EditAgentProperty() {
                     placeholder="e.g., 1200"
                     type="number"
                     name='landArea'
-                    value={formik.values?.landArea}
+                    value={formik.values?.landArea || ""}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     helperText={formik.touched.landArea && formik.errors.landArea && <ErrorText helperText={formik.errors.landArea} />}
@@ -456,7 +457,7 @@ export default function EditAgentProperty() {
                       placeholder="e.g., 15000000"
                       name='price'
                       type='number'
-                      value={formik.values?.price}
+                      value={formik.values?.price || ""}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       helperText={formik.touched.price && formik.errors.price && <ErrorText helperText={formik.errors.price} />}
@@ -468,7 +469,7 @@ export default function EditAgentProperty() {
                     <FormLabel>Currency</FormLabel>
                     <Select
                       name="currency"
-                      value={formik.values?.currency}
+                      value={formik.values?.currency || ""}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       error={formik.touched.currency && formik.errors.currency}
@@ -495,7 +496,7 @@ export default function EditAgentProperty() {
                     <Switch
                       color='green'
                       name='isPriceNegotiable'
-                      value={formik.values?.isPriceNegotiable}
+                      value={formik.values?.isPriceNegotiable || ""}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                     />
@@ -508,7 +509,7 @@ export default function EditAgentProperty() {
                       <MeetingRoomIcon fontSize="small" /> Property Type
                     </FormLabel>
                     <Select
-                      value={formik.values?.propertyType || " "}
+                      value={formik.values?.propertyType || ""}
                       name='propertyType'
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
@@ -531,7 +532,7 @@ export default function EditAgentProperty() {
                       <AutoMode fontSize="small" /> Status
                     </FormLabel>
                     <Select
-                      value={formik.values?.status || " "}
+                      value={formik.values?.status || ""}
                       name='status'
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
@@ -556,7 +557,7 @@ export default function EditAgentProperty() {
                     <DatePicker
                       name="availableFrom"
                       minDate={dayjs()}
-                      value={formik.values?.availableFrom}
+                      value={dayjs(formik.values?.availableFrom || "")}
                       maxDate={dayjs().add(5, 'year')}
                       onChange={(date) => formik.setFieldValue('availableFrom', date)}
                       slotProps={{
@@ -581,7 +582,7 @@ export default function EditAgentProperty() {
                     <TextField
                       type="number"
                       placeholder="e.g., 3"
-                      value={formik.values?.bedrooms}
+                      value={formik.values?.bedrooms || ""}
                       name='bedrooms'
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
@@ -598,7 +599,7 @@ export default function EditAgentProperty() {
                       type="number"
                       placeholder="e.g., 2"
                       name='bathrooms'
-                      value={formik.values?.bathrooms}
+                      value={formik.values?.bathrooms || ""}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       helperText={formik.touched.bathrooms && formik.errors.bathrooms && <ErrorText helperText={formik.errors.bathrooms} />}
@@ -614,7 +615,7 @@ export default function EditAgentProperty() {
                       type="number"
                       placeholder="e.g., 1800"
                       name='areaSqFt'
-                      value={formik.values?.areaSqFt}
+                      value={formik.values?.areaSqFt || ""}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       helperText={formik.touched.areaSqFt && formik.errors.areaSqFt && <ErrorText helperText={formik.errors.areaSqFt} />}
@@ -628,7 +629,7 @@ export default function EditAgentProperty() {
                   <TextareaAutosize
                     placeholder="Describe the property features, neighborhood, amenities, etc."
                     name='propertyDescription'
-                    value={formik.values?.propertyDescription}
+                    value={formik.values?.propertyDescription || ""}
                     style={{
                       resize: 'vertical',
                       width: '100%',
@@ -722,7 +723,7 @@ export default function EditAgentProperty() {
                       <Stack direction={'row'} sx={{ wordWrap: "break-word", wordBreak: "break-all", maxWidth: "100%" }}>
                         <Typography key={image} variant='body1' component={"span"} sx={{
                           maxWidth: "80%", overflow: 'clip'
-                        }}>{image}
+                        }}>{image.slice(0, 20)}
                         </Typography>
                         <IconButton
                           disableFocusRipple
@@ -780,13 +781,13 @@ export default function EditAgentProperty() {
                           color: "rgb(255 138 0)",
                           fontWeight: 700,
                         }}>Choose Files</Button>
-                        {formik.values.videos.length === 0 && <Typography variant='body1' component={"span"} sx={{
+                        {formik.values.videos?.length === 0 && <Typography variant='body1' component={"span"} sx={{
                         }}>No File chosen</Typography>}
                       </Stack>
                     </Stack>
                   </Stack>
                   {
-                    formik.values?.videos.length > 0 && formik.values.videos.map((video, index) => (
+                    formik.values?.videos?.length > 0 && formik.values.videos?.map((video, index) => (
                       <Stack direction={'row'}>
                         <Typography key={video[0].lastModified} variant='body1' component={"span"} sx={{
                           maxWidth: "80%", overflow: 'clip'
