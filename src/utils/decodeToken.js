@@ -25,16 +25,6 @@ const decodeToken = (role, router) => {
         return;
       }
 
-      if (decoded.exp <= Date.now() / 1000) {
-        console.log("Token Expired");
-        toast.error('Token is expired')
-
-        setIsLoggedIn(false);
-        localStorage.removeItem("EastMls");
-        router.replace("/login");
-        return;
-      }
-
       if (decoded.role !== role) {
         console.log("not allowed");
         toast.error('You are not allowed')
