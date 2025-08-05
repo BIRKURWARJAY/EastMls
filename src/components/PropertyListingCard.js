@@ -21,7 +21,7 @@ function PropertyListingCard({ data, title }) {
                     <Link href={`/property/${prop?.title?.replaceAll(' ','_')}/${prop._id}`} key={index} className=' w-xl'>
                         <Card  variant='outlined' sx={{  position: "relative" }}  >
 
-                            <Button sx={{ position: "absolute", left: "0.5rem", top: "0.5rem", bgcolor: "orange", color: "white", fontSize: "8px", fontWeight: "600", width: "1px", padding: "5px" }} >For sale</Button>
+                            <Button sx={{ position: "absolute", left: "0.5rem", top: "0.5rem", bgcolor: "orange", color: "white", fontSize: "8px", fontWeight: "600", width: "1px", padding: "5px" }} >For {prop?.leaseType}</Button>
 
                             <CardMedia
                                 sx={{ borderRadius: "5px", height: "16rem" }}

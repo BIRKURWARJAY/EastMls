@@ -1,25 +1,47 @@
 'use client'
-import { Box, Stack, Typography } from '@mui/material'
+import { Box, Stack, Typography } from '@mui/material';
 import PhoneCallbackIcon from '@mui/icons-material/PhoneCallback';
 import DraftsOutlinedIcon from '@mui/icons-material/DraftsOutlined';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
-import Image from 'next/image'
-import React from 'react'
 import FacebookIcon from '@mui/icons-material/Facebook';
 import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
 
 function AgentCard({ temp }) {
+    const router = useRouter();
+    const [detail, setdetail] = useState([]);
 
-    const router = useRouter()
-
+    useEffect(() => {
+        if (!temp) return;
+        setdetail(Array.isArray(temp) ? temp : [temp]);
+    }, [temp]);
 
     return (
-        <div className=' w-[100%] '>
-
-            {temp && temp?.map((data, index) => (
-
-                <Stack onClick={() => router.push(`/agents/${data.id}`)} key={index} sx={{ cursor: "pointer", width: "100%" }} display={'flex'} alignItems={'center'} flexWrap={'wrap'} gap={3} mb={4} flexDirection={'row'} p={2} boxShadow={'0px 0px 10px 0px #dbdbdb'} borderRadius={5} width={'65%'}>
-
+        <div className='w-full'>
+            {detail.map((data) => (
+                <Stack
+                    key={data._id}
+                    onClick={() => router.push(`/agents/${data._id}`)}
+                    sx={{
+                        cursor: "pointer",
+                        width: "100%",
+                        transition: "transform 0.2s",
+                        '&:hover': {
+                            transform: 'scale(1.02)',
+                            boxShadow: '0px 0px 15px 0px #c3c3c3'
+                        }
+                    }}
+                    display='flex'
+                    alignItems='center'
+                    flexWrap='wrap'
+                    gap={3}
+                    mb={4}
+                    flexDirection='row'
+                    p={2}
+                    boxShadow='0px 0px 10px 0px #dbdbdb'
+                    borderRadius={5}
+                    width='65%'
+                >
                     <img
                         style={{
                             height: "15rem",
@@ -27,36 +49,35 @@ function AgentCard({ temp }) {
                             objectFit: "cover",
                             borderRadius: "10px"
                         }}
-                        src={data.profileImage}
-                        alt="Profile"
+                        src={data.profileImage || '/default-profile.jpg'}
+                        alt={`${data.username}'s Profile Picture`}
                     />
 
-                    <Box display={'flex'} flexDirection={'column'} justifyContent={'start'} alignItems={'stretch'} gap={0.5}>
+                    <Box display='flex' flexDirection='column' justifyContent='start' alignItems='stretch' gap={0.5}>
                         <Typography variant='h5' fontWeight={700}>{data.username}</Typography>
                         <Typography variant='body1'>{data.role}</Typography>
 
-                        <Box display={'flex'} gap={1} mt={3}>
+                        <Box display='flex' gap={1} mt={3}>
                             <PhoneCallbackIcon />
-                            <Typography >{data.number}</Typography>
+                            <Typography>{data.number}</Typography>
                         </Box>
-                        <Box display={'flex'} gap={1}>
+                        <Box display='flex' gap={1}>
                             <DraftsOutlinedIcon />
-                            <Typography >{data.email}</Typography>
+                            <Typography>{data.email}</Typography>
                         </Box>
-                        <Box display={'flex'} gap={1}>
+                        <Box display='flex' gap={1}>
                             <HomeOutlinedIcon />
-                            <Typography >{data.property}</Typography>
+                            <Typography>{data.property || "No Properties Listed"}</Typography>
                         </Box>
 
-                        <Box borderTop={'1px solid #dbdbdb'}>
+                        <Box borderTop='1px solid #dbdbdb'>
                             <FacebookIcon fontSize='large' sx={{ color: "gray", mt: "1rem" }} />
                         </Box>
-
                     </Box>
                 </Stack>
             ))}
         </div>
-    )
+    );
 }
 
-export default AgentCard
+export default AgentCard;

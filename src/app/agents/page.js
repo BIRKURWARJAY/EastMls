@@ -16,7 +16,9 @@ import React, { useEffect, useState } from 'react';
 import decodeToken from '@/utils/decodeToken';
 import { useRouter } from 'next/navigation';
 import LoadingComponent from '@/components/loading';
+import toast from 'react-hot-toast';
 
+let timeId = null
 
 function Page() {
   const router = useRouter();
@@ -40,7 +42,7 @@ function Page() {
         setLoading(false);
       }
     }
-    tokenRes && fetchagent()
+    tokenRes?.status && fetchagent()
   }, [])
 
 
@@ -52,6 +54,29 @@ function Page() {
       Agents
     </Typography>,
   ];
+
+  const searchAgent = (keyword) => {
+
+    if (timeId) {
+      clearTimeout(timeId)
+    }
+    
+    const timeout = setTimeout(async () => {
+      // console.log("called");
+      try {
+        const response = await api.get(`/agent/search?username=${keyword}`)
+        console.log(response);
+        setdata(response.data.agentdetails)
+      } catch (error) {
+        setdata([])
+        toast.error(error.response.data.message)
+        console.log('error', error);
+
+      }
+    }, 1000);
+
+    timeId = timeout
+  }
 
   return (
     <>
@@ -88,6 +113,7 @@ function Page() {
               placeholder="Agent name"
               sx={{ bgcolor: 'white' }}
               fullWidth
+              onChange={(e) => searchAgent(e.target.value)}
             />
 
             <FormControl fullWidth>

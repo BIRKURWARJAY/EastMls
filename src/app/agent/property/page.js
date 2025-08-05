@@ -25,8 +25,15 @@ export default function BasicTable() {
       setprop(response.data.allprop)
 
     }
+
     getprop()
   }, [])
+
+  const deleteproperty = async (id) => {
+    const response = await axios.delete(`http://localhost:5000/api/property/${id}`, { withCredentials: true })
+    console.log(response.data);
+
+  }
 
   return (
     <>
@@ -46,8 +53,8 @@ export default function BasicTable() {
             {prop?.map((row, index) => (
               <TableRow
                 key={index}
-                // sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-               
+              // sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+
               >
                 <TableCell component="th" scope="row">
                   {row.title}
@@ -58,13 +65,13 @@ export default function BasicTable() {
                 <TableCell align="right">{row.status}</TableCell>
                 <TableCell align="right">
                   <IconButton aria-label="fingerprint" color="success">
-                    <RemoveRedEyeOutlined  sx={{color:"orange"}} />
+                    <RemoveRedEyeOutlined sx={{ color: "orange" }} />
                   </IconButton>
-                  <IconButton aria-label="fingerprint" color="success">
-                    <EditCalendarOutlined  sx={{color:"orange"}} />
+                  <IconButton aria-label="fingerprint" color="success" onClick={()=>''}>
+                    <EditCalendarOutlined sx={{ color: "orange" }} />
                   </IconButton>
-                  <IconButton aria-label="fingerprint" color="success">
-                    <DeleteOutlineOutlined  sx={{color:"red"}} />
+                  <IconButton aria-label="fingerprint" color="success" onClick={()=>deleteproperty(row._id)}>
+                    <DeleteOutlineOutlined sx={{ color: "red" }} />
                   </IconButton>
                 </TableCell>
               </TableRow>

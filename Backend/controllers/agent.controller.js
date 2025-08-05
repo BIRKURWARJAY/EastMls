@@ -4,7 +4,7 @@ import { tryCatchWrapper } from "../utils/transactions.js";
 
 
 
-export function getAllAgents(){
+export function getAllAgents() {
   return tryCatchWrapper(async (req, res, next) => {
     const agents = await userModel.find({
       role: "agent",
@@ -45,7 +45,7 @@ export function updateAgent() {
 export function getAgent() {
   return tryCatchWrapper(async (req, res, next) => {
     const { id } = req.params;
-    
+
     const agent = await userModel.findById(id).select("-refreshToken -password");
     if (!agent) return next(PostError("There is no Agent found", 404));
 
@@ -57,6 +57,46 @@ export function getAgent() {
   })
 }
 
-export function searchAgent (){
-  
+export async function searchAgent(req, res) {
+  try {
+
+    // console.log("agent details", req.query)
+    let { username } = req.query;
+    console.log(username);
+
+
+    const matchStage = {
+      role: "agent", 
+    };
+
+    if (username && username.trim() !== '') {
+      matchStage.username = {
+        $regex: username.trim(),
+        $options: "i"
+      };
+    }
+
+    const pipeline = [{ $match: matchStage }];
+
+    const agentdetails = await userModel.aggregate(pipeline);
+
+    if (!agentdetails.length) {
+      return res.status(300).json({
+        message: "No agent found",
+        agentdetails: []
+      });
+    }
+
+    res.status(200).json({
+      message: "agent fetched successfully",
+      agentdetails
+    });
+
+  } catch (error) {
+    console.error("Search agent Error:", error);
+    res.status(500).json({
+      message: "Error fetching agent",
+      error: error.message,
+    });
+  }
 }

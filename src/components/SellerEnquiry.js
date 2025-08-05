@@ -2,6 +2,7 @@
 import { api } from '@/utils/api';
 import { Box, Button, Stack, TextareaAutosize, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
+import toast from 'react-hot-toast';
 
 function SellerEnquiry({ data }) {
     const defaultInquiry = {
@@ -19,7 +20,7 @@ function SellerEnquiry({ data }) {
 
     const handleInquiry = async () => {
         if (!inquiry.name || !inquiry.phone || !inquiry.email || !inquiry.message) {
-            alert("Please fill all fields");
+            toast.error('All field required')
             return;
         }
 
@@ -27,7 +28,11 @@ function SellerEnquiry({ data }) {
             const response = await api.post('/inquiry', inquiry);
             console.log(response);
             setinqury(prev => ({ ...prev, name: '', phone: '', email: '', message: '' }));
+            if (response.status === 200) {
+                toast.success(response.data.message)
+            }
         } catch (error) {
+            toast.error(error.response.data.message)
             console.error("Error sending inquiry:", error);
         }
     };

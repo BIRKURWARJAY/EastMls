@@ -30,7 +30,7 @@ function page() {
         setLoading(false);
       }
     }
-    tokenRes && getinq();
+    tokenRes?.status && getinq();
   }, []);
 
   if (isLoading) {

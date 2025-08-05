@@ -51,7 +51,7 @@ export default function CreateAgentProperty() {
 
   useEffect(() => {
     const tokenRes = decodeToken("agent", router);
-    tokenRes && setLoading(false);
+    tokenRes?.status && setLoading(false);
 }, [])
 
   useEffect(() => {

@@ -7,6 +7,7 @@ import axios from 'axios'
 import decodeToken from '@/utils/decodeToken'
 import { useRouter } from 'next/navigation'
 import LoadingComponent from '@/components/loading'
+import toast from 'react-hot-toast'
 
 function page() {
   const [type, settype] = useState('')
@@ -15,20 +16,22 @@ function page() {
 
   const router = useRouter()
 
-  
-  
+
+
   useEffect(() => {
-    const tok = decodeToken("user");
-    if (tok.role === 'user') {
-      console.log("from code",tok.role);
-      router.push('/')
-    }
+    const tokenRes = decodeToken("user", router);
+
     const fetchProp = async () => {
-      const response = await api.get(`/property/all`)
-      console.log(response.data, "hello");
-      setprop(response.data.allprop)
+      try {
+        const response = await api.get(`/property/all`)
+        // console.log(response.data, "hello");
+        setprop(response.data.allprop)
+      } catch (error) {
+        toast.error('Error in fetch property')
+        console.log(error);
+      }
     }
-    tokenRes && fetchProp();
+    tokenRes?.status && fetchProp();
   }, [])
 
   const changeHandler = (e) => {
@@ -43,7 +46,13 @@ function page() {
       const response = await api.get(`/property/search?propertyType=${type}&title=${keyword}`);
       console.log(response.data.propertydetails);
       setprop(response.data.propertydetails);
+      if (response.status === 200) {
+        toast.success(response.data.message)
+      }
+
     } catch (error) {
+      setprop([])
+      toast.error(error.response.data.message)
       console.error('Search error:', error);
     }
   }
@@ -69,6 +78,7 @@ function page() {
             >
 
               <MenuItem disabled value={'Property type'}>Property type</MenuItem>
+              <MenuItem value={''}>None</MenuItem>
               <MenuItem value={'flat'}>flat</MenuItem>
               <MenuItem value={'villa'}>villa</MenuItem>
               <MenuItem value={'house'}>house</MenuItem>

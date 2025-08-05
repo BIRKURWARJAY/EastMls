@@ -14,7 +14,6 @@ import Overview from '@/components/Overview';
 import Propertydetails from '@/components/Propertydetails';
 import SellerEnquiry from '@/components/SellerEnquiry';
 import { api } from '@/utils/api';
-import useEastmlsStore from '@/store/eastmlsStore';
 import decodeToken from '@/utils/decodeToken';
 import LoadingComponent from '@/components/loading';
 
@@ -45,7 +44,7 @@ function page() {
 
 
   useEffect(() => {
-        const tokenRes = decodeToken("user", router);
+    const tokenRes = decodeToken("user", router);
 
     const fetchprop = async () => {
       try {
@@ -58,7 +57,7 @@ function page() {
         setLoading(false);
       }
     }
-    tokenRes && fetchprop()
+    tokenRes?.status && fetchprop()
   }, [])
 
   return (
@@ -91,7 +90,7 @@ function page() {
 
         </Stack>
 
-        <Stack display={'flex'} justifyContent={'space-evenly'} flexDirection={'row'} gap={3} mt={3} flexWrap={{xs:"wrap", xl:"nowrap"}}>
+        <Stack display={'flex'} justifyContent={'space-evenly'} flexDirection={'row'} gap={3} mt={3} flexWrap={{ xs: "wrap", xl: "nowrap" }}>
           <Box display={'flex'} flexDirection={'column'} gap={3} mb={3}>
             <img width={'100%'} style={{ borderRadius: "0.5rem" }} src={prop?.images[0]} alt="" />
 
