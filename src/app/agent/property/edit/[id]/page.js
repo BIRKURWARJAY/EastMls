@@ -43,6 +43,7 @@ import decodeToken from '@/utils/decodeToken';
 import { useParams, useRouter } from 'next/navigation';
 import LoadingComponent from '@/components/loading';
 import { api } from '@/utils/api';
+import Link from 'next/link';
 
 export default function EditAgentProperty() {
   const router = useRouter();
@@ -96,15 +97,17 @@ export default function EditAgentProperty() {
   // Currency options
   const currencyOptions = ['USD', "EURO", 'POUND', 'RUPEES', 'YEMEN', 'ND', 'KSh'];
 
-  
+
   useEffect(() => {
     const tokenRes = decodeToken("agent", router);
     async function getData() {
       try {
         const res = await api.get(`/property/${params.id}`)
-  
+
         if (res.status === 200) {
           console.log(res.data.propertydetails.images);
+          setImages(res.data.images);
+          setVideos(res.data.videos);
           setData(res.data.propertydetails)
           setLoading(false);
           console.log(res.data.propertydetails)
@@ -152,17 +155,16 @@ export default function EditAgentProperty() {
   })
 
   const formik = useFormik({
-    enableReinitialize: true, 
+    enableReinitialize: true,
     initialValues: data,
     validationSchema: YupValidation,
     onSubmit: async (values) => {
       console.log('Submitting form with values:', values)
       try {
-        // Convert date objects to ISO strings and ensure numbers are properly typed
+        console.log(values.images)
         const formData = {
           ...values,
           yearOfBuild: Number(values.yearOfBuild),
-          availableFrom: values.availableFrom.toISOString(),
           cityCode: Number(values.cityCode),
           countryCode: Number(values.countryCode),
           landArea: Number(values.landArea),
@@ -170,13 +172,12 @@ export default function EditAgentProperty() {
           bedrooms: Number(values.bedrooms),
           bathrooms: Number(values.bathrooms),
           areaSqFt: Number(values.areaSqFt),
-          images: [...images.map(file => file[0].name)],
-          coordinates: ["23","31"]
+          coordinates: ["23", "31"]
         };
-        
+
         console.log('Sending to API:', formData);
-        const res = await api.post("/property", formData);
-        if (res.status === 200) {
+        const res = await api.put(`/property/${params.id}`, formData);
+        if (res.status === 201) {
           console.log(res.data.message);
           router.push("/agent/property");
         }
@@ -215,7 +216,7 @@ export default function EditAgentProperty() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       {
-        isLoading ? <LoadingComponent /> : <Grid container spacing={4} sx={{
+        isLoading && data ? <LoadingComponent /> : <Grid container spacing={4} sx={{
           bgcolor: "#abb0b445",
           padding: 2,
           justifyContent: 'space-between'
@@ -227,9 +228,11 @@ export default function EditAgentProperty() {
             gap: 3
           }}>
             <Stack direction="row" alignItems="center" spacing={1}>
-              <IconButton sx={{ paddingLeft: 0 }}>
-                <KeyboardBackspaceIcon />
-              </IconButton>
+              <Link href={"/agent/property"}>
+                <IconButton sx={{ paddingLeft: 0 }}>
+                  <KeyboardBackspaceIcon />
+                </IconButton>
+              </Link>
               <Typography variant="h5">Create Property Listing</Typography>
             </Stack>
 
@@ -241,7 +244,7 @@ export default function EditAgentProperty() {
                   <TextField
                     placeholder="e.g., Beautiful 3-Bedroom Apartment in City Center"
                     name='title'
-                    value={formik.values?.title}
+                    value={formik.values?.title || ""}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     helperText={formik.touched.title && formik.errors.title && <ErrorText helperText={formik.errors.title} />}
@@ -252,7 +255,7 @@ export default function EditAgentProperty() {
                 {/* Location Details */}
                 <Stack spacing={2}>
                   <Typography variant="h6">Location Details</Typography>
-                  
+
                   <Stack spacing={.3}>
                     <FormLabel>Address</FormLabel>
                     <TextareaAutosize
@@ -276,7 +279,7 @@ export default function EditAgentProperty() {
                     />
                     {formik.touched.address && formik.errors.address && <ErrorText helperText={formik.errors.address} />}
                   </Stack>
-                  
+
                   <Stack direction="row" spacing={3}>
                     <Stack flex={1} spacing={.3}>
                       <FormLabel>City Code</FormLabel>
@@ -465,18 +468,21 @@ export default function EditAgentProperty() {
                   <Stack flex={1} spacing={.3}>
                     <FormLabel>Currency</FormLabel>
                     <Select
-                      name='currency'
-                      value={formik.values?.currency}
+                      name="currency"
+                      value={formik.values?.currency || ""}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       error={formik.touched.currency && formik.errors.currency}
                     >
-                      <MenuItem value=" " disabled>Currency</MenuItem>
-                      {currencyOptions.map((currency) => (
-                        <MenuItem key={currency} value={currency}>
-                          {currency}
-                        </MenuItem>
-                      ))}
+                      {currencyOptions?.length > 0 ? (
+                        currencyOptions.map((currency) => (
+                          <MenuItem key={currency} value={currency}>
+                            {currency}
+                          </MenuItem>
+                        ))
+                      ) : (
+                        <MenuItem value="" disabled>Loading currencies...</MenuItem>
+                      )}
                     </Select>
                     {formik.touched.currency && formik.errors.currency && <ErrorText helperText={formik.errors.currency} />}
                   </Stack>
@@ -549,7 +555,7 @@ export default function EditAgentProperty() {
                       <CalendarMonth fontSize="small" /> Available From
                     </FormLabel>
                     <DatePicker
-                      name='availableFrom'
+                      name="availableFrom"
                       minDate={dayjs()}
                       value={formik.values?.availableFrom}
                       maxDate={dayjs().add(5, 'year')}
@@ -563,6 +569,8 @@ export default function EditAgentProperty() {
                       }}
                       component={(props) => <TextField {...props} />}
                     />
+
+
                   </Stack>
                 </Stack>
 
@@ -650,7 +658,7 @@ export default function EditAgentProperty() {
                     fontWeight: 600,
                     boxShadow: '5px 5px 10px gray',
                     '&:hover': { boxShadow: "2px 2px 5px gray" }
-                  }}>Create property</Button>
+                  }}>Edit property</Button>
                 </Stack>
               </Stack>
             </form>
@@ -712,7 +720,7 @@ export default function EditAgentProperty() {
                   </Stack>
                   {
                     formik.values?.images?.length > 0 && formik.values?.images?.map((image, index) => (
-                      <Stack direction={'row'} sx={{wordWrap: "break-word", wordBreak: "break-all", maxWidth: "100%"}}>
+                      <Stack direction={'row'} sx={{ wordWrap: "break-word", wordBreak: "break-all", maxWidth: "100%" }}>
                         <Typography key={image} variant='body1' component={"span"} sx={{
                           maxWidth: "80%", overflow: 'clip'
                         }}>{image}
@@ -773,13 +781,13 @@ export default function EditAgentProperty() {
                           color: "rgb(255 138 0)",
                           fontWeight: 700,
                         }}>Choose Files</Button>
-                        {formik.values.videos.length === 0 && <Typography variant='body1' component={"span"} sx={{
+                        {formik.values?.videos?.length === 0 && <Typography variant='body1' component={"span"} sx={{
                         }}>No File chosen</Typography>}
                       </Stack>
                     </Stack>
                   </Stack>
                   {
-                    formik.values?.videos.length > 0 && formik.values.videos.map((video, index) => (
+                    formik.values?.videos?.length > 0 && formik.values?.videos?.map((video, index) => (
                       <Stack direction={'row'}>
                         <Typography key={video[0].lastModified} variant='body1' component={"span"} sx={{
                           maxWidth: "80%", overflow: 'clip'
