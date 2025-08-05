@@ -109,6 +109,7 @@ const updateproperty = async (req, res) => {
     try {
         const { id } = req.params
       console.log(id)
+      
       const propertydetails = await Property.findById(id)
       console.log(propertydetails)
       if (!propertydetails) {

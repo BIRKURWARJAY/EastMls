@@ -105,7 +105,7 @@ export default function EditAgentProperty() {
         const res = await api.get(`/property/${params.id}`)
 
         if (res.status === 200) {
-          console.log(res.data.propertydetails.images);
+          console.log(res.data.propertydetails);
           setImages(res.data.images);
           setVideos(res.data.videos);
           setData(res.data.propertydetails)
@@ -141,7 +141,6 @@ export default function EditAgentProperty() {
     areaSqFt: Yup.number('area must be in number').min(1).required('area is required'),
     propertyDescription: Yup.string('description must be in string').trim().required('description is required'),
     images: Yup.array().min(1).required('images is required'),
-    // New field validations
     address: Yup.string('address must be a string').trim().required('address is required'),
     cityCode: Yup.number('cityCode must be a number').required('cityCode is required'),
     cityName: Yup.string('cityName must be a string').trim().required('cityName is required'),
@@ -216,7 +215,7 @@ export default function EditAgentProperty() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       {
-        isLoading && data ? <LoadingComponent /> : <Grid container spacing={4} sx={{
+        (isLoading && !data) ? <LoadingComponent /> : <Grid container spacing={4} sx={{
           bgcolor: "#abb0b445",
           padding: 2,
           justifyContent: 'space-between'
@@ -469,7 +468,7 @@ export default function EditAgentProperty() {
                     <FormLabel>Currency</FormLabel>
                     <Select
                       name="currency"
-                      value={formik.values?.currency || ""}
+                      value={formik.values?.currency}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       error={formik.touched.currency && formik.errors.currency}

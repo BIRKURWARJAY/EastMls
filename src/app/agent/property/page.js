@@ -39,16 +39,13 @@ export default function BasicTable() {
       }
     }
 
-    getprop()
+    tokenRes?.status && fetchAgentProperty();
   }, [])
 
   const deleteproperty = async (id) => {
-    const response = await axios.delete(`http://localhost:5000/api/property/${id}`, { withCredentials: true })
+    const response = await api.delete(`/property/${id}`)
     console.log(response.data);
-
   }
-    tokenRes?.status && fetchAgentProperty();
-  }, []);
 
 
   return (
@@ -86,10 +83,11 @@ export default function BasicTable() {
                     <RemoveRedEyeOutlined sx={{ color: "orange" }} />
                   </IconButton>
                   <Link href={`/agent/property/edit/${row._id}`}>
-                  <IconButton aria-label="fingerprint" color="success">
-                    <EditCalendarOutlined sx={{ color: "orange" }} />
-                  </IconButton>
-                  <IconButton aria-label="fingerprint" color="success" onClick={()=>deleteproperty(row._id)}>
+                    <IconButton aria-label="fingerprint" color="success">
+                      <EditCalendarOutlined sx={{ color: "orange" }} />
+                    </IconButton>
+                  </Link>
+                  <IconButton aria-label="fingerprint" color="success" onClick={() => deleteproperty(row._id)}>
                     <DeleteOutlineOutlined sx={{ color: "red" }} />
                   </IconButton>
                 </TableCell>
@@ -98,6 +96,7 @@ export default function BasicTable() {
           </TableBody>
         </Table>
       </TableContainer>
+      }
     </>
   );
 }
