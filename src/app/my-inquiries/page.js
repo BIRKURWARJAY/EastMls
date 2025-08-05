@@ -64,7 +64,7 @@ function page() {
                     <TableCell component="th" scope="row">
                       {row.name}
                     </TableCell>
-                    <TableCell align="left">{row.propertyId.title}</TableCell>
+                    <TableCell align="left">{row.propertyId?.title}</TableCell>
                     <TableCell align="left">{row.message}</TableCell>
                     <TableCell align="left">{row.status}</TableCell>
                   </TableRow>

@@ -10,7 +10,7 @@ propertyRouter.get('/all', allproperties)
 propertyRouter.post("/", authenticateUser, addProperty)
 propertyRouter.get("/search", searchproperty)
 propertyRouter.get('/:id', getproperty);
-propertyRouter.put('/:id', updateproperty);
+propertyRouter.put('/:id',authenticateUser, updateproperty);
 propertyRouter.delete('/:id', deleteproperty);
 
 

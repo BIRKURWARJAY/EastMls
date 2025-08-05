@@ -3,8 +3,7 @@ import City from "../models/city.model.js";
 import Country from "../models/country.model.js";
 import { propertyValidator } from "../validators/property.validator.js";
 import Property from "../models/property.model.js";
-import userModel from "../models/user.model.js";
-import mongoose from "mongoose";
+
 
 const addProperty = async (req, res) => {
     try {
@@ -45,8 +44,8 @@ const addProperty = async (req, res) => {
           postalCode: data.postalCode,
           bathrooms: data.bathrooms,
           bedrooms: data.bedrooms,
-          garage: data.garage,
-          garageSize: data.garageSize,
+          garage: data?.garage,
+          garageSize: data?.garageSize,
           currency: data.currency,
           leaseType: data.leaseType,
           isPriceNegotiable: data.isPriceNegotiable,
@@ -109,25 +108,30 @@ const getproperty = async (req, res) => {
 const updateproperty = async (req, res) => {
     try {
         const { id } = req.params
-        console.log(id);
-
-        const propertydetails = await Property.findById(id)
+      console.log(id)
+      
+      const propertydetails = await Property.findById(id)
+      console.log(propertydetails)
+      if (!propertydetails) {
+        return res.status(404).json({
+          message: "Property not found"
+        })
+      }
         const data = req.body
         await propertyValidator.validate(data)
-        console.log(data);
 
 
-        const location = await Location.findByIdAndUpdate(data.location_id, {
-            type: data.type,
+        const location = await Location.findByIdAndUpdate(propertydetails.location, {
+            type: data?.type,
             coordinates: data.coordinates,
         })
-        const city = await City.findByIdAndUpdate(data.city_id, {
+        const city = await City.findByIdAndUpdate(propertydetails.city, {
             cityCode: data.cityCode,
             country: data.country,
             cityName: data.cityName,
             state: data.state,
         })
-        const country = await Country.findByIdAndUpdate(data.country_id, {
+        const country = await Country.findByIdAndUpdate(propertydetails.country, {
             countryCode: data.countryCode,
             currency: data.currency,
             countryName: data.countryName,
@@ -135,10 +139,7 @@ const updateproperty = async (req, res) => {
         })
 
         const newProperty = await Property.findByIdAndUpdate(id, {
-            agentId: data.agentId,
-            location: location._id,
-            city: city._id,
-            country: country._id,
+            agentId: req.user.id,
             title: data.title,
             address: data.address,
             propertyDescription: data.propertyDescription,
@@ -152,15 +153,15 @@ const updateproperty = async (req, res) => {
             postalCode: data.postalCode,
             bathrooms: data.bathrooms,
             bedrooms: data.bedrooms,
-            garage: data.garage,
-            garageSize: data.garageSize,
+            garage: data?.garage,
+            garageSize: data?.garageSize,
             currency: data.currency,
             leaseType: data.leaseType,
             verification: data.verification,
             viewCount: data.viewCount,
             isPriceNegotiable: data.isPriceNegotiable,
             availableFrom: data.availableFrom,
-            featured: data.featured,
+            featured: data.features.length > 0,
             features: data.features,
         }, { new: true })
         return res.status(201).json({

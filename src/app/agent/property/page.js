@@ -42,10 +42,11 @@ export default function BasicTable() {
     }
 
     tokenRes?.status && fetchAgentProperty();
+    tokenRes?.status && fetchAgentProperty();
   }, [])
 
   const deleteproperty = async (id) => {
-    const response = await axios.delete(`http://localhost:5000/api/property/${id}`, { withCredentials: true })
+    const response = await api.delete(`/property/${id}`)
     console.log(response.data);
     if (response.status === 200) {
       toast.success(response.data.message)

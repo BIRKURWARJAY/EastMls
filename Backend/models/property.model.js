@@ -82,6 +82,14 @@ const propertySchema = new mongoose.Schema({
     required: true,
     default: "sell"
   },
+  garage: {
+    type: Number,
+    default: 0
+  },
+  garageSize: {
+    type: Number,
+    default: 0
+  },
   isPriceNegotiable: {
     type: Boolean,
     default: false

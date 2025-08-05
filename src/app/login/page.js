@@ -38,6 +38,7 @@ export default function Login() {
           password: values.password,
           role: toggleButton
         });
+        console.log(res)
         if (res.status === 200) {
           toast.success(`Welcome ${res.data.existedUser.username}`)
           if (res.data.existedUser.role === 'user') {
@@ -49,7 +50,7 @@ export default function Login() {
           localStorage.setItem("EastMls", JSON.stringify(res.data.token));
         };
       } catch (error) {
-        toast.error(error.response.data.message);
+        toast.error(error.response?.data?.message);
 
         console.error(error);
       }

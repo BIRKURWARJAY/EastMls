@@ -22,11 +22,28 @@ api.interceptors.request.use(
 
 api.interceptors.response.use(
   res => {
-    if (res.status === 401) {
-      localStorage.removeItem("EastMls");
-      window.location.href = "/login";
-      return;
-    }
+    console.log(res)
     return res;
+  },
+
+  async error => {
+    console.log(error)
+    // if (error.response === 401) {
+    //   try {
+    //     const res = await api.get("/auth/refresh-token");
+    //     if (res.status === 200) {
+    //       console.log("Token refreshed");
+    //       localStorage.setItem("EastMls", res.data.token);
+    //       return;
+    //     }
+    //     if (res.status === 420) {
+    //       window.location.href = "/login"
+    //     }
+    //   } catch (error) {
+    //     console.error("Error refreshing token", error);
+    //     return error;
+    //   }
+    // }
+    return error
   }
 )

@@ -13,7 +13,7 @@ import { Button, List, ListItem, ListItemText } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { api } from '@/utils/api';
-import {eastMlsStore} from "../store/eastMlsStore.js"
+import { eastMlsStore } from "../store/eastMlsStore.js"
 import { InvalidTokenError, jwtDecode } from 'jwt-decode';
 
 
@@ -24,29 +24,35 @@ function Header() {
   const setIsLoggedIn = eastMlsStore(s => s.setIsLoggedIn);
 
   useEffect(() => {
-    if(typeof window !== "undefined"){
-      const token = localStorage.getItem("EastMls");
-      
-      if (!token) {
-        console.log("No token found, redirecting to login");
-        router.replace("/login");
-        return;
-      }
+    const setLogin = async() => {
+      if (typeof window !== "undefined") {
+        const token = localStorage.getItem("EastMls");
 
-      try {
-        const decoded = jwtDecode(token);
-
-        if (decoded instanceof InvalidTokenError || decoded.exp <= Date.now() / 1000) {
-          console.log("Token is expired please login");
+        if (!token) {
+          console.log("No token found");
           router.replace("/login");
-          return;
+          setIsLoggedIn(false);
+          return
         }
-        setIsLoggedIn(true)
-      } catch (error) {
-        console.log("Invalid token, redirecting to login");
-        router.replace("/login");
+
+        try {
+          const decoded = jwtDecode(token);
+
+          if (decoded instanceof InvalidTokenError) {
+            router.replace("/login");
+            setIsLoggedIn(false);
+          }
+          setIsLoggedIn(true);
+
+        } catch (error) {
+          console.log("Invalid token, redirecting to login");
+          router.replace("/login");
+          setIsLoggedIn(false);
+        }
       }
     }
+
+    setLogin();
   }, [])
 
   const toggleDrawer = (open) => (event) => {
@@ -67,7 +73,7 @@ function Header() {
         router.push("/login");
       }
     } catch (error) {
-      console.error("Error logging out...",error);
+      console.error("Error logging out...", error);
     }
   };
 
@@ -80,7 +86,7 @@ function Header() {
   ];
 
   return (
-    <AppBar position="sticky" sx={{ bgcolor: 'white', color: 'black', width: "100%", position: "relative", boxShadow:"0px 0px 10px #dbdbdb !important" }}>
+    <AppBar position="sticky" sx={{ bgcolor: 'white', color: 'black', width: "100%", position: "relative", boxShadow: "0px 0px 10px #dbdbdb !important" }}>
       <Container sx={{ width: "100%", height: "12vh", display: "flex", zIndex: "500", minHeight: "5rem", justifyContent: "space-between", alignItems: "center" }}>
         <Toolbar sx={{ justifyContent: 'space-between', width: "100%" }}>
 
@@ -93,7 +99,7 @@ function Header() {
           <Image src="/eastmls/logo.webp" alt="Logo" width={80} height={80} />
 
           <Box sx={{ flexGrow: 1, display: { xs: 'none', lg: 'flex' }, justifyContent: 'center', maxWidth: "80%", alignItems: "center", justifySelf: "center" }}>
-            <Stack direction={"row"}  justifyContent={'center'} display={'flex'}>
+            <Stack direction={"row"} justifyContent={'center'} display={'flex'}>
               {links.map(link => (
                 <Link key={link.href} href={link.href} style={{ color: 'black', textDecoration: "none" }}>
                   <ListItem sx={{ color: 'black' }}>
