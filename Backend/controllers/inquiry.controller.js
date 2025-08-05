@@ -11,7 +11,7 @@ const getInquiry = async (req, res) => {
         });
 
     } catch (error) {
-        console.error("Error in getInquiry:", error);
+        console.error("Error in getInquiry:", error); 
         res.status(200).json({
             message: "Error fetching inquiries",
             error

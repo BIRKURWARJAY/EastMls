@@ -28,9 +28,6 @@ export const propertyValidator = Yup.object().shape({
     .oneOf(['apartment', 'house', 'condo', 'villa', 'commercial'], 'Invalid property type')
     .required('propertyType is required'),
 
-  type: Yup.string()
-    .oneOf(['Point', 'Circle', 'Area'], 'Invalid  type')
-    .required('type is required'),
 
   status: Yup.string()
     .oneOf(['available', 'pending', 'sold', 'rented'], 'Invalid status')
@@ -51,35 +48,20 @@ export const propertyValidator = Yup.object().shape({
 
   garage: Yup.number()
     .typeError('garage must be a number')
-    .min(1, 'garage must be at least 1')
-    .required('garage is required'),
-
+    .min(1, 'garage must be at least 1'),
   garageSize: Yup.number()
     .typeError('garageSize must be a number')
-    .min(1, 'garageSize must be at least 1')
-    .required('garageSize is required'),
-
+    .min(1, 'garageSize must be at least 1'),
   areaSqFt: Yup.number()
     .typeError('areaSqFt must be a number')
     .min(1, 'areaSqFt must be at least 1')
     .required('areaSqFt is required'),
 
-  viewCount: Yup.number()
-    .typeError('viewCount must be a number')
-    .required('viewCount is required'),
-
 
   isPriceNegotiable: Yup.boolean()
     .required('isPriceNegotiable is required'),
 
-  countryStatus: Yup.boolean()
-    .required('countryStatus is required'),
-
-  featured: Yup.boolean()
-    .required('featured is required'),
-
-  verification: Yup.boolean()
-    .required('verification is required'),
+  verification: Yup.boolean(),
 
   propertyDescription: Yup.string()
     .trim()
@@ -96,10 +78,6 @@ export const propertyValidator = Yup.object().shape({
   countryName: Yup.string()
     .trim()
     .required('countryName id is required'),
-
-  country: Yup.string()
-    .trim()
-    .required('country is required'),
 
   countryCode: Yup.string()
     .trim()
@@ -124,9 +102,8 @@ export const propertyValidator = Yup.object().shape({
 
   features: Yup.array()
     .min(1, 'At least one feature is required')
-    .of(Yup.string().required('features must be a string'))
-    .required('features is required'),
-
+    .of(Yup.string().required('features must be a string')),
+  
   coordinates: Yup.array()
-    .required('coordinates is required'),
+    .optional('coordinates is required'),
 });

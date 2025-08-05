@@ -35,7 +35,9 @@ function page({ params: paramsPromise }) {
     if (tokenRes?.status) {
       fetchAgent();
     }
+    tokenRes?.status && fetchAgent();
   }, [params.id, router]);
+
 
 
   const breadcrumbs = [

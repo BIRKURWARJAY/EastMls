@@ -8,7 +8,8 @@ const locationSchema = new mongoose.Schema({
     },
     coordinates: {
         type: Array,
-        required: true,
+      required: true,
+        default: []
     },
 
 }, { timestamps: true });

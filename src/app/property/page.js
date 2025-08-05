@@ -34,6 +34,7 @@ function page() {
       }
     }
     tokenRes?.status && fetchprop()
+    tokenRes?.status && fetchprop()
 
   }, [])
 

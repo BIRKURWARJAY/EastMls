@@ -3,7 +3,6 @@ import PropertyListingCard from '@/components/PropertyListingCard'
 import { Box, Button, FormControl, InputLabel, MenuItem, Select, Stack, TextField } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { api } from '@/utils/api'
-import axios from 'axios'
 import decodeToken from '@/utils/decodeToken'
 import { useRouter } from 'next/navigation'
 import LoadingComponent from '@/components/loading'
@@ -13,8 +12,11 @@ function page() {
   const [type, settype] = useState('')
   const [keyword, setkeyword] = useState('')
   const [prop, setprop] = useState()
+  const [isLoading, setLoading] = useState(true);
 
   const router = useRouter()
+
+
 
 
 
@@ -31,6 +33,7 @@ function page() {
         console.log(error);
       }
     }
+    tokenRes?.status && fetchProp();
     tokenRes?.status && fetchProp();
   }, [])
 
@@ -66,16 +69,16 @@ function page() {
         <Stack minWidth={'80%'} flexDirection={{ xs: "column", sm: "row" }} justifyContent={'center'} alignItems={'center'} gap={3}>
 
 
-          <TextField id="outlined-basic" value={keyword} onChange={(e) => setkeyword(e.target.value)} placeholder="Enter keyword" variant="outlined" sx={{ width: "45%", minWidth: "200px" }} />
+              <TextField id="outlined-basic" placeholder="Enter keyword" variant="outlined" sx={{ width: "45%" }} />
 
-          <FormControl sx={{ width: '45%', minWidth: "200px" }}>
-            <Select
-              labelId="Property type"
-              id="demo-simple-select-helper"
-              value={type}
+              <FormControl sx={{ width: '45%', minWidth: "200px" }}>
+                <Select
+                  labelId="Property type"
+                  id="demo-simple-select-helper"
+                  value={type}
 
-              onChange={changeHandler}
-            >
+                  onChange={changeHandler}
+                >
 
               <MenuItem disabled value={'Property type'}>Property type</MenuItem>
               <MenuItem value={''}>None</MenuItem>
@@ -87,12 +90,15 @@ function page() {
           <Button variant="contained" size='large' onClick={() => serachProp()} sx={{ backgroundColor: "orange", width: "10%", height: "100%" }} >Search</Button>
         </Stack>
 
-      </Box>
-      <Stack sx={{ mt: "3rem" }} padding={2}>
-        <PropertyListingCard data={prop} title={'Buy Property listing'} />
-      </Stack>
+            <Stack sx={{ mt: "3rem" }} padding={2}>
+              <PropertyListingCard data={prop} title={'Buy Property listing'} />
+            </Stack>
+          </>
+        )}
     </>
+
   )
 }
 
-export default page
+
+export default page;

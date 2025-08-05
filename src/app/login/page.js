@@ -121,7 +121,6 @@ export default function Login() {
                 <Button variant="contained"
                   onClick={() => {
                     setToggleButton("agent")
-                    formik.resetForm()
                   }}
                   disableRipple
                   sx={{ bgcolor: toggleButton === "agent" ? "rgb(255 138 0)" : "white", color: toggleButton === "agent" ? "white" : "black", display: "flex", borderRadius: "15px", flexDirection: "column", width: "100%", paddingBlock: 2 }}>

@@ -14,52 +14,48 @@ const addProperty = async (req, res) => {
 
 
         const location = await Location.create({
-            type: data.type,
             coordinates: data.coordinates,
         })
-        const city = await City.create({
-            cityCode: data.cityCode,
-            country: data.country,
-            cityName: data.cityName,
-            state: data.state,
-        })
+        
         const country = await Country.create({
             countryCode: data.countryCode,
             currency: data.currency,
             countryName: data.countryName,
-            countryStatus: data.countryStatus,
         })
+      
+        const city = await City.create({
+          cityCode: data.cityCode,
+          country: country._id,
+          cityName: data.cityName,
+          state: data.state,
+      })
 
         const newProperty = await Property.create({
-            agentId: data.agentId,
-            location: location._id,
-            city: city._id,
-            country: country._id,
-
-
-            title: data.title,
-            address: data.address,
-            propertyDescription: data.propertyDescription,
-            status: data.status,
-            propertyType: data.propertyType,
-            images: data.images,
-            price: data.price,
-            areaSqFt: data.areaSqFt,
-            landArea: data.landArea,
-            yearOfBuild: data.yearOfBuild,
-            postalCode: data.postalCode,
-            bathrooms: data.bathrooms,
-            bedrooms: data.bedrooms,
-            garage: data.garage,
-            garageSize: data.garageSize,
-            currency: data.currency,
-            leaseType: data.leaseType,
-            verification: data.verification,
-            viewCount: data.viewCount,
-            isPriceNegotiable: data.isPriceNegotiable,
-            availableFrom: data.availableFrom,
-            featured: data.featured,
-            features: data.features,
+            agentId: req.user.id,
+          title: data.title,
+          address: data.address,
+          propertyDescription: data.propertyDescription,
+          status: data.status,
+          propertyType: data.propertyType,
+          images: data.images,
+          price: data.price,
+          areaSqFt: data.areaSqFt,
+          landArea: data.landArea,
+          yearOfBuild: data.yearOfBuild,
+          postalCode: data.postalCode,
+          bathrooms: data.bathrooms,
+          bedrooms: data.bedrooms,
+          garage: data.garage,
+          garageSize: data.garageSize,
+          currency: data.currency,
+          leaseType: data.leaseType,
+          isPriceNegotiable: data.isPriceNegotiable,
+          availableFrom: data.availableFrom,
+          features: data.features,
+          featured: data.features.length > 0,
+          country: country._id,
+          location: location._id,
+            city: city._id
         })
         return res.status(200).json({
             message: "Property added successfully",
@@ -81,7 +77,12 @@ const getproperty = async (req, res) => {
         const { id } = req.params
         console.log(id);
 
-        const propertydetails = await Property.findById(id).populate("agentId", "-password", userModel)
+        const propertydetails = await Property.findById(id)
+        .populate([
+          { path: "country", model: Country },
+          { path: "city", model: City },
+          { path: "location", model: Location }
+        ]);
         if (!propertydetails) {
             res.status(500).json({
                 message: "Error in fetch property",
@@ -90,7 +91,7 @@ const getproperty = async (req, res) => {
         }
 
         res.status(200).json({
-            message: "Error request property",
+            message: "request property fetched",
             propertydetails
         });
 
@@ -138,8 +139,6 @@ const updateproperty = async (req, res) => {
             location: location._id,
             city: city._id,
             country: country._id,
-
-
             title: data.title,
             address: data.address,
             propertyDescription: data.propertyDescription,
@@ -164,7 +163,7 @@ const updateproperty = async (req, res) => {
             featured: data.featured,
             features: data.features,
         }, { new: true })
-        return res.status(200).json({
+        return res.status(201).json({
             message: "Property updated successfully",
             newProperty
         });
@@ -314,7 +313,7 @@ const searchproperty = async (req, res) => {
 
 const agentProperty = async (req, res) => {
     try {
-        const { agentId } = req.cookies;
+        const agentId = req.user.id;
         console.log("cookie",agentId);
         
 

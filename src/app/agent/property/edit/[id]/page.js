@@ -40,11 +40,11 @@ import * as Yup from "yup";
 import ErrorText from '@/components/ErrorText';
 import { useEffect, useState } from 'react';
 import decodeToken from '@/utils/decodeToken';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import LoadingComponent from '@/components/loading';
 import { api } from '@/utils/api';
 
-export default function CreateAgentProperty() {
+export default function EditAgentProperty() {
   const router = useRouter();
   const [images, setImages] = useState([]);
   const [videos, setVideos] = useState([]);
@@ -52,6 +52,8 @@ export default function CreateAgentProperty() {
   const propertyTypes = ['Apartment', 'House', 'Condo', 'Villa', 'Commercial'];
   const statusArr = ['Available', 'Pending', 'Sold', 'Rented'];
   const [isLoading, setLoading] = useState(true);
+  const [data, setData] = useState([]);
+  const params = useParams();
 
   // Property features options
   const propertyFeatures = [
@@ -92,12 +94,28 @@ export default function CreateAgentProperty() {
   ];
 
   // Currency options
-  const currencyOptions = ['$', '€', '£', '₹', '¥', '₦', 'KSh'];
+  const currencyOptions = ['USD', "EURO", 'POUND', 'RUPEES', 'YEMEN', 'ND', 'KSh'];
 
+  
   useEffect(() => {
     const tokenRes = decodeToken("agent", router);
-    tokenRes?.status && setLoading(false);
-}, [])
+    async function getData() {
+      try {
+        const res = await api.get(`/property/${params.id}`)
+  
+        if (res.status === 200) {
+          console.log(res.data.propertydetails.images);
+          setData(res.data.propertydetails)
+          setLoading(false);
+          console.log(res.data.propertydetails)
+        }
+      } catch (error) {
+        console.error(error);
+        setLoading(false);
+      }
+    }
+    tokenRes?.status && getData();
+  }, [])
 
   useEffect(() => {
     formik.setFieldValue('images', images);
@@ -134,32 +152,8 @@ export default function CreateAgentProperty() {
   })
 
   const formik = useFormik({
-    initialValues: {
-      leaseType: " ",
-      yearOfBuild: dayjs().year(),
-      landArea: "",
-      price: "",
-      isPriceNegotiable: false,
-      propertyType: " ",
-      status: " ",
-      availableFrom: dayjs(),
-      bedrooms: "",
-      bathrooms: "",
-      areaSqFt: "",
-      propertyDescription: "",
-      images: [],
-      videos: [],
-      address: "",
-      cityCode: "",
-      cityName: "",
-      state: "",
-      countryCode: "",
-      countryName: "",
-      postalCode: "",
-      title: "",
-      currency: "$",
-      features: []
-    },
+    enableReinitialize: true, 
+    initialValues: data,
     validationSchema: YupValidation,
     onSubmit: async (values) => {
       console.log('Submitting form with values:', values)
@@ -212,11 +206,10 @@ export default function CreateAgentProperty() {
 
   // Handle features selection
   const handleFeaturesChange = (event) => {
-    const { value } = event.target;
-    formik.setFieldValue(
-      'features',
-      Array.isArray(value) ? value : []
-    );
+    const {
+      target: { value },
+    } = event;
+    formik.setFieldValue('features', typeof value === 'string' ? value.split(',') : value);
   };
 
   return (
@@ -274,7 +267,8 @@ export default function CreateAgentProperty() {
                         borderRadius: '4px',
                         borderColor: 'gray',
                         border: "1px solid",
-                        minHeight: "4rem",
+                        minHeight: "3rem",
+                        maxHeight: "5rem",
                         height: "4rem"
                       }}
                       onChange={formik.handleChange}
@@ -387,6 +381,7 @@ export default function CreateAgentProperty() {
                         </Box>
                       )}
                     >
+                      <MenuItem value={" "} disabled>Features</MenuItem>
                       {propertyFeatures.map((feature) => (
                         <MenuItem key={feature} value={feature}>
                           {feature}
@@ -476,6 +471,7 @@ export default function CreateAgentProperty() {
                       onBlur={formik.handleBlur}
                       error={formik.touched.currency && formik.errors.currency}
                     >
+                      <MenuItem value=" " disabled>Currency</MenuItem>
                       {currencyOptions.map((currency) => (
                         <MenuItem key={currency} value={currency}>
                           {currency}
@@ -554,8 +550,8 @@ export default function CreateAgentProperty() {
                     </FormLabel>
                     <DatePicker
                       name='availableFrom'
-                      value={formik.values?.availableFrom}
                       minDate={dayjs()}
+                      value={formik.values?.availableFrom}
                       maxDate={dayjs().add(5, 'year')}
                       onChange={(date) => formik.setFieldValue('availableFrom', date)}
                       slotProps={{
@@ -634,7 +630,8 @@ export default function CreateAgentProperty() {
                       borderRadius: '4px',
                       borderColor: 'gray',
                       border: "1px solid",
-                      minHeight: "8rem",
+                      maxHeight: "12rem",
+                      minHeight: "3rem",
                       height: "8rem"
                     }}
                     onChange={formik.handleChange}
@@ -714,11 +711,11 @@ export default function CreateAgentProperty() {
                     </Stack>
                   </Stack>
                   {
-                    formik.values?.images?.length > 0 && formik.values.images?.map((image, index) => (
-                      <Stack direction={'row'}>
-                        <Typography key={image[0].lastModified} variant='body1' component={"span"} sx={{
+                    formik.values?.images?.length > 0 && formik.values?.images?.map((image, index) => (
+                      <Stack direction={'row'} sx={{wordWrap: "break-word", wordBreak: "break-all", maxWidth: "100%"}}>
+                        <Typography key={image} variant='body1' component={"span"} sx={{
                           maxWidth: "80%", overflow: 'clip'
-                        }}>{image[0].name}
+                        }}>{image}
                         </Typography>
                         <IconButton
                           disableFocusRipple
