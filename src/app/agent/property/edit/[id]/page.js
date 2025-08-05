@@ -227,7 +227,7 @@ export default function EditAgentProperty() {
             gap: 3
           }}>
             <Stack direction="row" alignItems="center" spacing={1}>
-              <IconButton sx={{ paddingLeft: 0 }}>
+              <IconButton sx={{ paddingLeft: 0 }} onClick={()=>router.back()}>
                 <KeyboardBackspaceIcon />
               </IconButton>
               <Typography variant="h5">Create Property Listing</Typography>
@@ -393,7 +393,7 @@ export default function EditAgentProperty() {
                 </Stack>
 
                 <Stack direction="row" spacing={3}>
-                  <Stack flex={1} spacing={.3}>
+                  <Stack flex={1} spacing={0.3}>
                     <FormLabel>Lease Type</FormLabel>
                     <Select
                       name='leaseType'
@@ -414,7 +414,7 @@ export default function EditAgentProperty() {
                     {formik.touched.leaseType && formik.errors.leaseType && <ErrorText helperText={formik.errors.leaseType} />}
                   </Stack>
 
-                  <Stack flex={1} spacing={.3}>
+                  <Stack flex={1} spacing={0.3}>
                     <FormLabel>Year Built</FormLabel>
                     <TextField
                       type="number"
@@ -446,7 +446,7 @@ export default function EditAgentProperty() {
                 </Stack>
 
                 <Stack direction="row" spacing={3}>
-                  <Stack flex={1} spacing={.3}>
+                  <Stack flex={1} spacing={0.3}>
                     <FormLabel>
                       <PaymentsIcon fontSize="small" /> Price
                     </FormLabel>
@@ -462,7 +462,7 @@ export default function EditAgentProperty() {
                     />
                   </Stack>
 
-                  <Stack flex={1} spacing={.3}>
+                  <Stack flex={1} spacing={0.3}>
                     <FormLabel>Currency</FormLabel>
                     <Select
                       name='currency'
@@ -498,7 +498,7 @@ export default function EditAgentProperty() {
                 </Stack>
 
                 <Stack direction="row" spacing={3} >
-                  <Stack flex={1} spacing={.3}>
+                  <Stack flex={1} spacing={0.3}>
                     <FormLabel>
                       <MeetingRoomIcon fontSize="small" /> Property Type
                     </FormLabel>
@@ -773,13 +773,13 @@ export default function EditAgentProperty() {
                           color: "rgb(255 138 0)",
                           fontWeight: 700,
                         }}>Choose Files</Button>
-                        {formik.values.videos.length === 0 && <Typography variant='body1' component={"span"} sx={{
+                        {formik?.values?.videos?.length === 0 && <Typography variant='body1' component={"span"} sx={{
                         }}>No File chosen</Typography>}
                       </Stack>
                     </Stack>
                   </Stack>
                   {
-                    formik.values?.videos.length > 0 && formik.values.videos.map((video, index) => (
+                    formik.values?.videos?.length > 0 && formik.values.videos.map((video, index) => (
                       <Stack direction={'row'}>
                         <Typography key={video[0].lastModified} variant='body1' component={"span"} sx={{
                           maxWidth: "80%", overflow: 'clip'

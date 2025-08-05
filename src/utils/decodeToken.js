@@ -41,7 +41,7 @@ const decodeToken = (role, router) => {
 
         router.replace("/");
         if (decoded.role === "agent") {
-          router.replace("/agent/overview");
+          router.replace("/login");
         }
         return;
       }
