@@ -1,3 +1,4 @@
+'use client'
 import AgentCard from '@/components/AgentCard';
 import BreadCrumbs from '@/components/BreadCrumbs';
 import SellerEnquiry from '@/components/SellerEnquiry';
@@ -9,14 +10,16 @@ import { useRouter } from 'next/navigation'
 import { api } from '@/utils/api'
 import LoadingComponent from '@/components/loading';
 
-function page({ params }) {
+function page({ params: paramsPromise }) {
   const router = useRouter();
   const [isLoading, setLoading] = useState(true);
   const [agent, setAgent] = useState();
 
+  const params = React.use(paramsPromise);  
+
   useEffect(() => {
     const tokenRes = decodeToken("user", router);
-    
+
     const fetchAgent = async () => {
       try {
         setLoading(true);
@@ -27,12 +30,15 @@ function page({ params }) {
         console.error(error);
         setLoading(false);
       }
+    };
+
+    if (tokenRes?.status) {
+      fetchAgent();
     }
     tokenRes?.status && fetchAgent();
-  }, []);
+  }, [params.id, router]);
 
-  const { id } = params
-  console.log(id);
+
 
   const breadcrumbs = [
     <Link underline="hover" key="1" color="inherit" href="/" >
@@ -44,19 +50,6 @@ function page({ params }) {
     </Typography>,
   ];
 
-  const temp = [
-    {
-      id: "1",
-      image: "https://eastmls.net/_next/image?url=%2Fproperty.jpg&w=1080&q=75",
-      name: "Hussen ali",
-      role: "agent1",
-      number: "+91 897541132",
-      email: "@adminagent@gmail.com",
-      property: "3 house"
-    },
-
-  ]
-
   return (
     <>
       {isLoading ? <LoadingComponent /> : <Stack px={5} pt={8} display={'flex'} >
@@ -65,7 +58,7 @@ function page({ params }) {
 
         <Box display={'flex'} flexDirection={{ xs: 'column', md: 'row' }} mt={6} justifyContent={'space-between'} >
           <Box >
-            <AgentCard temp={temp} />
+            <AgentCard temp={agent} />
             <Box p={3} boxShadow={'0px 0px 10px 0px #dbdbdb'} borderRadius={5}>
               <Typography variant='h6' fontWeight={600} mb={3}>About Hussen ali</Typography>
               <Typography variant='body1' fontWeight={500}>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Accusamus commodi tempore maxime ad, asperiores id, assumenda illum obcaecati quibusdam doloremque veniam ducimus fuga officiis minima consectetur, dolorum laborum nulla aliquam. Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat, quod!</Typography>
@@ -73,7 +66,7 @@ function page({ params }) {
             </Box>
           </Box>
 
-          <SellerEnquiry />
+          {/* <SellerEnquiry data={agent} /> */}
         </Box>
       </Stack>}
 

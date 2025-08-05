@@ -6,7 +6,7 @@ import { api } from '@/utils/api'
 import decodeToken from '@/utils/decodeToken'
 import { useRouter } from 'next/navigation'
 import LoadingComponent from '@/components/loading'
-
+import toast from 'react-hot-toast'
 
 function page() {
   const [type, settype] = useState('')
@@ -18,19 +18,22 @@ function page() {
 
 
 
+
+
   useEffect(() => {
     const tokenRes = decodeToken("user", router);
+
     const fetchProp = async () => {
       try {
         const response = await api.get(`/property/all`)
-        console.log(response.data);
+        // console.log(response.data, "hello");
         setprop(response.data.allprop)
-        setLoading(false);
       } catch (error) {
+        toast.error('Error in fetch property')
         console.log(error);
-        setLoading(false);
       }
     }
+    tokenRes?.status && fetchProp();
     tokenRes?.status && fetchProp();
   }, [])
 
@@ -46,7 +49,13 @@ function page() {
       const response = await api.get(`/property/search?propertyType=${type}&title=${keyword}`);
       console.log(response.data.propertydetails);
       setprop(response.data.propertydetails);
+      if (response.status === 200) {
+        toast.success(response.data.message)
+      }
+
     } catch (error) {
+      setprop([])
+      toast.error(error.response.data.message)
       console.error('Search error:', error);
     }
   }
@@ -55,10 +64,9 @@ function page() {
 
   return (
     <>
-      {
-        isLoading ? <LoadingComponent /> : (
-          <>
-            <Stack direction={"row"} boxShadow={"0px 1px 10px 1px #d6d6d6"} padding={2} gap={3}>
+      <Box boxShadow={"0px 1px 10px 1px #d6d6d6"} padding={2} display={'flex'} justifyContent={'center'}>
+
+        <Stack minWidth={'80%'} flexDirection={{ xs: "column", sm: "row" }} justifyContent={'center'} alignItems={'center'} gap={3}>
 
 
               <TextField id="outlined-basic" placeholder="Enter keyword" variant="outlined" sx={{ width: "45%" }} />
@@ -72,14 +80,15 @@ function page() {
                   onChange={changeHandler}
                 >
 
-                  <MenuItem disabled value={'Property type'}>Property type</MenuItem>
-                  <MenuItem value={'flat'}>flat</MenuItem>
-                  <MenuItem value={'villa'}>villa</MenuItem>
-                  <MenuItem value={'house'}>house</MenuItem>
-                </Select>
-              </FormControl>
-              <Button variant="contained" size='large' onClick={() => serachProp()} sx={{ backgroundColor: "orange", width: "10%", height: "100%" }} >Search</Button>
-            </Stack>
+              <MenuItem disabled value={'Property type'}>Property type</MenuItem>
+              <MenuItem value={''}>None</MenuItem>
+              <MenuItem value={'flat'}>flat</MenuItem>
+              <MenuItem value={'villa'}>villa</MenuItem>
+              <MenuItem value={'house'}>house</MenuItem>
+            </Select>
+          </FormControl>
+          <Button variant="contained" size='large' onClick={() => serachProp()} sx={{ backgroundColor: "orange", width: "10%", height: "100%" }} >Search</Button>
+        </Stack>
 
             <Stack sx={{ mt: "3rem" }} padding={2}>
               <PropertyListingCard data={prop} title={'Buy Property listing'} />

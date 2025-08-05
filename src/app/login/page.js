@@ -10,6 +10,7 @@ import * as Yup from "yup";
 import ErrorText from "@/components/ErrorText";
 import { useRouter } from "next/navigation";
 import { api } from "@/utils/api.js";
+import toast from "react-hot-toast";
 
 
 export default function Login() {
@@ -38,10 +39,18 @@ export default function Login() {
           role: toggleButton
         });
         if (res.status === 200) {
-          router.push("/buy-property")
+          toast.success(`Welcome ${res.data.existedUser.username}`)
+          if (res.data.existedUser.role === 'user') {
+            router.push("/buy-property")
+          } else {
+            router.push("/agent/property")
+          }
+
           localStorage.setItem("EastMls", JSON.stringify(res.data.token));
         };
       } catch (error) {
+        toast.error(error.response.data.message);
+
         console.error(error);
       }
     }
@@ -50,7 +59,7 @@ export default function Login() {
 
 
   return (
-    <Stack id="loginPage" sx={{ height: "88vh",minHeight:"50rem",  backgroundImage: 'url(/eastmls/registerbg.webp)' }} display={'flex'} justifyContent={'center'} alignItems={'center'}>
+    <Stack id="loginPage" sx={{ height: "88vh", minHeight: "50rem", backgroundImage: 'url(/eastmls/registerbg.webp)' }} display={'flex'} justifyContent={'center'} alignItems={'center'}>
 
       <Card className="Login-modal" sx={{ maxWidth: "50rem", marginBlock: 2, bgcolor: "#e2e2e2cc", borderRadius: "20px", padding: 4, paddingInline: 2, alignItems: "center", justifyContent: "center", display: "flex", flexDirection: "column", gap: 2 }}>
         <Typography variant="h1" sx={{ fontSize: 30, fontWeight: 800 }}>
@@ -95,7 +104,7 @@ export default function Login() {
                 />
               </Stack>
 
-              <Stack  sx={{ gap: 2 }} direction={{xs:'column', sm:"row"}}>
+              <Stack sx={{ gap: 2 }} direction={{ xs: 'column', sm: "row" }}>
                 <Button variant="contained"
                   onClick={() => setToggleButton("user")}
                   sx={{ bgcolor: toggleButton === "user" ? "rgb(255 138 0)" : "white", color: toggleButton === "user" ? "white" : "black", borderRadius: "15px", display: "flex", flexDirection: "column", width: "100%", paddingBlock: 4 }}

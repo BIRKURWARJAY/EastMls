@@ -38,6 +38,15 @@ export default function BasicTable() {
         setLoading(false);
       }
     }
+
+    getprop()
+  }, [])
+
+  const deleteproperty = async (id) => {
+    const response = await axios.delete(`http://localhost:5000/api/property/${id}`, { withCredentials: true })
+    console.log(response.data);
+
+  }
     tokenRes?.status && fetchAgentProperty();
   }, []);
 
@@ -62,6 +71,8 @@ export default function BasicTable() {
                 key={index}
               // sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
 
+              // sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+
               >
                 <TableCell component="th" scope="row">
                   {row.title}
@@ -78,8 +89,7 @@ export default function BasicTable() {
                   <IconButton aria-label="fingerprint" color="success">
                     <EditCalendarOutlined sx={{ color: "orange" }} />
                   </IconButton>
-                  </Link>
-                  <IconButton aria-label="fingerprint" color="success">
+                  <IconButton aria-label="fingerprint" color="success" onClick={()=>deleteproperty(row._id)}>
                     <DeleteOutlineOutlined sx={{ color: "red" }} />
                   </IconButton>
                 </TableCell>
@@ -87,7 +97,7 @@ export default function BasicTable() {
             ))}
           </TableBody>
         </Table>
-      </TableContainer>}
+      </TableContainer>
     </>
   );
 }

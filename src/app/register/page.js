@@ -39,6 +39,8 @@ export default function Login() {
     validationSchema: YupValidation,
     onSubmit: async (values) => {
       try {
+        console.log(values);
+        
         const res = await api.post(`/auth`, {
           username: values.fullName,
           email: values.email,
@@ -47,10 +49,15 @@ export default function Login() {
           role: toggleButton
         }
         )
-
+        if (res.status === 200) {
+          toast.success('Register sucessfully')
+        }
+        
+        
         res.status === 200 && router.push("/login");
       } catch (error) {
-        console.error(error.message)
+        toast.error(error.response.data.message);
+        console.error(error)
       }
     }
   })
