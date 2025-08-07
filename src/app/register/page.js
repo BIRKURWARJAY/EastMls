@@ -3,7 +3,7 @@
 import { Button, Stack, TextField, Typography, Card, InputAdornment, CardContent, IconButton, FormLabel } from "@mui/material";
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -11,6 +11,7 @@ import ErrorText from "@/components/ErrorText";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { api } from "@/utils/api";
+import decodeToken from "@/utils/decodeToken";
 
 
 
@@ -19,6 +20,24 @@ export default function Login() {
   const router = useRouter();
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [toggleButton, setToggleButton] = useState("user");
+
+  useEffect(() => {
+    async function validate() {
+      const tokenRes = await decodeToken(["user", "agent"], router);
+
+      if (tokenRes.status && tokenRes.decodedToken.role === "user") {
+        toast.error("Logout First");
+        router.push("/buy-property");
+      } else if (tokenRes.status && tokenRes.decodedToken.role === "agent") {
+        toast.error("Logout First");
+        router.push("/agent/property");
+      }
+      else {
+        router.push("/login");
+      }
+    }
+    validate();
+  }, [])
 
   const Adornment = passwordVisible ? <VisibilityOffIcon /> : <VisibilityIcon />
 
@@ -40,7 +59,7 @@ export default function Login() {
     onSubmit: async (values) => {
       try {
         console.log(values);
-        
+
         const res = await api.post(`/auth`, {
           username: values.fullName,
           email: values.email,
@@ -52,8 +71,8 @@ export default function Login() {
         if (res.status === 200) {
           toast.success('Register sucessfully')
         }
-        
-        
+
+
         res.status === 200 && router.push("/login");
       } catch (error) {
         toast.error(error.response.data.message);

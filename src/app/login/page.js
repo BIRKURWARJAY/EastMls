@@ -3,7 +3,7 @@
 import { Button, FormLabel, Stack, TextField, Typography, Card, InputAdornment, CardContent, IconButton } from "@mui/material";
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -13,6 +13,7 @@ import { api } from "@/utils/api.js";
 import toast from "react-hot-toast";
 import { eastMlsStore } from "@/store/eastMlsStore";
 import { setCookie } from "@/utils/setCookie";
+import decodeToken from "@/utils/decodeToken";
 
 
 export default function Login() {
@@ -21,6 +22,24 @@ export default function Login() {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [toggleButton, setToggleButton] = useState("user");
   const setIsLoggedIn = eastMlsStore(s => s.setIsLoggedIn);
+
+  useEffect(() => {
+    async function validate() {
+      const tokenRes = await decodeToken(["user", "agent"], router);
+
+      if (tokenRes?.status && tokenRes?.decodedToken.role === "user") {
+        toast.error("Logout First");
+        router.push("/buy-property");
+      } else if (tokenRes?.status && tokenRes?.decodedToken.role === "agent") {
+        toast.error("Logout First");
+        router.push("/agent/property");
+      }
+      else {
+        router.push("/login");
+      }
+    }
+    validate();
+  }, [])
 
   const Adornment = passwordVisible ? <VisibilityOffIcon /> : <VisibilityIcon />
 

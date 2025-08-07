@@ -13,7 +13,6 @@ export default async function autoRefreshToken(req, res, next) {
   };
   
   try {
-    console.log(req.cookies)
 
     const token = req.cookies.refreshToken;
     if (!token) {

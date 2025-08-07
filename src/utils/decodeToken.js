@@ -15,7 +15,8 @@ const decodeToken = async (role, router) => {
         toast.success("Token Refreshed");
         setIsLoggedIn(true)
         return {
-          status: true
+          status: true,
+          decodedToken: jwtDecode(token)
         };
       } else {
         toast.error('Please login');
@@ -36,8 +37,9 @@ const decodeToken = async (role, router) => {
           toast.success("Token Refreshed");
           setIsLoggedIn(true)
           return {
-            status: true
-          }
+            status: true,
+            decodedToken: decoded
+          };
         } else {
           toast.error('Please login')
           setIsLoggedIn(false);
@@ -55,8 +57,9 @@ const decodeToken = async (role, router) => {
           toast.success("Token Refreshed");
           setIsLoggedIn(true)
           return {
-            status: true
-          }
+            status: true,
+            decodedToken: decoded
+          };
         } else {
           toast.error("Please Login");
           setIsLoggedIn(false);
@@ -66,10 +69,9 @@ const decodeToken = async (role, router) => {
         }
       }
 
-      if (decoded.role !== role) {
-        debugger
-        console.log("not allowed");
-        toast.error('You are not allowed')
+      if (typeof role === "string" ? !role.split().includes(decoded.role) : !Array.from(role).includes(decoded.role)) {
+        console.log("not allowed", decoded.role);
+        toast.error(`You are not allowed ${decoded.role}`)
 
         router.replace("/");
         if (decoded.role === "agent") {
@@ -83,6 +85,7 @@ const decodeToken = async (role, router) => {
         };
       }
 
+
       setIsLoggedIn(true);
       return {
         status: true,
@@ -90,7 +93,6 @@ const decodeToken = async (role, router) => {
       };
     } catch (error) {
       toast.error('Token decoding error')
-
       console.log("Error decoding token:", error);
       setIsLoggedIn(false);
       router.replace("/login");

@@ -2,7 +2,8 @@
 
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
-import HeaderWrapper from "@/components/HeaderWrapper";
+import Header from "@/components/Header";
+// import HeaderWrapper from "@/components/HeaderWrapper";
 
 export default function RootLayout({ children }) {
 
@@ -12,7 +13,8 @@ export default function RootLayout({ children }) {
         <link rel="icon" href="/favicon.webp" type="image/webp" />
       </head>
       <body style={{ margin: 0 }}>
-        <HeaderWrapper />
+        {/* <HeaderWrapper /> */}
+        <Header />
         <Toaster />
           {children}
       </body>
