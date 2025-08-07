@@ -32,8 +32,9 @@ export default function BasicTable() {
     const fetchAgentProperty = async () => {
       try {
         const response = await api.get('/property/agent')
-        console.log(response.data);
-        setprop(response.data.allprop)
+        if (response.status === 200) {
+          setprop(response?.data.allprop)
+        }
         setLoading(false);
       } catch (error) {
         console.error(error);
@@ -41,7 +42,7 @@ export default function BasicTable() {
       }
     }
 
-    tokenRes?.status && fetchAgentProperty();
+    tokenRes?.status ? fetchAgentProperty() : router.push("/login");
     }
     validate();
   }, [])

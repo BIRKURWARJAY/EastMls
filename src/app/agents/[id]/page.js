@@ -19,7 +19,7 @@ function page({ params: paramsPromise }) {
 
   useEffect(() => {
     async function validate() {
-      const tokenRes = decodeToken("user", router);
+      const tokenRes = await decodeToken("user", router);
 
     const fetchAgent = async () => {
       try {
@@ -36,7 +36,7 @@ function page({ params: paramsPromise }) {
     if (tokenRes?.status) {
       fetchAgent();
     }
-    tokenRes?.status && fetchAgent();
+    tokenRes?.status ? fetchAgent() : router.push("/login");
     }
     validate();
   }, [params.id, router]);

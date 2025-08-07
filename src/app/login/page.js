@@ -3,7 +3,7 @@
 import { Button, FormLabel, Stack, TextField, Typography, Card, InputAdornment, CardContent, IconButton } from "@mui/material";
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -45,7 +45,7 @@ export default function Login() {
         if (res.status === 200) {
           setIsLoggedIn(true);
           toast.success(`Welcome ${res.data.existedUser.username}`)
-          setCookie("EastMlsToken", "/", res.data.accessToken, 0.1)
+          setCookie("EastMlsToken", "/", res.data.accessToken, 15)
           if (res.data.existedUser.role === 'user') {
             router.replace("/buy-property")
           } else {

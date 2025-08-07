@@ -44,6 +44,7 @@ import { useParams, useRouter } from 'next/navigation';
 import LoadingComponent from '@/components/loading';
 import { api } from '@/utils/api';
 import Link from 'next/link';
+import toast from 'react-hot-toast';
 
 export default function EditAgentProperty() {
   const router = useRouter();
@@ -100,7 +101,7 @@ export default function EditAgentProperty() {
 
   useEffect(() => {
     async function validate() {
-      const tokenRes = decodeToken("agent", router);
+      const tokenRes = await decodeToken("agent", router);
     async function getData() {
       try {
         const res = await api.get(`/property/${params.id}`)
@@ -117,19 +118,12 @@ export default function EditAgentProperty() {
         router.replace("/agent/property");
       }
     }
-    tokenRes?.status && getData();
+    tokenRes?.status ? getData() : router.push("/login");
     }
 
     validate();
   }, [])
 
-  useEffect(() => {
-    formik.setFieldValue('images', images);
-  }, [images])
-
-  useEffect(() => {
-    formik.setFieldValue('videos', videos);
-  }, [videos])
 
   const YupValidation = Yup.object().shape({
     leaseType: Yup.string('numbers is not allowed').oneOf(['sell', 'rent'], 'leaseType must be one of "sell" or "rent"').required('leaseType is required'),
@@ -168,41 +162,64 @@ export default function EditAgentProperty() {
     onSubmit: async (values) => {
       console.log('Submitting form with values:', values)
       try {
-        const formData = {
-          ...values,
-          garageSize: 9,
-          garage: 1,
-          coordinates: ["23", "31"]
-        };
+        const formData = new FormData();
 
-        console.log('Sending to API:', formData);
+        formData.append("coordinates[]", "12.9715987");
+        formData.append("coordinates[]", "77.594566");
+
+        Object.entries(values).forEach(([key, value]) => {
+          formData.append(key, value);
+        });
+
+        values.features.forEach(feature => {
+          formData.append("features", feature);
+        })
+
+        images.forEach((image) => {
+          formData.append("images", image);
+        });
+
+        videos.forEach((video) => {
+          formData.append("videos", video);
+        });
+
         const res = await api.put(`/property/${params.id}`, formData);
         if (res.status === 201) {
           console.log(res.data.message);
+          toast.success("Property Edited");
           router.push("/agent/property");
         }
       } catch (error) {
         console.error('Form submission error:', error);
+        toast.error("Error Editing Property", {
+          duration: 2
+        })
       }
     }
   })
 
-  const handleImageChanges = (event) => {
-    const files = event.target.files;
-    setImages((prev) => [files, ...prev]);
+   const handleImageChanges = (event) => {
+    const files = Array.from(event.target.files || []);
+    formik.setFieldValue("images", files);
+    setImages(files);
   };
 
   const handleDeleteImage = (idx) => {
     setImages(prev => prev.filter((_, index) => index !== idx));
+    const newImages = formik.values.images.filter((_, index) => index !== idx);
+    formik.setFieldValue("images", newImages);
   }
 
   const handleDeletevideo = (idx) => {
     setVideos(prev => prev.filter((_, index) => index !== idx));
+    const newVideos = formik.values.videos.filter((_, index) => index !== idx);
+    formik.setFieldValue("images", newVideos);
   }
 
   const handleVideoChanges = (event) => {
     const files = Array.from(event.target.files || []);
-    formik.setFieldValue('videos', files);
+    formik.setFieldValue("videos", files);
+    setVideos(files)
   };
 
   // Handle features selection
@@ -233,7 +250,7 @@ export default function EditAgentProperty() {
                   <KeyboardBackspaceIcon />
                 </IconButton>
               </Link>
-              <Typography variant="h5">Create Property Listing</Typography>
+              <Typography variant="h5">Edit Property Listing</Typography>
             </Stack>
 
             <form encType='multipart/form-data' onSubmit={formik.handleSubmit}>

@@ -19,7 +19,6 @@ function page() {
   useEffect(() => {
     async function fetchProp() {
       const tokenRes = await decodeToken("user", router);
-
       const fetchProp = async () => {
         try {
           const response = await api.get(`/property/all`)
@@ -32,7 +31,7 @@ function page() {
           setLoading(false)
         }
       }
-      tokenRes?.status && fetchProp();
+      tokenRes?.status ? fetchProp() : router.push("/login");
     }
     fetchProp();
   }, [])

@@ -10,41 +10,80 @@ const decodeToken = async (role, router) => {
 
   if (typeof window !== "undefined") {
     const token = getCookie("EastMlsToken");
-
-    if (!token) {
-      toast.loading('refreshing Token')
-      await refreshAccessToken() ? toast.success("Token Refreshed") : toast.error('Please login')
-      return;
+    if (!token || token === "undefined") {
+      if (await refreshAccessToken()) {
+        toast.success("Token Refreshed");
+        setIsLoggedIn(true)
+        return {
+          status: true
+        };
+      } else {
+        toast.error('Please login');
+        setIsLoggedIn(false)
+        return {
+          status: false
+        };
+      }
     }
 
     try {
       const decoded = jwtDecode(token);
       if (decoded instanceof InvalidTokenError || !decoded) {
+        debugger
         toast.error('Token not valid')
         console.log("Token is invalid or not found.");
-        toast.loading('refreshing Token')
-        await refreshAccessToken() ? (toast.success("Token Refreshed"), setIsLoggedIn(true)) : toast.error('Please login')
-        return;
+        if (await refreshAccessToken()) {
+          toast.success("Token Refreshed");
+          setIsLoggedIn(true)
+          return {
+            status: true
+          }
+        } else {
+          toast.error('Please login')
+          setIsLoggedIn(false);
+          return {
+            status: false
+          };
+        }
       }
 
       if (decoded.exp <= Date.now() / 1000) {
+        debugger
         toast.error('Token is expired');
         console.log("Token Expired");
-        toast.loading('refreshing Token')
-        await refreshAccessToken() ? (toast.success("Token Refreshed"), setIsLoggedIn(true)) : toast.error('Please login')
-        return;
+        if (await refreshAccessToken()) {
+          toast.success("Token Refreshed");
+          setIsLoggedIn(true)
+          return {
+            status: true
+          }
+        } else {
+          toast.error("Please Login");
+          setIsLoggedIn(false);
+          return {
+            status: false
+          };
+        }
       }
 
       if (decoded.role !== role) {
+        debugger
         console.log("not allowed");
         toast.error('You are not allowed')
 
         router.replace("/");
         if (decoded.role === "agent") {
           router.replace("/agent/property");
+          return {
+            status: false
+          };
         }
-        return;
+        return {
+          status: false
+        };
       }
+
+      setIsLoggedIn(true);
       return {
         status: true,
         decodedToken: decoded

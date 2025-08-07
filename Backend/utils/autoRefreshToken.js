@@ -17,7 +17,9 @@ export default async function autoRefreshToken(req, res, next) {
 
     const token = req.cookies.refreshToken;
     if (!token) {
-      return res.status(420).json({
+      return res.status(420)
+        .clearCookie()
+        .json({
         message: "token not found please login"
       })
     }
@@ -37,18 +39,18 @@ export default async function autoRefreshToken(req, res, next) {
     }
 
     const accessToken = jwt.sign({
-      id: decodedToken.id,
-      role: decodedToken.role
+      id: user._id,
+      role: user.role
     }, process.env.JWTSECRET, {
       algorithm: "HS256",
-      expiresIn: "15m"
+      expiresIn: "1h"
     })
 
     return res.status(200)
       .cookie("accessToken", accessToken, cookieOptions(1000 * 60 * 15))
       .json({
       message: "Token refreshed successfully",
-      token: accessToken
+      accessToken
     });
   } catch (error) { 
     console.log(error);

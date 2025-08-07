@@ -14,24 +14,19 @@ function page() {
 
   useEffect(() => {
     async function validate() {
-      const tokenRes = decodeToken("user", router);
-
-    const getinq = async () => {
-      try {
-        const response = await api.get('/inquiry', {
-          headers: {
-            email: tokenRes.decodedToken.email
-          }
-        });
-        console.log(response.data);
-        setinquries(response.data.allInq);
-        setLoading(false);
-      } catch (error) {
-        console.log(error);
-        setLoading(false);
+      const tokenRes = await decodeToken("user", router);
+      const getinq = async () => {
+        try {
+          const response = await api.get('/inquiry');
+          console.log(response.data);
+          setinquries(response.data.allInq);
+          setLoading(false);
+        } catch (error) {
+          console.log(error);
+          setLoading(false);
+        }
       }
-    }
-    tokenRes?.status && getinq();
+      tokenRes?.status ? getinq() : router.push("/login");
     }
     validate();
   }, []);
