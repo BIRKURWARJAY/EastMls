@@ -75,8 +75,8 @@ function page() {
             <ToggleButton value={"rent"} sx={{ borderRadius: "1rem !important" }} size='medium'>
               <Typography sx={{ textWrap: "nowrap" }} fontSize={12} fontWeight={600} >For Rent</Typography>
             </ToggleButton >
-            <ToggleButton value={"sale"} sx={{ borderLeft: "1px solid #dbdbdb !important", borderRadius: "1rem !important" }} size='large'>
-              <Typography sx={{ textWrap: "nowrap" }} fontSize={12} fontWeight={600} >For Sale</Typography>
+            <ToggleButton value={"sell"} sx={{ borderLeft: "1px solid #dbdbdb !important", borderRadius: "1rem !important" }} size='large'>
+              <Typography sx={{ textWrap: "nowrap" }} fontSize={12} fontWeight={600} >For Sell</Typography>
             </ToggleButton >
           </ToggleButtonGroup>
           <Box width={'60%'} flexDirection={{ xs: "column", sm: "row" }} display={'flex'} justifyContent={'center'} alignItems={'center'} flexWrap={'nowrap'} gap={2}>
@@ -96,6 +96,7 @@ function page() {
                 <MenuItem disabled value={'Property type'}>Property type</MenuItem>
                 <MenuItem value={''}>None</MenuItem>
                 <MenuItem value={'villa'}>villa</MenuItem>
+                <MenuItem value={'condo'}>condo</MenuItem>
                 <MenuItem value={'house'}>house</MenuItem>
                 <MenuItem value={'flat'}>flat</MenuItem>
               </Select>
