@@ -36,7 +36,12 @@ function Header() {
           return;
         }
       } catch (error) {
-        await refreshAccessToken() ? validate() : router.replace("/login");
+        if (await refreshAccessToken()) {
+          validate();
+        } else {
+          setHeaderShowable(true);
+          router.replace("/login");
+        }
       }
     }
     validate();
