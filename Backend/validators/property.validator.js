@@ -46,12 +46,7 @@ export const propertyValidator = Yup.object().shape({
     .min(1, 'bathrooms must be at least 1')
     .required('bathrooms is required'),
 
-  garage: Yup.number()
-    .typeError('garage must be a number')
-    .min(1, 'garage must be at least 1'),
-  garageSize: Yup.number()
-    .typeError('garageSize must be a number')
-    .min(1, 'garageSize must be at least 1'),
+
   areaSqFt: Yup.number()
     .typeError('areaSqFt must be a number')
     .min(1, 'areaSqFt must be at least 1')

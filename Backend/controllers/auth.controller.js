@@ -117,6 +117,8 @@ export function logoutUser() {
     await user.save();
     return res
       .status(200)
+      .clearCookie('accessToken')
+      .clearCookie('refreshToken')
       .json({ message: "logged out successfully", status: "success" });
   })
 }
