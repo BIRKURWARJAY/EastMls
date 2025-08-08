@@ -49,8 +49,8 @@ function page() {
       const response = await api.get(`/property/search?propertyType=${type}&title=${keyword}&leaseType=${value}`);
       console.log(response.data.propertydetails);
       if (response.status === 200) {
-        setprop(response?.data.propertydetails);
-        toast.success(response?.data.message)
+        setprop(response?.data?.propertydetails);
+        toast.success(response.data.message)
       }
 
     } catch (error) {
