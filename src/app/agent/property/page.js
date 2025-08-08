@@ -33,7 +33,7 @@ export default function BasicTable() {
       try {
         const response = await api.get('/property/agent')
         console.log(response.data);
-        setprop(response.data.allprop)
+        setprop(response.data?.allprop)
         setLoading(false);
       } catch (error) {
         console.error(error);
