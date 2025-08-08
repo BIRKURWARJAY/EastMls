@@ -41,7 +41,7 @@ const decodeToken = async (role, router) => {
             decodedToken: decoded
           };
         } else {
-          toast.error('Please login')
+          // toast.error('Please login')
           setIsLoggedIn(false);
           return {
             status: false
@@ -61,7 +61,7 @@ const decodeToken = async (role, router) => {
             decodedToken: decoded
           };
         } else {
-          toast.error("Please Login");
+          // toast.error("Please Login");
           setIsLoggedIn(false);
           return {
             status: false

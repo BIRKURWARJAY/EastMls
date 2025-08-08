@@ -55,30 +55,34 @@ export default function Login() {
     },
     validationSchema: YupValidation,
     onSubmit: async (values) => {
-      try {
-        const res = await api.post("/auth/login", {
-          email: values.email,
-          password: values.password,
-          role: toggleButton
-        },
-          {
-          withCredentials: true
+
+      const res = await api.post("/auth/login", {
+        email: values.email,
+        password: values.password,
+        role: toggleButton
+      },
+        {
+          withCredentials: true,
+          validateStatus: (status) => status === 200,
         });
-        if (res.status === 200) {
-          setIsLoggedIn(true);
-          toast.success(`Welcome ${res.data.existedUser.username}`)
-          setCookie("EastMlsToken", "/", res.data.accessToken, 15)
-          if (res.data.existedUser.role === 'user') {
-            router.replace("/buy-property")
-          } else {
-            router.replace("/agent/property")
-          }
-        };
-      } catch (error) {
-        console.error(error.response);
-        toast.error(error.response.data.message);
+
+      console.log(res);
+
+      if (res.status === 200) {
+
+        setIsLoggedIn(true);
+        toast.success(`Welcome ${res.data.existedUser.username}`)
+        setCookie("EastMlsToken", "/", res.data.accessToken, 15)
+        if (res.data.existedUser.role === 'user') {
+          router.replace("/buy-property")
+        } else {
+          router.replace("/agent/property")
+        }
+      } else {
+        toast.error(res.response.data.message)
       }
     }
+
   })
 
 

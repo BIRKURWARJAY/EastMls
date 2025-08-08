@@ -13,35 +13,34 @@ import { Button, List, ListItem, ListItemText } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { api } from '@/utils/api';
 import { eastMlsStore } from "../store/eastMlsStore.js"
-import { deleteCookie, getCookie } from '@/utils/setCookie.js';
+import { deleteCookie } from '@/utils/setCookie.js';
+import toast from 'react-hot-toast';
 import { jwtDecode } from 'jwt-decode';
+import { getCookie } from '@/utils/setCookie.js';
+import { refreshAccessToken } from '@/utils/refreshAccessToken.js';
 
 
 function Header() {
   const [drawerOpen, setDrawerOpen] = React.useState(false);
+  const [headerShowable, setHeaderShowable] = React.useState(true);
   const router = useRouter();
   const isLoggedIn = eastMlsStore(s => s.isLoggedIn);
   const setIsLoggedIn = eastMlsStore(s => s.setIsLoggedIn);
-  const setRole = eastMlsStore(s => s.setRole);
-  const [headerShowable, setHeaderShowable] = React.useState(false);
 
   React.useEffect(() => {
-   try {
-     const decodedToken = jwtDecode(getCookie("EastMlsToken") || undefined);
- 
-     if (decodedToken?.role === "agent") {
-       setHeaderShowable(false);
-       setRole("agent");
-       return;
-     }
-     
-     setRole("user");
-     setHeaderShowable(true);
-   } catch (error) {
-     setHeaderShowable(true);
-     router.push("/");
-   }
-  }, [handleLogout])
+    async function validate() {
+      try {
+        const decoded = jwtDecode(getCookie("EastMlsToken"));
+        if (decoded.role === "agent") {
+          setHeaderShowable(false);
+          return;
+        }
+      } catch (error) {
+        await refreshAccessToken() ? validate() : router.replace("/login");
+      }
+    }
+    validate();
+  }, [isLoggedIn])
 
 
   const toggleDrawer = (open) => (event) => {
@@ -53,13 +52,15 @@ function Header() {
 
   async function handleLogout() {
     try {
-      console.log("Logging out...");
-      const res = await api.get("/auth");
+      const res = await api.get("/auth", {
+        withCredentials: true
+      });
       console.log("Logout response:", res.data);
       if (res.data.status === "success") {
+        toast.success(res.data.message)
         deleteCookie("EastMlsToken", "/");
-        setIsLoggedIn(false);
         router.push("/login");
+        setIsLoggedIn(false);
       }
     } catch (error) {
       console.error("Error logging out...", error);

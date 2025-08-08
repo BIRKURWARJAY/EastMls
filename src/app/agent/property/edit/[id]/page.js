@@ -105,7 +105,7 @@ export default function EditAgentProperty() {
     async function getData() {
       try {
         const res = await api.get(`/property/${params.id}`)
-
+        console.log(res);
         if (res.status === 200) {
           console.log(res.data.propertydetails);
           setImages(res.data.images);
