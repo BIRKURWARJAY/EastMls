@@ -27,7 +27,7 @@ function page() {
           setLoading(true);
           const response = await api.get(`/property/all`)
           console.log(response.data);
-          if (res?.status === 200) {
+          if (response?.status === 200) {
             setprop(response.data.allprop)
             setLoading(false);
           }

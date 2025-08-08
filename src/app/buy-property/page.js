@@ -42,7 +42,7 @@ function page() {
       console.log(type);
 
       const response = await api.get(`/property/search?propertyType=${type}&title=${keyword}`);
-      console.log(response.data.propertydetails);
+      console.log(response);
       if (response.status === 200) {
         setprop(response.data.propertydetails);
         toast.success(response.data.message)
@@ -50,7 +50,7 @@ function page() {
 
     } catch (error) {
       setprop([])
-      toast.error(error.response.data.message)
+      toast.error(error.response?.data?.message)
       console.error('Search error:', error);
     }
   }
