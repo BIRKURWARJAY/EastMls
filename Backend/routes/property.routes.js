@@ -6,7 +6,7 @@ import { upload } from "../middlewares/multer.js";
 const propertyRouter = Router();
 
 propertyRouter.get("/agent",authenticateUser, agentProperty)
-propertyRouter.get('/all', allproperties)
+propertyRouter.get('/all', authenticateUser, allproperties)
 
   propertyRouter.post("/", authenticateUser, upload.fields([
     {
@@ -20,7 +20,7 @@ propertyRouter.get('/all', allproperties)
   ]), addProperty)
   
 propertyRouter.get("/search", searchproperty)
-propertyRouter.get('/:id', getproperty);
+propertyRouter.get('/:id', authenticateUser, getproperty);
 propertyRouter.put('/:id',authenticateUser, upload.fields([
   {
     name: 'images',

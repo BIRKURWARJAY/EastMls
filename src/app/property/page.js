@@ -22,18 +22,20 @@ function page() {
     async function validate() {
       const tokenRes = await decodeToken("user", router);
 
-    const fetchprop = async () => {
-      try {
-        setLoading(true);
-        const response = await api.get(`/property/all`)
-        console.log(response.data);
-        setprop(response.data.allprop)
-        setLoading(false);
-      } catch (error) {
-        console.error(error);
-        setLoading(false);
+      const fetchprop = async () => {
+        try {
+          setLoading(true);
+          const response = await api.get(`/property/all`)
+          console.log(response.data);
+          if (response?.status === 200) {
+            setprop(response.data.allprop)
+            setLoading(false);
+          }
+        } catch (error) {
+          console.error(error);
+          setLoading(false);
+        }
       }
-    }
       tokenRes?.status ? fetchprop() : router.push("/login");
     }
     validate();

@@ -45,7 +45,7 @@ function page() {
 
   useEffect(() => {
     async function validate() {
-      const tokenRes = await decodeToken("user", router);
+      const tokenRes = await decodeToken(["user", "agent"], router);
 
     const fetchprop = async () => {
       try {

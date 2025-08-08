@@ -387,7 +387,7 @@ const searchproperty = async (req, res) => {
     const propertydetails = await Property.aggregate(pipeline);
 
     if (!propertydetails.length) {
-      return res.status(400).json({
+      return res.status(200).json({
         message: "No properties found",
         propertydetails: []
       });

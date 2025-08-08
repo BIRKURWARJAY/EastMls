@@ -8,7 +8,7 @@ export async function refreshAccessToken() {
       withCredentials: true
    });
  
-   if (res.status === 200) {
+   if (res?.status === 200) {
      setCookie("EastMlsToken", "/", res?.data?.accessToken, 60);
      return true;
    }
