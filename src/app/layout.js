@@ -3,9 +3,11 @@
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import Header from "@/components/Header";
-// import HeaderWrapper from "@/components/HeaderWrapper";
+import { eastMlsStore } from "@/store/eastMlsStore";
 
 export default function RootLayout({ children }) {
+
+  const role = eastMlsStore(s => s.role);
 
   return (
     <html lang="en">
@@ -14,8 +16,7 @@ export default function RootLayout({ children }) {
         <link rel="icon" href="/favicon.webp" type="image/webp" />
       </head>
       <body style={{ margin: 0 }}>
-        {/* <HeaderWrapper /> */}
-        <Header />
+        {role === "user" || "undefined" ? <Header /> : null}
         <Toaster />
           {children}
       </body>

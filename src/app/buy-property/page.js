@@ -64,7 +64,7 @@ function page() {
         <Stack minWidth={'80%'} flexDirection={{ xs: "column", sm: "row" }} justifyContent={'center'} alignItems={'center'} gap={3}>
 
 
-          <TextField id="outlined-basic" placeholder="Enter keyword" variant="outlined" sx={{ width: "45%" }} />
+          <TextField id="outlined-basic" value={keyword} placeholder="Enter keyword" variant="outlined" sx={{ width: "45%" }} onChange={(e)=>setkeyword(e.target.value)}/>
 
           <FormControl sx={{ width: '45%', minWidth: "200px" }}>
             <Select

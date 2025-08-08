@@ -60,7 +60,10 @@ export function loginUser() {
       role: req.body.role
     });
     if (!existedUser) {
-      return next(PostError("User Doesn't Exists", 404));
+      return res.status(404)
+        .json({
+          message: "user does not exist"
+        });
     }
 
     const passwordCheck = await existedUser.isPasswordCorrect(req.body.password);
@@ -93,7 +96,7 @@ export function loginUser() {
 
     existedUser.refreshToken = refreshToken;
 
-    await existedUser.save({ validateBeforeSave: false });
+    await existedUser.save();
 
     return res
       .status(200)
@@ -117,8 +120,8 @@ export function logoutUser() {
     await user.save();
     return res
       .status(200)
-      .clearCookie('accessToken')
-      .clearCookie('refreshToken')
+      .clearCookie("accessToken")
+      .clearCookie("refreshToken")
       .json({ message: "logged out successfully", status: "success" });
   })
 }

@@ -103,26 +103,23 @@ export default function EditAgentProperty() {
   useEffect(() => {
     async function validate() {
       const tokenRes = await decodeToken("agent", router);
-      async function getData() {
-        try {
-          const res = await api.get(`/property/${params.id}`)
-
-          console.log("sgfhusvh", res.data.propertydetails.features);
-
-
-          if (res.status === 200) {
-            console.log(res.data.propertydetails);
-            setImages(res.data.propertydetails.images || []);
-            setVideos(res.data.propertydetails.videos || []);
-            setData(res.data.propertydetails)
-            setLoading(false);
-          }
-        } catch (error) {
-          console.error(error);
-          router.replace("/agent/property");
+    async function getData() {
+      try {
+        const res = await api.get(`/property/${params.id}`)
+        console.log(res);
+        if (res.status === 200) {
+          console.log(res.data.propertydetails);
+          setImages(res.data.images);
+          setVideos(res.data.videos);
+          setData(res.data.propertydetails)
+          setLoading(false);
         }
+      } catch (error) {
+        console.error(error);
+        router.replace("/agent/property");
       }
-      tokenRes?.status ? getData() : router.push("/login");
+    }
+    tokenRes?.status ? getData() : router.push("/login");
     }
 
     validate();
