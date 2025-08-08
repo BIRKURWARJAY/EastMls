@@ -25,14 +25,20 @@ function Header() {
   const [headerShowable, setHeaderShowable] = React.useState(false);
 
   React.useEffect(() => {
-    const decodedToken = jwtDecode(getCookie("EastMlsToken") || undefined);
+    try {
+      const decodedToken = jwtDecode(getCookie("EastMlsToken") || undefined);
 
-    if (decodedToken?.role === "agent") {
-      setHeaderShowable(false);
-      return;
+      if (decodedToken?.role === "agent") {
+        setHeaderShowable(false);
+        return;
+      }
+
+      setHeaderShowable(true);
+    } catch (error) {
+      setHeaderShowable(true)
+      console.log('error', error);
+      router.push('/')
     }
-    
-    setHeaderShowable(true);
   }, [handleLogout])
 
 

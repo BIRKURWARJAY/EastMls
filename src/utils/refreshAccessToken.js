@@ -9,12 +9,12 @@ export async function refreshAccessToken() {
    });
  
    if (res.status === 200) {
-     setCookie("EastMlsToken", "/", res.data.accessToken, 60);
+     setCookie("EastMlsToken", "/", res?.data?.accessToken, 60);
      return true;
    }
   } catch (error) {
     console.log(error);
-    if (res.status === 420) {
+    if (error?.status === 420) {
       deleteCookie("EastMlsToken", "/");
       return false;
     }
