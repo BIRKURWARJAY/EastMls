@@ -45,10 +45,11 @@ import LoadingComponent from '@/components/loading';
 import { api } from '@/utils/api';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
+import { features } from 'process';
 
 export default function EditAgentProperty() {
   const router = useRouter();
-  const [images, setImages] = useState([]);
+  const [images, setImages] = useState();
   const [videos, setVideos] = useState([]);
   const leaseTypes = ['Sell', 'Rent'];
   const propertyTypes = ['Apartment', 'House', 'Condo', 'Villa', 'Commercial'];
@@ -102,27 +103,32 @@ export default function EditAgentProperty() {
   useEffect(() => {
     async function validate() {
       const tokenRes = await decodeToken("agent", router);
-    async function getData() {
-      try {
-        const res = await api.get(`/property/${params.id}`)
+      async function getData() {
+        try {
+          const res = await api.get(`/property/${params.id}`)
 
-        if (res.status === 200) {
-          console.log(res.data.propertydetails);
-          setImages(res.data.images);
-          setVideos(res.data.videos);
-          setData(res.data.propertydetails)
-          setLoading(false);
+          console.log("sgfhusvh", res.data.propertydetails.features);
+
+
+          if (res.status === 200) {
+            console.log(res.data.propertydetails);
+            setImages(res.data.propertydetails.images || []);
+            setVideos(res.data.propertydetails.videos || []);
+            setData(res.data.propertydetails)
+            setLoading(false);
+          }
+        } catch (error) {
+          console.error(error);
+          router.replace("/agent/property");
         }
-      } catch (error) {
-        console.error(error);
-        router.replace("/agent/property");
       }
-    }
-    tokenRes?.status ? getData() : router.push("/login");
+      tokenRes?.status ? getData() : router.push("/login");
     }
 
     validate();
   }, [])
+
+
 
 
   const YupValidation = Yup.object().shape({
@@ -167,24 +173,24 @@ export default function EditAgentProperty() {
         formData.append("coordinates[]", "12.9715987");
         formData.append("coordinates[]", "77.594566");
 
-        Object.entries(values).forEach(([key, value]) => {
+        Object?.entries(values)?.forEach(([key, value]) => {
           formData.append(key, value);
         });
 
-        values.features.forEach(feature => {
-          formData.append("features", feature);
-        })
+      formik.values.features.forEach((feature) => {
+        formData.append("features", feature)
+      })
 
-        images.forEach((image) => {
+        images?.forEach((image) => { 
           formData.append("images", image);
         });
 
-        videos.forEach((video) => {
+        values?.videos?.forEach((video) => {
           formData.append("videos", video);
         });
 
         const res = await api.put(`/property/${params.id}`, formData);
-        if (res.status === 201) {
+        if (res?.status === 201) {
           console.log(res.data.message);
           toast.success("Property Edited");
           router.push("/agent/property");
@@ -198,7 +204,7 @@ export default function EditAgentProperty() {
     }
   })
 
-   const handleImageChanges = (event) => {
+  const handleImageChanges = (event) => {
     const files = Array.from(event.target.files || []);
     formik.setFieldValue("images", files);
     setImages(files);
@@ -222,13 +228,7 @@ export default function EditAgentProperty() {
     setVideos(files)
   };
 
-  // Handle features selection
-  const handleFeaturesChange = (event) => {
-    const {
-      target: { value },
-    } = event;
-    formik.setFieldValue('features', typeof value === 'string' ? value.split(',') : value);
-  };
+
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -390,7 +390,7 @@ export default function EditAgentProperty() {
                       multiple
                       name='features'
                       value={formik.values?.features || []}
-                      onChange={handleFeaturesChange}
+                      onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       input={<OutlinedInput />}
                       renderValue={(selected) => (
