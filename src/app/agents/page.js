@@ -70,6 +70,7 @@ function Page() {
         const response = await api.get(`/agent/search?username=${keyword}`)
         console.log(response);
         setdata(response.data.agentdetails)
+        toast.success(response.data.message)
       } catch (error) {
         setdata([])
         toast.error(error.response.data.message)

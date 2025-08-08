@@ -2,17 +2,27 @@ import Inquiry from "../models/inquiry.model.js";
 import Property from "../models/property.model.js";
 
 const getInquiry = async (req, res) => {
-  try {
-        const allInq = await Inquiry.findById(req.user.id).populate("propertyId", "title", Property);
+    try {
+        console.log(req.user.id);
+
+        const allInq = await Inquiry.find({ userId: req.user.id }).populate("propertyId", "", Property);
+        console.log(allInq);
+        
+
+        if (!allInq) {
+            res.status(400).json({
+                message: "Error fetching inquiries",
+            });
+        }
 
         return res.status(200).json({
-            message: allInq.length ? "All inquiries fetched" : "No inquiries found",
+            message: "All inquiries fetched",
             allInq
         });
 
     } catch (error) {
-        console.error("Error in getInquiry:", error); 
-        res.status(200).json({
+        console.error("Error in getInquiry:", error);
+        res.status(400).json({
             message: "Error fetching inquiries",
             error
         });
@@ -23,9 +33,10 @@ const getInquiry = async (req, res) => {
 const addInquiry = async (req, res) => {
     try {
 
-        const { name, email, phone, message, propertyId, agentId, userId, status } = req.body
+        const { name, email, phone, message, propertyId, agentId, status } = req.body
 
-        if (![name, email, phone, message, propertyId, agentId, userId, status].every(Boolean)) {
+
+        if (![name, email, phone, message, propertyId, agentId, status].every(Boolean)) {
             return res.status(400).json({ message: "All fields are required." });
         }
         const newInq = await Inquiry.create({
@@ -35,7 +46,7 @@ const addInquiry = async (req, res) => {
             message,
             propertyId,
             agentId,
-            userId,
+            userId: req.user.id,
             status
         })
 

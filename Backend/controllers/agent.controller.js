@@ -81,7 +81,7 @@ export async function searchAgent(req, res) {
     const agentdetails = await userModel.aggregate(pipeline);
 
     if (!agentdetails.length) {
-      return res.status(300).json({
+      return res.status(200).json({
         message: "No agent found",
         agentdetails: []
       });

@@ -12,7 +12,6 @@ function SellerEnquiry({ data }) {
         message: '',
         propertyId: data?._id || '',
         agentId: data?.agentId,
-        userId: "688a3652f042eea828c8fa90", // Replace this with actual logged-in user ID
         status: "new"
     };
 
