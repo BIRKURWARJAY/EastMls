@@ -22,18 +22,20 @@ function page() {
     async function validate() {
       const tokenRes = await decodeToken("user", router);
 
-    const fetchprop = async () => {
-      try {
-        setLoading(true);
-        const response = await api.get(`/property/all`)
-        console.log(response.data);
-        setprop(response.data.allprop)
-        setLoading(false);
-      } catch (error) {
-        console.error(error);
-        setLoading(false);
+      const fetchprop = async () => {
+        try {
+          setLoading(true);
+          const response = await api.get(`/property/all`)
+          console.log(response.data);
+          if (res?.status === 200) {
+            setprop(response.data.allprop)
+            setLoading(false);
+          }
+        } catch (error) {
+          console.error(error);
+          setLoading(false);
+        }
       }
-    }
       tokenRes?.status ? fetchprop() : router.push("/login");
     }
     validate();
@@ -46,9 +48,9 @@ function page() {
 
       const response = await api.get(`/property/search?propertyType=${type}&title=${keyword}&leaseType=${value}`);
       console.log(response.data.propertydetails);
-      setprop(response.data.propertydetails);
       if (response.status === 200) {
-        toast.success(response.data.message)
+        setprop(response?.data.propertydetails);
+        toast.success(response?.data.message)
       }
 
     } catch (error) {

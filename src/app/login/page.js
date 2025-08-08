@@ -60,6 +60,9 @@ export default function Login() {
           email: values.email,
           password: values.password,
           role: toggleButton
+        },
+          {
+          withCredentials: true
         });
         if (res.status === 200) {
           setIsLoggedIn(true);

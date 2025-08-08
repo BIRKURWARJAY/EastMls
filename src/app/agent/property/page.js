@@ -29,20 +29,20 @@ export default function BasicTable() {
     async function validate() {
       const tokenRes = await decodeToken("agent", router);
 
-    const fetchAgentProperty = async () => {
-      try {
-        const response = await api.get('/property/agent')
-        if (response.status === 200) {
-          setprop(response?.data.allprop)
+      const fetchAgentProperty = async () => {
+        try {
+          const response = await api.get('/property/agent')
+          if (response.status === 200) {
+            setprop(response?.data.allprop)
+          }
+          setLoading(false);
+        } catch (error) {
+          console.error(error);
+          setLoading(false);
         }
-        setLoading(false);
-      } catch (error) {
-        console.error(error);
-        setLoading(false);
       }
-    }
 
-    tokenRes?.status ? fetchAgentProperty() : router.push("/login");
+      tokenRes?.status ? fetchAgentProperty() : router.push("/login");
     }
     validate();
   }, [])
@@ -90,9 +90,11 @@ export default function BasicTable() {
                   <TableCell align="left">{row.viewCount}</TableCell>
                   <TableCell align="left">{row.status}</TableCell>
                   <TableCell align="right">
-                    <IconButton aria-label="fingerprint" color="success" >
-                      <RemoveRedEyeOutlined sx={{ color: "orange" }} />
-                    </IconButton>
+                    <Link href={`/property/${row?.title}/${row?._id}`}>
+                      <IconButton aria-label="fingerprint" color="success" >
+                        <RemoveRedEyeOutlined sx={{ color: "orange" }} />
+                      </IconButton>
+                    </Link>
                     <Link href={`/agent/property/edit/${row._id}`}>
                       <IconButton aria-label="fingerprint" color="success">
                         <EditCalendarOutlined sx={{ color: "orange" }} />

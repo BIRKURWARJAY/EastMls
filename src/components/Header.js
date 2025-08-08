@@ -22,17 +22,25 @@ function Header() {
   const router = useRouter();
   const isLoggedIn = eastMlsStore(s => s.isLoggedIn);
   const setIsLoggedIn = eastMlsStore(s => s.setIsLoggedIn);
+  const setRole = eastMlsStore(s => s.setRole);
   const [headerShowable, setHeaderShowable] = React.useState(false);
 
   React.useEffect(() => {
-    const decodedToken = jwtDecode(getCookie("EastMlsToken") || undefined);
-
-    if (decodedToken?.role === "agent") {
-      setHeaderShowable(false);
-      return;
-    }
-    
-    setHeaderShowable(true);
+   try {
+     const decodedToken = jwtDecode(getCookie("EastMlsToken") || undefined);
+ 
+     if (decodedToken?.role === "agent") {
+       setHeaderShowable(false);
+       setRole("agent");
+       return;
+     }
+     
+     setRole("user");
+     setHeaderShowable(true);
+   } catch (error) {
+     setHeaderShowable(true);
+     router.push("/");
+   }
   }, [handleLogout])
 
 
