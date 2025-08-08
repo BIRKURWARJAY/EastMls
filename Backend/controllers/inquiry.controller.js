@@ -3,7 +3,7 @@ import Property from "../models/property.model.js";
 
 const getInquiry = async (req, res) => {
   try {
-        const allInq = await Inquiry.find({ email: req.user.email }).populate("propertyId", "title", Property);
+        const allInq = await Inquiry.findById(req.user.id).populate("propertyId", "title", Property);
 
         return res.status(200).json({
             message: allInq.length ? "All inquiries fetched" : "No inquiries found",

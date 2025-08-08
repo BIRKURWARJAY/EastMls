@@ -1,49 +1,39 @@
-'use client'
 import axios from "axios";
+import { getCookie } from "./setCookie.js";
+import { refreshAccessToken } from "./refreshAccessToken.js";
 
 export const api = axios.create({
   baseURL: "http://localhost:5000/api", 
-  timeout: 5000
+  timeout: 2000,
 });
 
 api.interceptors.request.use(
   config => {
+    console.log(">> interceptor > req >", config)
     if (typeof window !== 'undefined') {
-      const token = localStorage.getItem("EastMls") || undefined;
-
+      const token = getCookie("EastMlsToken");
       config.headers = {
         ...config.headers,
-        Authorization:` Bearer ${token}`
+        Authorization:`Bearer ${token}`
       };
     }
     return config;
+  },
+  error => {
+    console.log("interceptor > request > error > ", error, config)
   }
 )
 
 api.interceptors.response.use(
-  res => {
-    console.log(res)
-    return res;
-  },
+  undefined, 
 
   async error => {
-    console.log(error)
-    // if (error.response === 401) {
-    //   try {
-    //     const res = await api.get("/auth/refresh-token");
-    //     if (res.status === 200) {
-    //       console.log("Token refreshed");
-    //       localStorage.setItem("EastMls", res.data.token);
-    //       return;
-    //     }
-    //     if (res.status === 420) {
-    //       window.location.href = "/login"
-    //     }
-    //   } catch (error) {
-    //     console.error("Error refreshing token", error);
-    //     return error;
-    //   }
-    // }
-    return error
+    if (error?.status === 401) {
+      if (await refreshAccessToken()) {
+        return api(error.config)
+      }
+    }
   }
 )
+
+

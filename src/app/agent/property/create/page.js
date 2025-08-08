@@ -16,6 +16,7 @@ import {
   OutlinedInput,
   Box,
 } from '@mui/material';
+import Link from 'next/link';
 
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import SellIcon from '@mui/icons-material/Sell';
@@ -43,15 +44,17 @@ import decodeToken from '@/utils/decodeToken';
 import { useRouter } from 'next/navigation';
 import LoadingComponent from '@/components/loading';
 import { api } from '@/utils/api';
+import { features } from 'process';
+import toast from 'react-hot-toast';
 
 export default function CreateAgentProperty() {
   const router = useRouter();
-  const [images, setImages] = useState([]);
-  const [videos, setVideos] = useState([]);
   const leaseTypes = ['Sell', 'Rent'];
   const propertyTypes = ['Apartment', 'House', 'Condo', 'Villa', 'Commercial'];
   const statusArr = ['Available', 'Pending', 'Sold', 'Rented'];
   const [isLoading, setLoading] = useState(true);
+  const [images, setImages] = useState([]);
+  const [videos, setVideos] = useState([]);
 
   // Property features options
   const propertyFeatures = [
@@ -91,21 +94,15 @@ export default function CreateAgentProperty() {
     'Maintenance Staff'
   ];
 
-  // Currency options
-  const currencyOptions = ['$', '€', '£', '₹', '¥', '₦', 'KSh'];
+  const currencyOptions = ['USD', "EURO", 'POUND', 'RUPEES', 'YEMEN', 'ND', 'KSh'];
 
   useEffect(() => {
-    const tokenRes = decodeToken("agent", router);
-    tokenRes?.status && setLoading(false);
-}, [])
-
-  useEffect(() => {
-    formik.setFieldValue('images', images);
-  }, [images])
-
-  useEffect(() => {
-    formik.setFieldValue('videos', videos);
-  }, [videos])
+    async function validate() {
+      const tokenRes = await decodeToken("agent", router);
+      tokenRes?.status ? setLoading(false) : router.push("/login");
+    }
+    validate();
+  }, [])
 
   const YupValidation = Yup.object().shape({
     leaseType: Yup.string('numbers is not allowed').oneOf(['sell', 'rent'], 'leaseType must be one of "sell" or "rent"').required('leaseType is required'),
@@ -127,7 +124,7 @@ export default function CreateAgentProperty() {
     state: Yup.string('state must be a string').trim().required('state is required'),
     countryCode: Yup.number('countryCode must be a number').required('countryCode is required'),
     countryName: Yup.string('countryName must be a string').trim().required('countryName is required'),
-    postalCode: Yup.string('postalCode must be a string').trim().required('postalCode is required'),
+    postalCode: Yup.number('postalCode must be a string').required('postalCode is required'),
     title: Yup.string('title must be a string').trim().required('title is required'),
     currency: Yup.string('currency must be a string').required('currency is required'),
     features: Yup.array().min(1, 'At least one feature must be selected').required('features is required')
@@ -157,57 +154,72 @@ export default function CreateAgentProperty() {
       countryName: "",
       postalCode: "",
       title: "",
-      currency: "$",
+      currency: " ",
       features: []
     },
     validationSchema: YupValidation,
     onSubmit: async (values) => {
       console.log('Submitting form with values:', values)
       try {
-        // Convert date objects to ISO strings and ensure numbers are properly typed
-        const formData = {
-          ...values,
-          yearOfBuild: Number(values.yearOfBuild),
-          availableFrom: values.availableFrom.toISOString(),
-          cityCode: Number(values.cityCode),
-          countryCode: Number(values.countryCode),
-          landArea: Number(values.landArea),
-          price: Number(values.price),
-          bedrooms: Number(values.bedrooms),
-          bathrooms: Number(values.bathrooms),
-          areaSqFt: Number(values.areaSqFt),
-          images: [...images.map(file => file[0].name)],
-          coordinates: ["23","31"]
-        };
-        
+        const formData = new FormData();
+
+        formData.append("coordinates[]", "12.9715987");
+        formData.append("coordinates[]", "77.594566");
+
+        Object.entries(values).forEach(([key, value]) => {
+          formData.append(key, value);
+        });
+
+        values.features.forEach(feature => {
+          formData.append("features", feature);
+        })
+
+        images.forEach((image) => {
+          formData.append("images", image);
+        });
+
+        videos.forEach((video) => {
+          formData.append("videos", video);
+        });
+
+
+
         console.log('Sending to API:', formData);
         const res = await api.post("/property", formData);
-        if (res.status === 200) {
+        if (res?.status === 200) {
           console.log(res.data.message);
+          toast.success("Property Listed");
           router.push("/agent/property");
         }
       } catch (error) {
         console.error('Form submission error:', error);
+        toast.error("Error Listing Property");
       }
     }
   })
 
   const handleImageChanges = (event) => {
-    const files = event.target.files;
-    setImages((prev) => [files, ...prev]);
+    const files = Array.from(event.target.files || []);
+    formik.setFieldValue("images", files);
+    setImages(files);
   };
 
   const handleDeleteImage = (idx) => {
     setImages(prev => prev.filter((_, index) => index !== idx));
+    const newImages = formik.values.images.filter((_, index) => index !== idx);
+    formik.setFieldValue("images", newImages);
   }
 
   const handleDeletevideo = (idx) => {
     setVideos(prev => prev.filter((_, index) => index !== idx));
+    const newVideos = formik.values.videos.filter((_, index) => index !== idx);
+    formik.setFieldValue("images", newVideos);
   }
 
   const handleVideoChanges = (event) => {
     const files = Array.from(event.target.files || []);
-    formik.setFieldValue('videos', files);
+    formik.setFieldValue("videos", files);
+    setVideos(files)
   };
 
   // Handle features selection
@@ -234,9 +246,11 @@ export default function CreateAgentProperty() {
             gap: 3
           }}>
             <Stack direction="row" alignItems="center" spacing={1}>
-              <IconButton sx={{ paddingLeft: 0 }}>
-                <KeyboardBackspaceIcon />
-              </IconButton>
+              <Link href={"/agent/property"}>
+                <IconButton sx={{ paddingLeft: 0 }}>
+                  <KeyboardBackspaceIcon />
+                </IconButton>
+              </Link>
               <Typography variant="h5">Create Property Listing</Typography>
             </Stack>
 
@@ -259,7 +273,7 @@ export default function CreateAgentProperty() {
                 {/* Location Details */}
                 <Stack spacing={2}>
                   <Typography variant="h6">Location Details</Typography>
-                  
+
                   <Stack spacing={.3}>
                     <FormLabel>Address</FormLabel>
                     <TextareaAutosize
@@ -282,7 +296,7 @@ export default function CreateAgentProperty() {
                     />
                     {formik.touched.address && formik.errors.address && <ErrorText helperText={formik.errors.address} />}
                   </Stack>
-                  
+
                   <Stack direction="row" spacing={3}>
                     <Stack flex={1} spacing={.3}>
                       <FormLabel>City Code</FormLabel>
@@ -358,6 +372,7 @@ export default function CreateAgentProperty() {
                       <TextField
                         placeholder="e.g., 380001"
                         name='postalCode'
+                        type='number'
                         value={formik.values?.postalCode}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -375,18 +390,19 @@ export default function CreateAgentProperty() {
                     <Select
                       multiple
                       name='features'
-                      value={formik.values.features || []}
+                      value={formik.values.features}
                       onChange={handleFeaturesChange}
                       onBlur={formik.handleBlur}
                       input={<OutlinedInput />}
                       renderValue={(selected) => (
                         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                           {selected.map((value) => (
-                            <Chip key={value} label={value} />
+                            <Chip key={value + Date.now()} label={value} />
                           ))}
                         </Box>
                       )}
                     >
+                      <MenuItem value={[]} disabled>Features</MenuItem>
                       {propertyFeatures.map((feature) => (
                         <MenuItem key={feature} value={feature}>
                           {feature}
@@ -476,6 +492,7 @@ export default function CreateAgentProperty() {
                       onBlur={formik.handleBlur}
                       error={formik.touched.currency && formik.errors.currency}
                     >
+                      <MenuItem value={" "} disabled>Currency</MenuItem>
                       {currencyOptions.map((currency) => (
                         <MenuItem key={currency} value={currency}>
                           {currency}
@@ -554,12 +571,13 @@ export default function CreateAgentProperty() {
                     </FormLabel>
                     <DatePicker
                       name='availableFrom'
-                      value={formik.values?.availableFrom}
+                      value={(formik.values?.availableFrom)}
                       minDate={dayjs()}
                       maxDate={dayjs().add(5, 'year')}
                       onChange={(date) => formik.setFieldValue('availableFrom', date)}
                       slotProps={{
                         textField: {
+                          name: "availableFrom",
                           error: formik.touched.availableFrom && formik.errors.availableFrom,
                           onBlur: formik.handleBlur,
                           helperText: <ErrorText helperText={formik.errors.availableFrom} />
@@ -714,11 +732,11 @@ export default function CreateAgentProperty() {
                     </Stack>
                   </Stack>
                   {
-                    formik.values?.images?.length > 0 && formik.values.images?.map((image, index) => (
+                    images?.length > 0 && images?.map((image, index) => (
                       <Stack direction={'row'}>
-                        <Typography key={image[0].lastModified} variant='body1' component={"span"} sx={{
+                        <Typography key={image.lastModified} variant='body1' component={"span"} sx={{
                           maxWidth: "80%", overflow: 'clip'
-                        }}>{image[0].name}
+                        }}>{image.name}
                         </Typography>
                         <IconButton
                           disableFocusRipple
@@ -776,13 +794,13 @@ export default function CreateAgentProperty() {
                           color: "rgb(255 138 0)",
                           fontWeight: 700,
                         }}>Choose Files</Button>
-                        {formik.values.videos.length === 0 && <Typography variant='body1' component={"span"} sx={{
+                        {videos?.length === 0 && <Typography variant='body1' component={"span"} sx={{
                         }}>No File chosen</Typography>}
                       </Stack>
                     </Stack>
                   </Stack>
                   {
-                    formik.values?.videos.length > 0 && formik.values.videos.map((video, index) => (
+                    videos.length > 0 && videos?.map((video, index) => (
                       <Stack direction={'row'}>
                         <Typography key={video[0].lastModified} variant='body1' component={"span"} sx={{
                           maxWidth: "80%", overflow: 'clip'

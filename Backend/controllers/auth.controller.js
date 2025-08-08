@@ -7,10 +7,11 @@ import { Transactions, tryCatchWrapper } from '../utils/transactions.js';
 
 const cookieOptions = (maxAge) => {
   return {
-    httpOnly: false,
-    secure: false,
+    httpOnly: true,
+    secure: true,
+    origin: "http://localhost:3000",
     sameSite: "none",
-    maxAge
+    expires: new Date(Date.now() + maxAge)
   }
 };
 
@@ -67,7 +68,6 @@ export function loginUser() {
     if (!passwordCheck) return next(PostError("password is incorrect", 404));
 
     const accessToken = jwt.sign({
-      email: existedUser.email,
       id: existedUser._id,
       role: req.body.role
     },
@@ -81,7 +81,6 @@ export function loginUser() {
     if (!accessToken) return next(PostError('Error Creating AccessToken', 500));
 
     const refreshToken = jwt.sign({
-      email: existedUser.email,
       id: existedUser._id
     },
       process.env.JWTSECRET,
@@ -94,13 +93,15 @@ export function loginUser() {
 
     existedUser.refreshToken = refreshToken;
 
-    (await existedUser.save());
+    await existedUser.save({ validateBeforeSave: false });
 
     return res
       .status(200)
+      .cookie("accessToken", accessToken, cookieOptions(1000 * 60 * 15))
+      .cookie("refreshToken", refreshToken, cookieOptions(1000 * 60 * 60 * 24 * 7))
       .json({
         message: "User Logged in successfully",
-        token: accessToken,
+        accessToken,
         existedUser: existedUser.toObject({ versionKey: false, transform: (doc, ret) => { delete ret.password; delete ret.refreshToken; } }),
       });
   })

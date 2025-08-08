@@ -44,7 +44,8 @@ function page() {
 
 
   useEffect(() => {
-    const tokenRes = decodeToken("user", router);
+    async function validate() {
+      const tokenRes = await decodeToken("user", router);
 
     const fetchprop = async () => {
       try {
@@ -57,7 +58,9 @@ function page() {
         setLoading(false);
       }
     }
-    tokenRes?.status && fetchprop()
+      tokenRes?.status ? fetchprop() : router.push("/login");
+    }
+    validate();
   }, [])
 
   return (

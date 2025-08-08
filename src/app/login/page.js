@@ -3,7 +3,7 @@
 import { Button, FormLabel, Stack, TextField, Typography, Card, InputAdornment, CardContent, IconButton } from "@mui/material";
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -11,12 +11,35 @@ import ErrorText from "@/components/ErrorText";
 import { useRouter } from "next/navigation";
 import { api } from "@/utils/api.js";
 import toast from "react-hot-toast";
+import { eastMlsStore } from "@/store/eastMlsStore";
+import { setCookie } from "@/utils/setCookie";
+import decodeToken from "@/utils/decodeToken";
 
 
 export default function Login() {
+
   const router = useRouter();
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [toggleButton, setToggleButton] = useState("user");
+  const setIsLoggedIn = eastMlsStore(s => s.setIsLoggedIn);
+
+  useEffect(() => {
+    async function validate() {
+      const tokenRes = await decodeToken(["user", "agent"], router);
+
+      if (tokenRes?.status && tokenRes?.decodedToken.role === "user") {
+        toast.error("Logout First");
+        router.push("/buy-property");
+      } else if (tokenRes?.status && tokenRes?.decodedToken.role === "agent") {
+        toast.error("Logout First");
+        router.push("/agent/property");
+      }
+      else {
+        router.push("/login");
+      }
+    }
+    validate();
+  }, [])
 
   const Adornment = passwordVisible ? <VisibilityOffIcon /> : <VisibilityIcon />
 
@@ -38,21 +61,19 @@ export default function Login() {
           password: values.password,
           role: toggleButton
         });
-        console.log(res)
         if (res.status === 200) {
+          setIsLoggedIn(true);
           toast.success(`Welcome ${res.data.existedUser.username}`)
+          setCookie("EastMlsToken", "/", res.data.accessToken, 15)
           if (res.data.existedUser.role === 'user') {
-            router.push("/buy-property")
+            router.replace("/buy-property")
           } else {
-            router.push("/agent/property")
+            router.replace("/agent/property")
           }
-
-          localStorage.setItem("EastMls", JSON.stringify(res.data.token));
         };
       } catch (error) {
-        toast.error(error.response?.data?.message);
-
-        console.error(error);
+        console.error(error.response);
+        toast.error(error.response.data.message);
       }
     }
   })

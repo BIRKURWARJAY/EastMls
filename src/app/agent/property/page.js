@@ -16,7 +16,6 @@ import { api } from '@/utils/api';
 import decodeToken from '@/utils/decodeToken';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import axios from 'axios';
 import toast from 'react-hot-toast';
 
 
@@ -27,13 +26,15 @@ export default function BasicTable() {
   const router = useRouter();
 
   useEffect(() => {
-    const tokenRes = decodeToken("agent", router);
+    async function validate() {
+      const tokenRes = await decodeToken("agent", router);
 
     const fetchAgentProperty = async () => {
       try {
         const response = await api.get('/property/agent')
-        console.log(response.data);
-        setprop(response.data?.allprop)
+        if (response.status === 200) {
+          setprop(response?.data.allprop)
+        }
         setLoading(false);
       } catch (error) {
         console.error(error);
@@ -41,8 +42,9 @@ export default function BasicTable() {
       }
     }
 
-    tokenRes?.status && fetchAgentProperty();
-    tokenRes?.status && fetchAgentProperty();
+    tokenRes?.status ? fetchAgentProperty() : router.push("/login");
+    }
+    validate();
   }, [])
 
   const deleteproperty = async (id) => {

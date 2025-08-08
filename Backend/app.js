@@ -15,16 +15,20 @@ const app = express();
 
 configDotenv();
 connect()
+
+
 app.use(cors({
   credentials: true,
   origin: "http://localhost:3000"
 }));
 app.use(express.json());
-
-
-
 app.use(cookieParser());
-app.use(express.json());
+app.use(express.urlencoded({
+  extended: true
+}))
+app.use(express.static("./public"));
+
+
 // app.get("/", authenticateUser)
 
 app.use("/api/property", propertyRouter);

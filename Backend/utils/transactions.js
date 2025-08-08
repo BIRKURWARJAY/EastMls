@@ -20,10 +20,10 @@ const Transactions = (fn) => async (req, res, next) => {
     await session.abortTransaction();
     
     if (error instanceof mongoose.Error || error.code === 11000) {
-      return next(new MongoError("Mongoose Errr", 409, error));
+      return next(new MongoError(error.message, 409, error));
     }
     if (error instanceof ValidationError) {
-      return next(new PostError(error.errors));
+      return next(new PostError(error.errors, 409));
     }
 
     return next(new PostError(error.message, 409));
