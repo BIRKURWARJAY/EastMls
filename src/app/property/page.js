@@ -2,11 +2,11 @@
 
 import PropertyListingCard from '@/components/PropertyListingCard'
 import { api } from '@/utils/api'
-import decodeToken from '@/utils/decodeToken'
 import { Box, Button, FormControl, MenuItem, Select, Stack, TextField, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
+import decodeRole from '@/utils/decodeRole'
 
 function page() {
   const router = useRouter();
@@ -20,11 +20,10 @@ function page() {
 
   useEffect(() => {
     async function validate() {
-      const tokenRes = await decodeToken("user", router);
+      const tokenRes = await decodeRole("user", router);
 
       const fetchprop = async () => {
         try {
-          setLoading(true);
           const response = await api.get(`/property/all`)
           console.log(response.data);
           if (response?.status === 200) {
@@ -36,7 +35,7 @@ function page() {
           setLoading(false);
         }
       }
-      tokenRes?.status ? fetchprop() : router.push("/login");
+      tokenRes ? fetchprop() : router.replace("/login");
     }
     validate();
   }, [])

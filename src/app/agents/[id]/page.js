@@ -1,14 +1,13 @@
 'use client'
 import AgentCard from '@/components/AgentCard';
 import BreadCrumbs from '@/components/BreadCrumbs';
-import SellerEnquiry from '@/components/SellerEnquiry';
-import decodeToken from '@/utils/decodeToken';
 import { Box, Stack, Typography } from '@mui/material';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { api } from '@/utils/api'
 import LoadingComponent from '@/components/loading';
+import decodeRole from '@/utils/decodeRole';
 
 function page({ params: paramsPromise }) {
   const router = useRouter();
@@ -19,7 +18,7 @@ function page({ params: paramsPromise }) {
 
   useEffect(() => {
     async function validate() {
-      const tokenRes = await decodeToken("user", router);
+      const tokenRes = await decodeRole("user", router);
 
     const fetchAgent = async () => {
       try {
@@ -33,7 +32,7 @@ function page({ params: paramsPromise }) {
       }
     };
 
-    tokenRes?.status ? fetchAgent() : router.push("/login");
+    tokenRes ? fetchAgent() : router.push("/login");
     }
     validate();
   }, [params.id, router]);

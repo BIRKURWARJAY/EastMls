@@ -13,10 +13,10 @@ import {
 } from '@mui/material';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
-import decodeToken from '@/utils/decodeToken';
 import { useRouter } from 'next/navigation';
 import LoadingComponent from '@/components/loading';
 import toast from 'react-hot-toast';
+import decodeRole from '@/utils/decodeRole';
 
 let timeId = null
 
@@ -29,7 +29,7 @@ function Page() {
 
   useEffect(() => {
     async function validate() {
-      const tokenRes = await decodeToken("user", router);
+      const tokenRes = await decodeRole("user", router);
 
     const fetchagent = async () => {
       try {
@@ -43,7 +43,7 @@ function Page() {
         setLoading(false);
       }
     }
-      tokenRes?.status ? fetchagent() : router.push("/login");
+      tokenRes ? fetchagent() : router.push("/login");
     }
     validate();
   }, [])

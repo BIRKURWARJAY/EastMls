@@ -2,9 +2,9 @@
 import { Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, CircularProgress, Box } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { api } from '@/utils/api'
-import decodeToken from '@/utils/decodeToken'
 import { useRouter } from 'next/navigation'
 import LoadingComponent from '@/components/loading'
+import decodeRole from '@/utils/decodeRole'
 
 function page() {
   const router = useRouter();
@@ -14,7 +14,7 @@ function page() {
 
   useEffect(() => {
     async function validate() {
-      const tokenRes = await decodeToken("user", router);
+      const tokenRes = await decodeRole("user", router);
       const getinq = async () => {
         try {
           const response = await api.get('/inquiry');
@@ -26,7 +26,7 @@ function page() {
           setLoading(false);
         }
       }
-      tokenRes?.status ? getinq() : router.push("/login");
+      tokenRes ? getinq() : router.push("/login");
     }
     validate();
   }, []);

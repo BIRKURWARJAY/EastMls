@@ -8,7 +8,7 @@ import bcrypt from 'bcrypt'
 
 export function getUserDetails() {
   return tryCatchWrapper(async (req, res, next) => {
-    const user = await req.Model.findById(req.user.id).select("-password -refreshToken");
+    const user = await userModel.findById(req.user.id).select("-password -refreshToken");
     if (!user) {
       return next(PostError("User not found", 404));
     }

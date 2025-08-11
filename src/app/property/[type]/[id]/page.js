@@ -14,8 +14,8 @@ import Overview from '@/components/Overview';
 import Propertydetails from '@/components/Propertydetails';
 import SellerEnquiry from '@/components/SellerEnquiry';
 import { api } from '@/utils/api';
-import decodeToken from '@/utils/decodeToken';
 import LoadingComponent from '@/components/loading';
+import decodeRole from '@/utils/decodeRole';
 
 function page() {
   const router = useRouter();
@@ -45,7 +45,7 @@ function page() {
 
   useEffect(() => {
     async function validate() {
-      const tokenRes = await decodeToken(["user", "agent"], router);
+      const tokenRes = await decodeRole(["user", "agent"], router);
 
     const fetchprop = async () => {
       try {
@@ -58,7 +58,7 @@ function page() {
         setLoading(false);
       }
     }
-      tokenRes?.status ? fetchprop() : router.push("/login");
+      tokenRes ? fetchprop() : router.push("/login");
     }
     validate();
   }, [])

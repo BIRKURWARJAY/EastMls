@@ -3,7 +3,7 @@ import userModel from '../models/user.model.js';
 import { userLoginValidationSchema, userValidator } from "../validators/user.validator.js";
 import { PostError, MongoError } from '../utils/ErrorHandler.js';
 import jwt from "jsonwebtoken";
-import { Transactions, tryCatchWrapper } from '../utils/transactions.js';
+import { tryCatchWrapper } from '../utils/transactions.js';
 
 const cookieOptions = (maxAge) => {
   return {
@@ -104,7 +104,6 @@ export function loginUser() {
       .cookie("refreshToken", refreshToken, cookieOptions(1000 * 60 * 60 * 24 * 7))
       .json({
         message: "User Logged in successfully",
-        accessToken,
         existedUser: existedUser.toObject({ versionKey: false, transform: (doc, ret) => { delete ret.password; delete ret.refreshToken; } }),
       });
   })

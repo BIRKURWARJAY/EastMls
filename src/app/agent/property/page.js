@@ -13,10 +13,11 @@ import { useState } from 'react';
 import { DeleteOutlineOutlined, EditCalendarOutlined, RemoveRedEyeOutlined } from '@mui/icons-material';
 import { Box, IconButton } from '@mui/material';
 import { api } from '@/utils/api';
-import decodeToken from '@/utils/decodeToken';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
+import decodeRole from '@/utils/decodeRole';
+import { eastMlsStore } from '@/store/eastMlsStore';
 
 
 export default function BasicTable() {
@@ -24,10 +25,12 @@ export default function BasicTable() {
   const [prop, setprop] = useState();
   const [isLoading, setLoading] = useState(true);
   const router = useRouter();
+    const role = eastMlsStore(s => s.role);
+  
 
   useEffect(() => {
     async function validate() {
-      const tokenRes = await decodeToken("agent", router);
+      const tokenRes = decodeRole("agent", router);
 
       const fetchAgentProperty = async () => {
         try {
@@ -42,7 +45,7 @@ export default function BasicTable() {
         }
       }
 
-      tokenRes?.status ? fetchAgentProperty() : router.push("/login");
+      tokenRes ? fetchAgentProperty() : router.push("/login");
     }
     validate();
   }, [])
@@ -59,9 +62,9 @@ export default function BasicTable() {
 
   return (
     <>
-      <Box display={'flex'} justifyContent={'center'} p={'2rem'}>
+      {isLoading ? <LoadingComponent /> : <Box display={'flex'} justifyContent={'center'} p={'2rem'}>
 
-        {isLoading ? <LoadingComponent /> : <TableContainer component={Paper} sx={{ maxWidth: "90rem" }}>
+        <TableContainer component={Paper} sx={{ maxWidth: "90rem" }}>
           <Table sx={{ minWidth: 650, }} aria-label="simple table">
             <TableHead>
               <TableRow>
@@ -110,8 +113,8 @@ export default function BasicTable() {
           </Table>
         </TableContainer>
 
-        }
       </Box>
+      }
     </>
   );
 }

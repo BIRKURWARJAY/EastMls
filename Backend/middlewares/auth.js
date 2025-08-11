@@ -1,12 +1,11 @@
-import { PostError } from "../utils/ErrorHandler.js";
 import jwt from "jsonwebtoken";
+import autoRefreshToken from "../utils/autoRefreshToken.js";
 
-export const authenticateUser = (req, res, next) => {
-  const token = req.headers.authorization?.replaceAll('"', '').split("Bearer ")[1] || undefined;
-
-  
+export const authenticateUser = async (req, res, next) => {
+  let token = req?.cookies?.accessToken;
   if (!token) {
-    return next(PostError("Unauthorized", 401));
+    const resp = await autoRefreshToken(req, res);
+    token = resp.accessToken;
   }
 
   jwt.verify(token, process.env.JWTSECRET, (err, decoded) => {
