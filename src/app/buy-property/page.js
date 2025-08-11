@@ -1,28 +1,26 @@
 'use client'
 import PropertyListingCard from '@/components/PropertyListingCard'
-import { Box, Button, FormControl, InputLabel, MenuItem, Select, Stack, TextField } from '@mui/material'
+import { Box, Button, FormControl, MenuItem, Select, Stack, TextField } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { api } from '@/utils/api'
-import decodeToken from '@/utils/decodeToken'
 import { useRouter } from 'next/navigation'
 import LoadingComponent from '@/components/loading'
 import toast from 'react-hot-toast'
+import decodeRole from '@/utils/decodeRole'
 
 function page() {
   const [type, settype] = useState('')
   const [keyword, setkeyword] = useState('')
   const [prop, setprop] = useState()
   const [isLoading, setLoading] = useState(true);
-
   const router = useRouter()
-
+  
   useEffect(() => {
     async function fetchProp() {
-      const tokenRes = await decodeToken("user", router);
+      const tokenRes = await decodeRole("user", router);
       const fetchProp = async () => {
         try {
           const response = await api.get(`/property/all`)
-          // console.log(response.data, "hello");
           setprop(response.data.allprop);
           setLoading(false);
         } catch (error) {
@@ -31,7 +29,7 @@ function page() {
           setLoading(false)
         }
       }
-      tokenRes?.status ? fetchProp() : router.push("/login");
+      tokenRes ? fetchProp() : router.push("/login");
     }
     fetchProp();
   }, [])

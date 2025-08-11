@@ -8,7 +8,7 @@ import { hashPassword } from "../utils/hashPassword.js";
 
 export function getUserDetails() { 
   return tryCatchWrapper(async (req, res, next) => {
-    const user = await req.Model.findById(req.user.id).select("-password -refreshToken");
+    const user = await userModel.findById(req.user.id).select("-password -refreshToken");
     if (!user) {
       return next(PostError("User not found", 404));
     }
@@ -18,7 +18,7 @@ export function getUserDetails() {
 
 export function getUserDetailsById() {
   return tryCatchWrapper(async (req, res, next) => {
-    const user = req.Model.findById(req.user.id).select("-password", "-refreshToken");
+    const user = await userModel.findById(req.user.id).select("-password", "-refreshToken");
     if (!user) return next(PostError("User Doesn't Exists"));
 
     return res.status(200).json({

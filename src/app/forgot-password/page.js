@@ -3,19 +3,36 @@
 import { api } from "@/utils/api";
 import { Button, FormControl, FormLabel, Stack, TextField, Typography, Card, CardContent } from "@mui/material";
 import Link from "next/link";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import decodeRole from "@/utils/decodeRole";
+import LoadingComponent from "@/components/loading";
 
 
 export default function ForgotPassword() {
 
   const router = useRouter();
-  const emailRef = useRef();
-  const passwordRef = useRef();
+  const emailRef = useRef(null);
+  const passwordRef = useRef(null);
+  const [loading, setLoading] = useState(true);
 
-  const validateEmail = async(email) => {
+  useEffect(() => {
+    async function validate() {
+      const tokenRes = await decodeRole(["user", "agent"], router);
+
+      if (tokenRes) {
+        return router.back();
+      }
+
+      setLoading(false);
+      return;
+    }
+    validate();
+  }, [])
+
+  const validateEmail = async (email) => {
     try {
-      if (!email.trim()) {
+      if (!email?.trim()) {
         return alert("email is required");
       }
       const res = await api.post("/user/validateEmail", {
@@ -55,7 +72,7 @@ export default function ForgotPassword() {
   }
 
   return (
-    <Stack id="loginPage" sx={{ height: "auto", minHeight: "calc(100vh - 6rem)", backgroundImage: 'url(/eastmls/registerbg.webp)' }}>
+    <>{loading ? <LoadingComponent /> : <Stack id="loginPage" sx={{ height: "auto", minHeight: "calc(100vh - 6rem)", backgroundImage: 'url(/eastmls/registerbg.webp)' }}>
 
       <Card className="Login-modal" sx={{ width: "30%", bgcolor: "#e2e2e2cc", marginInline: "auto", marginBlock: "auto", borderRadius: "20px", paddingBlock: 4, paddingInline: 2, alignItems: "center", display: "flex", flexDirection: "column", gap: 2 }}>
         <Typography variant="h1" sx={{ fontSize: 30, fontWeight: 800 }}>
@@ -73,7 +90,7 @@ export default function ForgotPassword() {
               />
             </Stack>
 
-            <Button variant="contained" onClick={() => validateEmail(emailRef.current)} sx={{ paddingBlock: 1.5, bgcolor: "rgb(255 138 0)" }} disabled={!emailRef.current.trim()}>
+            <Button variant="contained" onClick={() => validateEmail(emailRef?.current)} sx={{ paddingBlock: 1.5, bgcolor: "rgb(255 138 0)" }} disabled={!emailRef?.current?.trim()}>
               Submit
             </Button>
           </FormControl>
@@ -81,6 +98,6 @@ export default function ForgotPassword() {
 
         <Link href={"/login"}>Back to login</Link>
       </Card>
-    </Stack>
+    </Stack>}</>
   )
 }

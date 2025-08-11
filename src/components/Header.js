@@ -1,3 +1,5 @@
+'use client'
+
 import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -10,42 +12,20 @@ import Stack from '@mui/material/Stack';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button, List, ListItem, ListItemText } from '@mui/material';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { api } from '@/utils/api';
 import { eastMlsStore } from "../store/eastMlsStore.js"
-import { deleteCookie } from '@/utils/setCookie.js';
 import toast from 'react-hot-toast';
-import { jwtDecode } from 'jwt-decode';
-import { getCookie } from '@/utils/setCookie.js';
-import { refreshAccessToken } from '@/utils/refreshAccessToken.js';
+
 
 
 function Header() {
   const [drawerOpen, setDrawerOpen] = React.useState(false);
-  const [headerShowable, setHeaderShowable] = React.useState(true);
   const router = useRouter();
   const isLoggedIn = eastMlsStore(s => s.isLoggedIn);
-  const setIsLoggedIn = eastMlsStore(s => s.setIsLoggedIn);
+  const clearStore = eastMlsStore(s => s.clearStore);
 
-  React.useEffect(() => {
-    async function validate() {
-      try {
-        const decoded = jwtDecode(getCookie("EastMlsToken"));
-        if (decoded.role === "agent") {
-          setHeaderShowable(false);
-          return;
-        }
-      } catch (error) {
-        if (await refreshAccessToken()) {
-          validate();
-        } else {
-          setHeaderShowable(true);
-          router.replace("/login");
-        }
-      }
-    }
-    validate();
-  }, [isLoggedIn])
+
 
 
   const toggleDrawer = (open) => (event) => {
@@ -63,9 +43,9 @@ function Header() {
       console.log("Logout response:", res.data);
       if (res.data.status === "success") {
         toast.success(res.data.message)
-        deleteCookie("EastMlsToken", "/");
         router.push("/login");
-        setIsLoggedIn(false);
+        clearStore();
+        sessionStorage.clear();
       }
     } catch (error) {
       console.error("Error logging out...", error);
@@ -82,7 +62,7 @@ function Header() {
 
   return (
     <>
-      {headerShowable && <AppBar position="sticky" sx={{ bgcolor: 'white', color: 'black', width: "100%", position: "relative", boxShadow: "0px 0px 10px #dbdbdb !important" }}>
+      <AppBar position="sticky" sx={{ bgcolor: 'white', color: 'black', width: "100%", position: "relative", boxShadow: "0px 0px 10px #dbdbdb !important" }}>
         <Container sx={{ width: "100%", height: "12vh", display: "flex", zIndex: "500", minHeight: "5rem", justifyContent: "space-between", alignItems: "center" }}>
           <Toolbar sx={{ justifyContent: 'space-between', width: "100%" }}>
 
@@ -131,7 +111,7 @@ function Header() {
             )}
           </Stack>
         </Container>
-      </AppBar>}
+      </AppBar>
     </>
   );
 }

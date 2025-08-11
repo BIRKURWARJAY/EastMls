@@ -1,6 +1,5 @@
 'use client'
 import { api } from '@/utils/api'
-import { deleteCookie } from '@/utils/setCookie'
 import { Button, Stack } from '@mui/material'
 import { useRouter } from 'next/navigation'
 import React from 'react'
@@ -15,7 +14,6 @@ function AgentHeader() {
             const response = await api.get('/auth', {withCredentials:true})
             console.log(response);
             if (response.status === 200) {
-                deleteCookie("EastMlsToken", "/");
                 toast.success(response.data.message)
                 router.push('/login')
             }

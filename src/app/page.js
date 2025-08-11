@@ -1,32 +1,29 @@
 'use client'
 
-import { useRouter } from "next/navigation";
 import SearchProperty from "../components/SearchProperty";
 import { Stack, Typography } from "@mui/material";
-import { eastMlsStore } from "@/store/eastMlsStore";
 import { useEffect, useState } from "react";
-import decodeToken from "@/utils/decodeToken";
+import decodeRole from "@/utils/decodeRole";
+import { useRouter } from "next/navigation";
 import LoadingComponent from "@/components/loading";
 
 
 
-export default async function Home() {
+export default function Home() {
+
   const router = useRouter();
-  const setRole = eastMlsStore(s => s.setRole);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function validate() {
-      const tokenRes = await decodeToken("user", router);
-      if (tokenRes?.decodedToken?.role === agent) {
-        setRole("agent");
-        router.replace("/agent/property");
-        return;
-      }
+      await decodeRole("user", router);
+
       setLoading(false);
+      return;
     }
     validate();
   }, [])
+
 
   return (
     <>

@@ -1,6 +1,4 @@
 import axios from "axios";
-import { deleteCookie, setCookie } from "./setCookie.js";
-
 
 export async function refreshAccessToken() {
   try {
@@ -9,13 +7,11 @@ export async function refreshAccessToken() {
    });
  
    if (res?.status === 200) {
-     setCookie("EastMlsToken", "/", res?.data?.accessToken, 60);
-     return true;
+     return res.data.user;
    }
   } catch (error) {
     console.log(error);
     if (error?.status === 420) {
-      deleteCookie("EastMlsToken", "/");
       return false;
     }
  }

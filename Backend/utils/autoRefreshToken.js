@@ -1,40 +1,39 @@
 import jwt from "jsonwebtoken";
 import userModel from "../models/user.model.js";
 
-export default async function autoRefreshToken(req, res, next) {
-  const cookieOptions = (maxAge) => {
+const cookieOptions = (maxAge) => {
   return {
     httpOnly: true,
     secure: true,
-    origin: "http://localhost:3000",
+    origin: process.env.FRONTEND_URI,
     sameSite: "none",
     expires: new Date(Date.now() + maxAge)
   }
-  };
-  
-  try {
+};
 
-    const token = req.cookies.refreshToken;
+export default async function autoRefreshToken(req, res) {
+
+  try {
+    const token = req?.cookies?.refreshToken;
     if (!token) {
       return res.status(420)
-        .clearCookie()
         .json({
-        message: "token not found please login"
-      })
+          message: "token not found please login"
+        })
     }
-    
+
     const decodedToken = jwt.verify(token, process.env.JWTSECRET);
     if (!decodedToken) {
-      return res.status(420).json({ message: "Unauthorized" });
+      return res.status(420).clearCookie("refreshToken").json({ message: "Unauthorized" });
     }
 
     const user = await userModel.findById(decodedToken.id);
     if (!user) {
-      return res.status(420).json({ message: "User not found" });
+      return res.status(420).clearCookie("refreshToken").json({ message: "User not found" });
     }
 
     if (token !== user?.refreshToken) {
-      return res.status(420).json({ meassge: "Invalid Refresh Token" });
+      return res.status(420).clearCookie("refreshToken").json({ meassge: "Invalid Refresh Token" });
     }
 
     const accessToken = jwt.sign({
@@ -46,14 +45,14 @@ export default async function autoRefreshToken(req, res, next) {
     })
 
     return res.status(200)
-      .cookie("accessToken", accessToken, cookieOptions(1000 * 60 * 15))
+      .cookie("accessToken", accessToken, cookieOptions(1000 * 60 * 60))
       .json({
-      message: "Token refreshed successfully",
-      accessToken
-    });
-  } catch (error) { 
+        message: "Token refreshed successfully",
+        user: user.toObject({ versionKey: false, transform: (doc, ret) => { delete ret.password; delete ret.refreshToken; } })
+      });
+  } catch (error) {
     console.log(error);
-    return res.status(420).json({
+    return res.status(420).clearCookie("refreshToken").json({
       message: error.message
     })
   }

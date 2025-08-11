@@ -4,14 +4,17 @@ export function setCookie(name, path="/", value, minutes) {
 }
 
 export function getCookie(name) {
-  const cookies = document.cookie.split('; ');
+  if (typeof window !== "undefined") {
+      const cookies = document.cookie.split('; ');
     for (let cookie of cookies) {
         const [key, value] = cookie.split('=');
         if (key === name) return value;
     }
-    return null;
+    return null;  
+  }
 }
 
 export function deleteCookie(name, path = "/") {
     document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=${path};`;
 }
+ 
