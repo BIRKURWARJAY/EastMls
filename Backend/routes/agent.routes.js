@@ -4,10 +4,10 @@ import { authenticateUser } from "../middlewares/auth.js";
 
 const router = Router();
 
-router.get("/", authenticateUser, getAllAgents());
+router.get("/all", authenticateUser, getAllAgents());
 router.get("/search", authenticateUser, searchAgent);
 
-router.get("/:id", authenticateUser, getAgent());
+router.get("/", authenticateUser, getAgent());
 
 router.put("/", authenticateUser, updateAgent());
 

@@ -29,6 +29,8 @@ const decodeToken = async (role, router) => {
 
     try {
       const decoded = jwtDecode(token);
+      console.log(decoded);
+      
       if (decoded instanceof InvalidTokenError || !decoded) {
         debugger
         toast.error('Token not valid')

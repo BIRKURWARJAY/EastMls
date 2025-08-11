@@ -1,4 +1,4 @@
-'use client'
+// 'use client'
 
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
@@ -7,7 +7,7 @@ import { eastMlsStore } from "@/store/eastMlsStore";
 
 export default function RootLayout({ children }) {
 
-  const role = eastMlsStore(s => s.role);
+  const role = eastMlsStore.getState.role;
 
   return (
     <html lang="en">

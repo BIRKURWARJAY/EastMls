@@ -24,18 +24,26 @@ export function getAllAgents() {
 
 export function updateAgent() {
   return tryCatchWrapper(async (req, res, next) => {
-    const { email, username, licenseNumber, id } = req.body;
-    if (!id || !email.trim() || !username.trim() || !licenseNumber.trim()) return next(PostError("Fields are Missing", 304));
+    const { id } = req.user
+    const { email, username, licenseNumber, phone, instagram, facebook, linkedin } = req.body;
+    if (!id || !email.trim() || !username.trim()) return next(PostError("Fields are Missing", 304));
 
-    const update = userModel.findByIdAndUpdate(id, {
+
+
+    const update = await userModel.findByIdAndUpdate(id, {
       email,
       username,
-      licenseNumber
-    }).select("-refreshToken -password");
+      licenseNumber,
+      phone,
+      instagram,
+      facebook,
+      linkedin
+    }, { new: true }).select("-refreshToken -password");
+
     if (!update) return next(MongoError("error updating details", 500));
 
-    return res.status(201).json({
-      message: "details updated successFully",
+    return res.status(200).json({
+      message: "Updated successFully",
       status: "success",
       agent: update
     })
@@ -44,7 +52,9 @@ export function updateAgent() {
 
 export function getAgent() {
   return tryCatchWrapper(async (req, res, next) => {
-    const { id } = req.params;
+    const { id } = req.user;
+    console.log(id);
+
 
     const agent = await userModel.findById(id).select("-refreshToken -password");
     if (!agent) return next(PostError("There is no Agent found", 404));
@@ -66,7 +76,7 @@ export async function searchAgent(req, res) {
 
 
     const matchStage = {
-      role: "agent", 
+      role: "agent",
     };
 
     if (username && username.trim() !== '') {

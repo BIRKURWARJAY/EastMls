@@ -34,7 +34,7 @@ function Page() {
     const fetchagent = async () => {
       try {
         setLoading(true);
-        const response = await api.get('/agent')
+        const response = await api.get('/agent/all')
         console.log(response, data);
         setdata(response.data.agents)
         setLoading(false);

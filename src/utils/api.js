@@ -3,7 +3,7 @@ import { getCookie } from "./setCookie.js";
 import { refreshAccessToken } from "./refreshAccessToken.js";
 
 export const api = axios.create({
-  baseURL: "http://localhost:5000/api", 
+  baseURL: "http://localhost:5000/api",
   timeout: 2000,
 });
 
@@ -14,7 +14,7 @@ api.interceptors.request.use(
       const token = getCookie("EastMlsToken");
       config.headers = {
         ...config.headers,
-        Authorization:`Bearer ${token}`
+        Authorization: `Bearer ${token}`
       };
     }
     return config;
@@ -25,7 +25,7 @@ api.interceptors.request.use(
 )
 
 api.interceptors.response.use(
-  undefined, 
+  undefined,
 
   async error => {
     if (error?.status === 401) {
@@ -33,7 +33,9 @@ api.interceptors.response.use(
         return api(error.config)
       }
     }
-    return error
+    console.log("from api",error);
+
+    return Promise.reject(error)
   }
 )
 

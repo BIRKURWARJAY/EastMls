@@ -1,3 +1,4 @@
+'use client'
 import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -19,7 +20,6 @@ import { jwtDecode } from 'jwt-decode';
 import { getCookie } from '@/utils/setCookie.js';
 import { refreshAccessToken } from '@/utils/refreshAccessToken.js';
 
-
 function Header() {
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [headerShowable, setHeaderShowable] = React.useState(true);
@@ -30,9 +30,15 @@ function Header() {
   React.useEffect(() => {
     async function validate() {
       try {
+        console.log(isLoggedIn);
+        
         const decoded = jwtDecode(getCookie("EastMlsToken"));
         if (decoded.role === "agent") {
           setHeaderShowable(false);
+          return;
+        }
+        if (decoded.role === "user") {
+          setHeaderShowable(true);
           return;
         }
       } catch (error) {
@@ -111,14 +117,14 @@ function Header() {
                       </ListItem>
                     </Link>
                   ))}
-                  <Button fullWidth sx={{ bgcolor: "orange", color: "white" }}>Search property</Button>
+                  <Button fullWidth sx={{ bgcolor: "orange", color: "white" }} onClick={()=>router.push('/property')}>Search property</Button>
                 </List>
               </Box>
             </Drawer>
           </Toolbar>
 
           <Stack direction={"row"} alignItems={"center"} sx={{ position: "absolute", right: "20px", display: { xs: 'none', lg: 'flex' } }}>
-            <Button sx={{ bgcolor: "orange", color: "white", mr: "1rem" }}>Sell property</Button>
+            <Button sx={{ bgcolor: "orange", color: "white", mr: "1rem" }} onClick={()=>router.push('/agent/property/create')}>Sell property</Button>
             {isLoggedIn ? (
               <Link onClick={handleLogout} href="#" style={{ color: "#faa61f", textDecoration: "none" }}>Logout</Link>
             ) : (

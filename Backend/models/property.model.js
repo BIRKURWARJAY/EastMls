@@ -95,11 +95,10 @@ const propertySchema = new mongoose.Schema({
     default: false
   },
   availableFrom: {
-    type: String,
-    default: false
+    type: Date,
   },
   verification: {
-    type: String,
+    type: Boolean,
     default: false
   },
   featured: {

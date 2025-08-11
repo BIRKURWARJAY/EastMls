@@ -1,12 +1,12 @@
-import {Transactions, tryCatchWrapper } from "../utils/transactions.js";
+import { Transactions, tryCatchWrapper } from "../utils/transactions.js";
 import { PostError, MongoError } from "../utils/ErrorHandler.js";
 import userModel from "../models/user.model.js";
 import { hashPassword } from "../utils/hashPassword.js";
+import bcrypt from 'bcrypt'
 
 
 
-
-export function getUserDetails() { 
+export function getUserDetails() {
   return tryCatchWrapper(async (req, res, next) => {
     const user = await req.Model.findById(req.user.id).select("-password -refreshToken");
     if (!user) {
@@ -18,7 +18,7 @@ export function getUserDetails() {
 
 export function getUserDetailsById() {
   return tryCatchWrapper(async (req, res, next) => {
-    const user = req.Model.findById(req.user.id).select("-password", "-refreshToken");
+    const user = req.Model.findById(req.user.id).select("-password -refreshToken");
     if (!user) return next(PostError("User Doesn't Exists"));
 
     return res.status(200).json({
@@ -55,7 +55,7 @@ export function forgotPassword() {
     if (!existedUser) return next(PostError("Account Not Found", 404));
 
     const hashedPassword = await hashPassword(password);
-    
+
     existedUser.password = hashedPassword;
     await existedUser.save();
 
@@ -67,19 +67,40 @@ export function forgotPassword() {
 }
 
 export function changePassword() {
-  return tryCatchWrapper(async(req, res, next) => {
-    const { password } = req.body;
-    if (!password || password.trim().length < 6) return next(PostError("password is not valid", 301));
+  return tryCatchWrapper(async (req, res, next) => {
+    const { oldpassword, newpassword } = req.body;
+    console.log(req.body);
 
-    const hashedPassword = await hashPassword(password);
-    if (!hashedPassword) changePassword();
+    if (!oldpassword || !newpassword || newpassword.trim().length < 6) return next(PostError("password is not valid", 301));
+
 
     const user = await userModel.findById(req.user.id);
     if (!user) return next(PostError("user doesn't exist", 404));
 
-    user.password = hashedPassword;
+    const hashedPassword = await bcrypt.compare(oldpassword, user.password);
+    if (!hashedPassword) return res.status(500).json({ message: "password is incorrect" });
+
+
+    user.password = await bcrypt.hash(newpassword, 10);
+
     await user.save();
 
-    return res.status(201).json({ message: "password changed successfully" });
+
+    return res.status(200).json({ message: "password changed successfully" });
+  })
+}
+
+export function getAgentDetailById() {
+  return tryCatchWrapper(async (req, res, next) => {
+    const { id } = await req.params
+    console.log(id);
+
+    const agent = await userModel.findById(id).select("-password -refreshToken");
+    if (!agent) return next(PostError("Agent Doesn't Exists"));
+
+    return res.status(200).json({
+      message: "agent fetch sucessfully",
+      agent
+    })
   })
 }

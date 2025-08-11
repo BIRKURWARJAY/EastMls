@@ -1,4 +1,5 @@
 'use client'
+import { eastMlsStore } from '@/store/eastMlsStore'
 import { api } from '@/utils/api'
 import { deleteCookie } from '@/utils/setCookie'
 import { Button, Stack } from '@mui/material'
@@ -8,7 +9,8 @@ import toast from 'react-hot-toast'
 
 function AgentHeader() {
 
-    const router = useRouter()
+    const router = useRouter();
+    const setIsLoggedIn = eastMlsStore(s => s.setIsLoggedIn);
 
     const logout = async () => {
         try {
@@ -16,6 +18,7 @@ function AgentHeader() {
             console.log(response);
             if (response.status === 200) {
                 deleteCookie("EastMlsToken", "/");
+                setIsLoggedIn(false)
                 toast.success(response.data.message)
                 router.push('/login')
             }

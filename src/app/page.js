@@ -10,7 +10,7 @@ import LoadingComponent from "@/components/loading";
 
 
 
-export default async function Home() {
+export default function Home() {
   const router = useRouter();
   const setRole = eastMlsStore(s => s.setRole);
   const [loading, setLoading] = useState(true);
@@ -18,7 +18,7 @@ export default async function Home() {
   useEffect(() => {
     async function validate() {
       const tokenRes = await decodeToken("user", router);
-      if (tokenRes?.decodedToken?.role === agent) {
+      if (tokenRes?.decodedToken?.role === 'agent') {
         setRole("agent");
         router.replace("/agent/property");
         return;

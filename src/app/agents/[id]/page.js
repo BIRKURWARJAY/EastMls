@@ -24,7 +24,7 @@ function page({ params: paramsPromise }) {
     const fetchAgent = async () => {
       try {
         setLoading(true);
-        const response = await api.get(`/agent/${params.id}`);
+        const response = await api.get(`/user/agent/${params.id}`);
         setAgent(response.data.agent);
         setLoading(false);
       } catch (error) {
@@ -33,9 +33,6 @@ function page({ params: paramsPromise }) {
       }
     };
 
-    if (tokenRes?.status) {
-      fetchAgent();
-    }
     tokenRes?.status ? fetchAgent() : router.push("/login");
     }
     validate();

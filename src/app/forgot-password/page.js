@@ -15,7 +15,7 @@ export default function ForgotPassword() {
 
   const validateEmail = async(email) => {
     try {
-      if (!email.trim()) {
+      if (!(email?.trim())) {
         return alert("email is required");
       }
       const res = await api.post("/user/validateEmail", {
@@ -34,10 +34,10 @@ export default function ForgotPassword() {
 
   const resetPassword = async (email, password) => {
     try {
-      if (!email.trim()) {
+      if (!email?.trim()) {
         return alert("email is required");
       }
-      if (!password.trim() || !password.length > 6) {
+      if (!password?.trim() || !password.length > 6) {
         return alert("password length must be > 6");
       }
 
@@ -73,7 +73,7 @@ export default function ForgotPassword() {
               />
             </Stack>
 
-            <Button variant="contained" onClick={() => validateEmail(emailRef.current)} sx={{ paddingBlock: 1.5, bgcolor: "rgb(255 138 0)" }} disabled={!emailRef.current.trim()}>
+            <Button variant="contained" onClick={() => validateEmail(emailRef?.current)} sx={{ paddingBlock: 1.5, bgcolor: "rgb(255 138 0)" }} disabled={!emailRef?.current?.trim()}>
               Submit
             </Button>
           </FormControl>
