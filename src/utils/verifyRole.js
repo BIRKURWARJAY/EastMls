@@ -41,6 +41,7 @@ export async function verifyRole(role, router, path) {
     return true;
   } catch (error) {
     console.error(error);
-    return router.push("/login");
+    router.push("/login");
+    return true;
   }
 }

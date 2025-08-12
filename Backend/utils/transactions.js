@@ -7,18 +7,19 @@ const Transactions = (fn) => async (req, res, next) => {
   const session = await mongoose.startSession();
   try {
     session.startTransaction();
-
-    let {status, message, data} = await fn(req, res, next, session);
-
+    
+    let { status, message, data } = await fn(req, res, next, session);
     await session.commitTransaction();
-
-    return res.status(status).json({
-      message,
-      data
-    });
+    
+    return res
+      .status(status)
+      .json({
+        message,
+        data
+      });
   } catch (error) {
     await session.abortTransaction();
-    
+
     if (error instanceof mongoose.Error || error.code === 11000) {
       return next(new MongoError(error.message, 409, error));
     }
@@ -32,7 +33,7 @@ const Transactions = (fn) => async (req, res, next) => {
   }
 };
 
-const tryCatchWrapper = (fn) => async(req, res, next) => {
+const tryCatchWrapper = (fn) => async (req, res, next) => {
   try {
     await fn(req, res, next);
   } catch (error) {

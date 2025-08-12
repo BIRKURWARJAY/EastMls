@@ -20,16 +20,7 @@ export default function Login() {
   const router = useRouter();
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [toggleButton, setToggleButton] = useState("user");
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function validate() {
-      const verified = await verifyRole("all", router, "/login");
-
-      verified && setLoading(false);
-    }
-    validate();
-  }, [])
+  const [loading, setLoading] = useState(false);
 
 
   const Adornment = passwordVisible ? <VisibilityOffIcon /> : <VisibilityIcon />

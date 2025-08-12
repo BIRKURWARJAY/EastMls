@@ -20,6 +20,7 @@ export default function EditAgentProperty() {
   const [data, setData] = useState({});
   const params = useParams();
   const [isLoading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
 
 
 
@@ -38,7 +39,7 @@ export default function EditAgentProperty() {
           }
         } catch (error) {
           console.error(error);
-          router.replace("/agent/property");
+          return router.replace("/agent/property");
         }
       }
       verified && getData();
@@ -57,7 +58,7 @@ export default function EditAgentProperty() {
     price: Yup.number('price must be in number').min(1).required('price is required'),
     propertyType: Yup.string('propertyType must be string').oneOf(['apartment', 'house', 'condo', 'villa', 'commercial'], `propertyType must be in ${propertyTypes}`).required('propertyType is required'),
     status: Yup.string('status must be string').oneOf(['available', 'pending', 'sold', 'rented']).required('status is required'),
-    availableFrom: Yup.date().min(dayjs(), `availableFrom must be atleast ${dayjs().format('DD/MM/YYYY')}`).max(dayjs().add(5, 'year'), `availbleFrom date cannot be > than ${dayjs().format('DD/MM/YYYY')}`).required('availbleFrom is required'),
+    availableFrom: Yup.date().min(dayjs(data?.availableFrom), `availableFrom must be atleast ${data?.availableFrom}`).max(dayjs(data?.availableFrom).add(5, 'year'), `availbleFrom date cannot be > than ${dayjs().format('DD/MM/YYYY')}`).required('availbleFrom is required'),
     bedrooms: Yup.number('bedrooms must be in number').min(1, 'bedrooms must be atleast 1').required('bedrooms is required'),
     bathrooms: Yup.number('bathrooms must be in number').min(1, 'bathrooms must be atleast 1').required('bathrooms is required'),
     areaSqFt: Yup.number('area must be in number').min(1).required('area is required'),
@@ -87,6 +88,7 @@ export default function EditAgentProperty() {
     onSubmit: async (values) => {
       console.log('Submitting form with values:', values)
       try {
+        setUploading(true);
         const formData = new FormData();
 
         formData.append("coordinates[]", "12.9715987");
@@ -118,6 +120,7 @@ export default function EditAgentProperty() {
         }
       } catch (error) {
         console.error('Form submission error:', error);
+        setUploading(false);
         toast.error("Error Editing Property", {
           duration: 2
         })
@@ -162,6 +165,8 @@ export default function EditAgentProperty() {
           handleDeleteImage={handleDeleteImage}
           handleDeletevideo={handleDeletevideo}
           handleVideoChanges={handleVideoChanges}
+          uploading={uploading}
+          useFor={"Edit"}
       />}
     </>
   )
