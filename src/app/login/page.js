@@ -154,11 +154,11 @@ export default function Login() {
           </CardContent>
 
           <Typography variant="p" sx={{ fontSize: 20 }}>
-            Don't have an account?  <Link href={"/register"}>Register</Link>
+            Don't have an account?  <Link href={"/register"}  style={{color: "black", textDecoration: "none"}}>Register</Link>
           </Typography>
 
 
-          <Link href={"/forgot-password"}>Forgot password?</Link>
+          <Link href={"/forgot-password"} style={{color: "black", textDecoration: "none"}}>Forgot password?</Link>
         </Card>
       </Stack>}
     </>

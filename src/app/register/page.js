@@ -192,7 +192,7 @@ export default function Login() {
           </CardContent>
 
           <Typography variant="p" sx={{ fontSize: 20 }}>
-            Already have an account?  <Link href={"/login"}>Login</Link>
+            Already have an account?  <Link href={"/login"}  style={{color: "black", textDecoration: "none"}}>Login</Link>
           </Typography>
         </Card>
       </Stack >}
