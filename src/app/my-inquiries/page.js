@@ -15,8 +15,19 @@ function page() {
   useEffect(() => {
 
     async function validate() {
-      const verified = await verifyRole("all", router)
-      
+
+      const verified = await verifyRole("user");
+      if (!verified) {
+        toast.error('Your are not allowed')
+        router.push('/agent')
+        return
+      }
+      if (verified === 'login required') {
+        router.push('/login')
+        return
+      }
+
+
       const getinq = async () => {
         try {
           const response = await api.get('/inquiry');
@@ -28,7 +39,7 @@ function page() {
           setLoading(false);
         }
       }
-      verified && getinq();
+      getinq()
     }
     validate();
   }, []);

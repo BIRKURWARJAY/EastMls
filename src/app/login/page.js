@@ -24,7 +24,7 @@ export default function Login() {
 
   useEffect(() => {
     async function validate() {
-      const verified = await verifyRole("all", router, "/login");
+      const verified = await verifyRole("all");
 
       verified && setLoading(false);
     }

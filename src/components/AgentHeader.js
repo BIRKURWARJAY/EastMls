@@ -1,5 +1,4 @@
 'use client'
-import { eastMlsStore } from '@/store/eastMlsStore'
 import { api } from '@/utils/api'
 import { Button, Stack } from '@mui/material'
 import Link from 'next/link'
@@ -9,30 +8,28 @@ import toast from 'react-hot-toast'
 
 function AgentHeader() {
 
-  const router = useRouter()
+    const router = useRouter()
 
-    const logout = async () => {
+
+    async function Logout() {
         try {
-            const response = await api.get('/auth', {withCredentials:true})
-            console.log(response);
-          if (response.status === 200) {
-                toast.success(response.data.message)
-                router.push('/login')
+            const res = await api.get("/auth", { withCredentials: true });
+            if (res.data.status === "success") {
+                toast.success(res.data.message);
+
+                router.push("/login");
             }
         } catch (error) {
-            console.log(error);
-            toast.error('Error in logout')
-
+            console.error("Error logging out...", error);
         }
-
     }
 
     return (
         <>
-            <Stack  height={'10vh'} justifyContent={'center'} alignItems={'center'} flexDirection={'row'} gap={4} boxShadow={'0px 0px 15px #dbdbdb'}>
-                <Link style={{fontSize:"20px"}} href={'/agent'}>Profile</Link>
-                <Link style={{fontSize:"20px"}} href={'/agent/property'}>Property</Link>
-                <Button onClick={() => logout()} variant='outlined' color='warning' >Log out</Button>
+            <Stack height={'10vh'} justifyContent={'center'} alignItems={'center'} flexDirection={'row'} gap={4} boxShadow={'0px 0px 15px #dbdbdb'}>
+                <Link style={{ fontSize: "20px" }} href={'/agent'}>Profile</Link>
+                <Link style={{ fontSize: "20px" }} href={'/agent/property'}>Property</Link>
+                <Button onClick={() => Logout()} variant='outlined' color='warning' >Log out</Button>
             </Stack>
         </>
     )

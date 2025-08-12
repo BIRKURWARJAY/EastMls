@@ -25,7 +25,16 @@ export default function EditAgentProperty() {
 
   useEffect(() => {
     async function validate() {
-      const verified = await verifyRole("agent", router);
+      const verified = await verifyRole("agent");
+      if (!verified) {
+        toast.error('Your are not allowed')
+        router.push('/')
+        return
+      }
+      if (verified === 'login required') {
+        router.push('/login')
+        return
+      }
       async function getData() {
         try {
           const res = await api.get(`/property/${params.id}`)
@@ -41,7 +50,7 @@ export default function EditAgentProperty() {
           router.replace("/agent/property");
         }
       }
-      verified && getData();
+      getData()
     }
 
     validate();
@@ -162,7 +171,7 @@ export default function EditAgentProperty() {
           handleDeleteImage={handleDeleteImage}
           handleDeletevideo={handleDeletevideo}
           handleVideoChanges={handleVideoChanges}
-      />}
+        />}
     </>
   )
 }

@@ -8,7 +8,7 @@ export default async function autoRefreshToken(req, res) {
   try {
     const token = req?.cookies?.refreshToken;
     if (!token) {
-      return res.status(420)
+      return res.status(220)
         .json({
           message: "token not found please login"
         })
