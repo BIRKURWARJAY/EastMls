@@ -4,16 +4,24 @@ export async function verifyRole(role) {
 
   try {
     const response = await api.get('/auth/verifyRole')
-    console.log('dyftsygxh',response);
+
+    console.log(response);
     
-    
+    if (response.status === 220  || !response) {
+      return 'login required'
+    }
+    if (role === 'check') {
+      if (response.data.role === 'user') {
+        return 'user login'
+      }else{
+        return 'agent login'
+      }
+    }
+
     if (role === 'all') {
       return true
     }
 
-    if (response.status === 220  || !response) {
-      return 'login required'
-    }
 
     if (role !==  response.data.role) {
       return false;
@@ -23,6 +31,6 @@ export async function verifyRole(role) {
     return true;
   } catch (error) {
     console.error(error);
-    return '/login'
+    return false
   }
 }

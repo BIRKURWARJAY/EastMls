@@ -31,12 +31,12 @@ function Header() {
       if (verified === 'login required') {
         setHeaderShowable(true)
         setloggedin(false)
-        router.push('/login')
         return
       }
       if (!verified) {
         setHeaderShowable(false)
       }
+
       setloggedin(true)
     };
     fetchData();

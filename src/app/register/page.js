@@ -24,12 +24,20 @@ export default function Login() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function validate() {
-      const verified = await verifyRole("all", router, "/register");
 
-      verified && setLoading(false);
+    async function validate() {
+      const verified = await verifyRole("check");
+      if (verified === 'user login') {
+        toast.success('Already login')
+        router.push('/')
+      }
+      if (verified === 'agent login') {
+        console.log('Already login');
+        router.push('/agent')
+      }
+      setLoading(false)
     }
-    validate();
+    validate()
   }, [])
 
   const Adornment = passwordVisible ? <VisibilityOffIcon /> : <VisibilityIcon />

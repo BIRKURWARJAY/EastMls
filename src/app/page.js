@@ -18,18 +18,13 @@ export default function Home() {
   useEffect(() => {
     async function validate() {
 
-      const verified = await verifyRole("user");
-      setLoading(false)
-      if (!verified) {
-        toast.error('Your are not allowed')
+      const verified = await verifyRole("check");
+
+      if (verified === 'agent login' ) {
+        toast.error('Not allowed')
         router.push('/agent')
-        return
       }
-      if (verified === 'login required') {
-      toast.error('login required')
-        router.push('/login')
-        return
-      }
+      setLoading(false)
     }
     validate();
   }, [])
