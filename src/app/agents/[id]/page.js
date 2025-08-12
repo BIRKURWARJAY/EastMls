@@ -14,34 +14,25 @@ function page({ params: paramsPromise }) {
   const [isLoading, setLoading] = useState(true);
   const [agent, setAgent] = useState();
 
-  const params = React.use(paramsPromise);
+  const params = React.use(paramsPromise);  
 
   useEffect(() => {
     async function validate() {
-      const verified = await verifyRole("user");
-      if (!verified) {
-        toast.error('Your are not allowed')
-        router.push('/agent')
-        return
-      }
-      if (verified === 'login required') {
-        router.push('/login')
-        return
-      }
+      const verified = await verifyRole("user", router);
 
-      const fetchAgent = async () => {
-        try {
-          setLoading(true);
-          const response = await api.get(`/user/agent/${params.id}`);
-          setAgent(response.data.agent);
-          setLoading(false);
-        } catch (error) {
-          console.error(error);
-          setLoading(false);
-        }
-      };
+    const fetchAgent = async () => {
+      try {
+        setLoading(true);
+        const response = await api.get(`/user/agent/${params.id}`);
+        setAgent(response.data.agent);
+        setLoading(false);
+      } catch (error) {
+        console.error(error);
+        setLoading(false);
+      }
+    };
 
-      fetchAgent()
+    verified && fetchAgent();
     }
     validate();
   }, [params.id, router]);

@@ -14,31 +14,22 @@ function page() {
   const [prop, setprop] = useState()
   const [isLoading, setLoading] = useState(true);
   const router = useRouter()
-
+  
   useEffect(() => {
-
     async function fetchProp() {
-      const verified = await verifyRole("user");
-      if (!verified) {
-        toast.error('Your are not allowed')
-        router.push('/agent')
-        return
+      const verified = await verifyRole("user", router);
+      const fetchProp = async () => {
+        try {
+          const response = await api.get(`/property/all`)
+          setprop(response.data.allprop);
+          setLoading(false);
+        } catch (error) {
+          toast.error('Error in fetch property')
+          console.log(error);
+          setLoading(false)
+        }
       }
-      if (verified === 'login required') {
-        router.push('/login')
-        return
-      }
-
-      try {
-        const response = await api.get(`/property/all`)
-        setprop(response.data.allprop);
-        setLoading(false);
-      } catch (error) {
-        toast.error('Error in fetch property')
-        console.log(error);
-        setLoading(false)
-      }
-
+      verified && fetchProp();
     }
     fetchProp();
   }, [])
@@ -71,7 +62,7 @@ function page() {
         <Stack minWidth={'80%'} flexDirection={{ xs: "column", sm: "row" }} justifyContent={'center'} alignItems={'center'} gap={3}>
 
 
-          <TextField id="outlined-basic" value={keyword} placeholder="Enter keyword" variant="outlined" sx={{ width: "45%" }} onChange={(e) => setkeyword(e.target.value)} />
+          <TextField id="outlined-basic" value={keyword} placeholder="Enter keyword" variant="outlined" sx={{ width: "45%" }} onChange={(e)=>setkeyword(e.target.value)}/>
 
           <FormControl sx={{ width: '45%', minWidth: "200px" }}>
             <Select

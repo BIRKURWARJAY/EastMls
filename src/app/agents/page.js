@@ -29,31 +29,21 @@ function Page() {
 
   useEffect(() => {
     async function validate() {
+      const verified = await verifyRole("user", router);
 
-      const verified = await verifyRole("user");
-      if (!verified) {
-        toast.error('Your are not allowed')
-        router.push('/agent')
-        return
+    const fetchagent = async () => {
+      try {
+        setLoading(true);
+        const response = await api.get('/agent/all')
+        console.log(response, data);
+        setdata(response.data.agents)
+        setLoading(false);
+      } catch (error) {
+        console.log(error);
+        setLoading(false);
       }
-      if (verified === 'login required') {
-        router.push('/login')
-        return
-      }
-
-      const fetchagent = async () => {
-        try {
-          setLoading(true);
-          const response = await api.get('/agent/all')
-          console.log(response, data);
-          setdata(response.data.agents)
-          setLoading(false);
-        } catch (error) {
-          console.log(error);
-          setLoading(false);
-        }
-      }
-      fetchagent()
+    }
+      verified && fetchagent();
     }
     validate();
   }, [])
@@ -73,7 +63,7 @@ function Page() {
     if (timeId) {
       clearTimeout(timeId)
     }
-
+    
     const timeout = setTimeout(async () => {
       // console.log("called");
       try {

@@ -5,10 +5,6 @@ import { Box, Stack, Tabs, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import Tab from '@mui/material/Tab';
 import UpdatePassword from '@/components/UpdatePassword'
-import { verifyRole } from '@/utils/verifyRole'
-import { useRouter } from 'next/navigation'
-import toast from 'react-hot-toast'
-import LoadingComponent from '@/components/loading'
 
 function page() {
     const [agent, setAgent] = useState({
@@ -20,10 +16,8 @@ function page() {
         facebook: '',
         linkedin: ''
     })
-    const [isLoading, setLoading] = useState(true);
 
     const [value, setValue] = React.useState('one');
-    const router = useRouter()
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -31,27 +25,12 @@ function page() {
 
 
     useEffect(() => {
-        async function validate() {
-
-            const verified = await verifyRole("agent");
-            if (!verified) {
-                toast.error('Your are not allowed')
-                router.push('/')
-                return
-            }
-            if (verified === 'login required') {
-                router.push('/login')
-                return
-            }
-            const fetchagent = async () => {
-                const response = await api.get('/agent', { withCredentials: true })
-                console.log(response.data.agent);
-                setAgent(response.data.agent)
-                setLoading(false);
-            }
-            fetchagent()
+        const fetchagent = async () => {
+            const response = await api.get('/agent', { withCredentials: true })
+            console.log(response.data.agent);
+            setAgent(response.data.agent)
         }
-        validate();
+        fetchagent()
     }, [])
 
 
@@ -59,16 +38,16 @@ function page() {
     return (
         <>
 
-            {isLoading ? <LoadingComponent /> :
-                <Box display={'flex'} justifyContent={'center'} alignItems={'center'} p={1} width={'min'} >
-                    <Stack border={1} borderRadius={3} >
-                        <Box bgcolor={'orange'} flexDirection={'column'} display={'flex'} justifyContent={'center'} alignItems={'center'} p={2} borderRadius={3}>
-                            <img src={agent?.profileImage} style={{ height: "10rem", width: "10rem", objectFit: "cover !important", borderRadius: "100%", border: "2px solid white" }} alt="" />
-                            <Typography variant='h4' mt={1} fontWeight={600} color='white'>{agent?.username}</Typography>
-                            <Typography variant='h6' fontWeight={400} color='white'>{agent?.email}</Typography>
-                        </Box>
 
+            <Box display={'flex'} justifyContent={'center'} alignItems={'center'} p={1} width={'min'} >
+                <Stack border={1} borderRadius={3} >
+                    <Box bgcolor={'orange'} flexDirection={'column'} display={'flex'} justifyContent={'center'} alignItems={'center'} p={2} borderRadius={3}>
+                        <img src={agent?.profileImage} style={{ height: "10rem", width: "10rem", objectFit: "cover !important", borderRadius: "100%", border: "2px solid white" }} alt="" />
+                        <Typography variant='h4' mt={1} fontWeight={600} color='white'>{agent?.username}</Typography>
+                        <Typography variant='h6' fontWeight={400} color='white'>{agent?.email}</Typography>
+                    </Box>
 
+                   
                         <Tabs
                             value={value}
                             onChange={handleChange}
@@ -77,22 +56,22 @@ function page() {
                             <Tab
                                 value="one"
                                 label="Profile details"
-
+                                
                             />
                             <Tab value="two" label="Change password" />
                         </Tabs>
+                   
 
+                    {
+                        value === 'one' && <UpdateAgent agent={agent} setAgent={setAgent} />
+                    }
+                    {
+                        value === 'two' && <UpdatePassword agent={agent} setAgent={setAgent}/>
+                    }
 
-                        {
-                            value === 'one' && <UpdateAgent agent={agent} setAgent={setAgent} />
-                        }
-                        {
-                            value === 'two' && <UpdatePassword agent={agent} setAgent={setAgent} />
-                        }
+                </Stack>
+            </Box>
 
-                    </Stack>
-                </Box>
-                }
 
         </>
     )

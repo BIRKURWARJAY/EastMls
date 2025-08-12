@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import LoadingComponent from "@/components/loading";
 import { verifyRole } from "@/utils/verifyRole";
-import toast from "react-hot-toast";
 
 
 
@@ -16,8 +15,6 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-
-
     async function validate() {
 
       const verified = await verifyRole("user");
@@ -27,10 +24,7 @@ export default function Home() {
         router.push('/agent')
         return
       }
-      if (verified === 'login required') {
-        router.push('/login')
-        return
-      }
+      return;
     }
     validate();
   }, [])

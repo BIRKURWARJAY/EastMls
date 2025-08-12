@@ -41,7 +41,7 @@ import dayjs from "dayjs"
 
 
 
-export default function PropertyFormFields({ formik, handleDeleteImage, handleDeletevideo, handleImageChanges, handleVideoChanges, useFor }) {
+export default function PropertyFormFields({ formik, handleDeleteImage, handleDeletevideo, handleImageChanges, handleVideoChanges, useFor, uploading }) {
 
   const leaseTypes = ['Sell', 'Rent'];
   const statusArr = ['Available', 'Pending', 'Sold', 'Rented'];
@@ -86,7 +86,7 @@ export default function PropertyFormFields({ formik, handleDeleteImage, handleDe
   ];
 
   // Currency options
-  const currencyOptions = ['USD', "EURO", 'POUND', 'RUPEES', 'YEMEN', 'ND', 'KSh'];
+  const currencyOptions = ['USD', "EURO", 'POUND', 'INR', 'YEM', 'ND', 'KSh'];
 
 
   return (
@@ -540,7 +540,9 @@ export default function PropertyFormFields({ formik, handleDeleteImage, handleDe
                   fontWeight: 600,
                   boxShadow: '5px 5px 10px gray',
                   '&:hover': { boxShadow: "2px 2px 5px gray" }
-                }}>{useFor} property</Button>
+                }}
+                disabled={uploading}
+                >{useFor} property</Button>
               </Stack>
             </Stack>
           </form>

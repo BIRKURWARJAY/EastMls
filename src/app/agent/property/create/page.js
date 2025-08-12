@@ -8,7 +8,6 @@ import { useRouter } from 'next/navigation';
 import LoadingComponent from '@/components/loading';
 import { api } from '@/utils/api';
 import toast from 'react-hot-toast';
-import decodeRole from '@/utils/decodeRole';
 import PropertyFormFields from '@/components/PropertyFormFields';
 import { verifyRole } from '@/utils/verifyRole';
 
@@ -18,20 +17,12 @@ export default function CreateAgentProperty() {
   const [isLoading, setLoading] = useState(true);
   const [images, setImages] = useState([]);
   const [videos, setVideos] = useState([]);
-
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     async function validate() {
-      const verified = await verifyRole("agent");
-      if (!verified) {
-        toast.error('Your are not allowed')
-        router.push('/')
-        return
-      }
-      if (verified === 'login required') {
-        router.push('/login')
-        return
-      }
+      const verified = await verifyRole("agent", router);
+      verified && setLoading(false);
     }
     validate();
   }, [])
@@ -49,7 +40,6 @@ export default function CreateAgentProperty() {
     areaSqFt: Yup.number('area must be in number').min(1).required('area is required'),
     propertyDescription: Yup.string('description must be in string').trim().required('description is required'),
     images: Yup.array().min(1).required('images is required'),
-    // New field validations
     address: Yup.string('address must be a string').trim().required('address is required'),
     cityCode: Yup.number('cityCode must be a number').required('cityCode is required'),
     cityName: Yup.string('cityName must be a string').trim().required('cityName is required'),
@@ -93,6 +83,7 @@ export default function CreateAgentProperty() {
     onSubmit: async (values) => {
       console.log('Submitting form with values:', values)
       try {
+        setUploading(true);
         const formData = new FormData();
 
         formData.append("coordinates[]", "12.9715987");
@@ -126,6 +117,7 @@ export default function CreateAgentProperty() {
           router.push("/agent/property");
         }
       } catch (error) {
+        setUploading(false);
         console.error('Form submission error:', error);
         toast.error("Error Listing Property");
       }
@@ -169,6 +161,7 @@ export default function CreateAgentProperty() {
           handleDeletevideo={handleDeletevideo}
           handleVideoChanges={handleVideoChanges}
           useFor={"Create"}
+          uploading={uploading}
         />}
     </>
   )
