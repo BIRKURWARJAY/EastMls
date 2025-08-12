@@ -1,47 +1,28 @@
 import { api } from "./api";
 
-export async function verifyRole(role, router, path) {
-
-  const restrictedRoutes = ["/login", "/register", "/forgot-password"];
-
+export async function verifyRole(role) {
 
   try {
     const response = await api.get('/auth/verifyRole')
 
-    if (path === "header" && response.data.role === "user") {
-      return true;
+    console.log(response.status);
+    
+    if (role === 'all') {
+      return true
     }
 
-    if (response.data.role && path && restrictedRoutes.includes(path)) {
-      if (router?.history?.length > 0) {
-        return router.back();
-      }
-
-      if (response.data.role === "agent") {
-        return router.replace("/agent/property");
-      }
-
-      return router.replace("/buy-property");
+    if (response.status === 220  || !response) {
+      return 'login required'
     }
 
-    if (role !== "all" && response.data.role !== role) {
-      if (response.data.role === "agent") {
-        if (router?.history?.length > 0) {
-          return router.back();
-        }
-        return router.replace("/agent/property");
-      }
-
-      if (router?.history?.length > 0) {
-        return router.back();
-      }
-      return router.replace("/buy-property");
+    if (role !==  response.data.role) {
+      return false;
     }
+
 
     return true;
   } catch (error) {
     console.error(error);
-    router.push("/login");
-    return true;
+    return '/login'
   }
 }

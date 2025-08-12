@@ -17,10 +17,12 @@ export default function Home() {
   useEffect(() => {
     async function validate() {
 
-      const verified = await verifyRole("user", router);
-      if (verified) {
-        setLoading(false);
-        return;
+      const verified = await verifyRole("user");
+      setLoading(false)
+      if (!verified) {
+        toast.error('Your are not allowed')
+        router.push('/agent')
+        return
       }
       return;
     }
