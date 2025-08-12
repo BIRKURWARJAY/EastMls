@@ -16,7 +16,7 @@
           <link rel="icon" href="/favicon.webp" type="image/webp" />
         </head>
         <body style={{ margin: 0 }}>
-          {role === "user" || role === "undefined"  ? <Header /> : null}
+          {role === "user" || role === undefined  ? <Header /> : null}
           <Toaster />
           {children}
         </body>

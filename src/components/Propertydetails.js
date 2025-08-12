@@ -4,7 +4,6 @@ import React, { useState } from 'react'
 function Propertydetails({ data }) {
 
     const temp = {
-        Id: data?._id,
         price: `${data?.currency, data?.price}`,
         size: `${data?.areaSqFt} Sq. Ft.`,
         rooms: data?.bedrooms,

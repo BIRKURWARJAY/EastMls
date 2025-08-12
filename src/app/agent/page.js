@@ -41,16 +41,17 @@ function page() {
 
             <Box display={'flex'} justifyContent={'center'} alignItems={'center'} p={1} width={'min'} >
                 <Stack border={1} borderRadius={3} >
-                    <Box bgcolor={'orange'} flexDirection={'column'} display={'flex'} justifyContent={'center'} alignItems={'center'} p={2}>
+                    <Box bgcolor={'orange'} flexDirection={'column'} display={'flex'} justifyContent={'center'} alignItems={'center'} p={2} borderRadius={3}>
                         <img src={agent?.profileImage} style={{ height: "10rem", width: "10rem", objectFit: "cover !important", borderRadius: "100%", border: "2px solid white" }} alt="" />
                         <Typography variant='h4' mt={1} fontWeight={600} color='white'>{agent?.username}</Typography>
                         <Typography variant='h6' fontWeight={400} color='white'>{agent?.email}</Typography>
                     </Box>
 
-                    <Box display={'flex'} justifyContent={'center'} alignItems={'center'}>
+                   
                         <Tabs
                             value={value}
                             onChange={handleChange}
+                            centered
                         >
                             <Tab
                                 value="one"
@@ -59,7 +60,7 @@ function page() {
                             />
                             <Tab value="two" label="Change password" />
                         </Tabs>
-                    </Box>
+                   
 
                     {
                         value === 'one' && <UpdateAgent agent={agent} setAgent={setAgent} />

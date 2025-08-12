@@ -32,7 +32,7 @@ export default async function decodeRole(allowedRole, router) {
     toast.error("Not Allowed");
 
     if (currentRole === "agent") {
-      return router.replace("/buy-property");
+      return router.replace("/agent");
     }
     
     return router.back();

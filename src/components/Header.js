@@ -12,7 +12,7 @@ import Stack from '@mui/material/Stack';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button, List, ListItem, ListItemText } from '@mui/material';
-import { usePathname, useRouter } from 'next/navigation';
+import {useRouter } from 'next/navigation';
 import { api } from '@/utils/api';
 import { eastMlsStore } from "../store/eastMlsStore.js"
 import toast from 'react-hot-toast';
@@ -24,6 +24,7 @@ function Header() {
   const router = useRouter();
   const isLoggedIn = eastMlsStore(s => s.isLoggedIn);
   const clearStore = eastMlsStore(s => s.clearStore);
+  // console.log(isLoggedIn);
 
 
 
@@ -96,20 +97,58 @@ function Header() {
                       </ListItem>
                     </Link>
                   ))}
-                  <Button fullWidth sx={{ bgcolor: "orange", color: "white" }} onClick={()=>router.push('/property')}>Search property</Button>
+                  <Button fullWidth sx={{ bgcolor: "orange", color: "white" }} onClick={() => router.push('/property')}>Search property</Button>
                 </List>
               </Box>
             </Drawer>
           </Toolbar>
 
-          <Stack direction={"row"} alignItems={"center"} sx={{ position: "absolute", right: "20px", display: { xs: 'none', lg: 'flex' } }}>
-            <Button sx={{ bgcolor: "orange", color: "white", mr: "1rem" }} onClick={()=>router.push('/agent/property/create')}>Sell property</Button>
+          <Stack
+            direction="row"
+            alignItems="center"
+            sx={{
+              position: "absolute",
+              right: "20px",
+              display: { xs: 'none', lg: 'flex' }
+            }}
+          >
+            <Button
+              sx={{ bgcolor: "orange", color: "white", mr: "1rem" }}
+              onClick={() => router.push('/agent/property/create')}
+            >
+              Sell property
+            </Button>
+
+
             {isLoggedIn ? (
-              <Link onClick={handleLogout} href="#" style={{ color: "#faa61f", textDecoration: "none" }}>Logout</Link>
+              <Link
+                onClick={handleLogout}
+                href={'/login'}
+                sx={{
+                  color: "#faa61f",
+                  textTransform: "none",
+                  bgcolor: "transparent",
+                  "&:hover": { bgcolor: "transparent", textDecoration: "underline" }
+                }}
+              >
+                Logout
+              </Link>
             ) : (
-              <Link href="/login" style={{ color: "#faa61f", textDecoration: "none" }}>Login</Link>
+              <Link
+
+                href="/login"
+                sx={{
+                  color: "#faa61f",
+                  textTransform: "none",
+                  bgcolor: "transparent",
+                  "&:hover": { bgcolor: "transparent", textDecoration: "underline" }
+                }}
+              >
+                Login
+              </Link>
             )}
           </Stack>
+
         </Container>
       </AppBar>
     </>
