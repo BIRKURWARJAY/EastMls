@@ -21,6 +21,7 @@ export default function Home() {
     async function validate() {
 
       const verified = await verifyRole("user");
+      setLoading(false)
       if (!verified) {
         toast.error('Your are not allowed')
         router.push('/agent')
