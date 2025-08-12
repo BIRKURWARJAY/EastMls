@@ -21,8 +21,17 @@ export default function CreateAgentProperty() {
 
   useEffect(() => {
     async function validate() {
-      const verified = await verifyRole("agent", router);
-      verified && setLoading(false);
+      const verified = await verifyRole("agent");
+      if (!verified) {
+        toast.error('Your are not allowed')
+        router.push('/')
+        return
+      }
+      if (verified === 'login required') {
+        toast.error('login required')
+        router.push('/login')
+        return
+      }
     }
     validate();
   }, [])

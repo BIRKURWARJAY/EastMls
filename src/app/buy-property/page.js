@@ -17,19 +17,28 @@ function page() {
   
   useEffect(() => {
     async function fetchProp() {
-      const verified = await verifyRole("user", router);
-      const fetchProp = async () => {
-        try {
-          const response = await api.get(`/property/all`)
-          setprop(response.data.allprop);
-          setLoading(false);
-        } catch (error) {
-          toast.error('Error in fetch property')
-          console.log(error);
-          setLoading(false)
-        }
+      const verified = await verifyRole("user");
+      if (!verified) {
+        toast.error('Your are not allowed')
+        router.push('/agent')
+        return
       }
-      verified && fetchProp();
+      if (verified === 'login required') {
+      toast.error('login required')
+        router.push('/login')
+        return
+      }
+
+      try {
+        const response = await api.get(`/property/all`)
+        setprop(response.data.allprop);
+        setLoading(false);
+      } catch (error) {
+        toast.error('Error in fetch property')
+        console.log(error);
+        setLoading(false)
+      }
+
     }
     fetchProp();
   }, [])

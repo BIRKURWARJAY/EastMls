@@ -5,6 +5,7 @@ import { api } from '@/utils/api'
 import { useRouter } from 'next/navigation'
 import LoadingComponent from '@/components/loading'
 import { verifyRole } from '@/utils/verifyRole'
+import toast from 'react-hot-toast'
 
 function page() {
   const router = useRouter();
@@ -15,8 +16,20 @@ function page() {
   useEffect(() => {
 
     async function validate() {
-      const verified = await verifyRole("all", router)
-      
+
+      const verified = await verifyRole("user");
+      if (!verified) {
+        toast.error('Your are not allowed')
+        router.push('/agent')
+        return
+      }
+      if (verified === 'login required') {
+        toast.error('login required')
+        router.push('/login')
+        return
+      }
+
+
       const getinq = async () => {
         try {
           const response = await api.get('/inquiry');

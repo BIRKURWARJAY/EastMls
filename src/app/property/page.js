@@ -6,7 +6,6 @@ import { Box, Button, FormControl, MenuItem, Select, Stack, TextField, ToggleBut
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
-import decodeRole from '@/utils/decodeRole'
 import { verifyRole } from '@/utils/verifyRole'
 
 function page() {
@@ -21,7 +20,19 @@ function page() {
 
   useEffect(() => {
     async function validate() {
-      const verified = await verifyRole("user", router);
+      const verified = await verifyRole("user");
+      if (!verified) {
+        toast.error('Your are not allowed')
+        router.push('/agent')
+        return
+      }
+      if (verified === 'login required') {
+      toast.error('login required')
+        router.push('/login')
+        return
+      }
+
+
 
       const fetchprop = async () => {
         try {

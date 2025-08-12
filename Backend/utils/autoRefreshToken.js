@@ -10,7 +10,7 @@ export default async function autoRefreshToken(req, res) {
     const token = req?.cookies?.refreshToken;
     console.log("Refresh Token:", token);
     if (!token) {
-      return res.status(401)
+      return res.status(220)
       .json({
           message: "token not found please login"
         })
@@ -40,8 +40,9 @@ export default async function autoRefreshToken(req, res) {
     
     console.log("New Access Token:", accessToken);
     
-    return res.status(200).cookie("accessToken", accessToken, cookieOptions(1000 * 60 * 60));
-    
+    return {
+    accessToken
+  }    
 
   } catch (error) {
     console.log(error);

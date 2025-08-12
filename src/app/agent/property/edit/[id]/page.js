@@ -26,7 +26,17 @@ export default function EditAgentProperty() {
 
   useEffect(() => {
     async function validate() {
-      const verified = await verifyRole("agent", router);
+      const verified = await verifyRole("agent");
+      if (!verified) {
+        toast.error('Your are not allowed')
+        router.push('/')
+        return
+      }
+      if (verified === 'login required') {
+        toast.error('login required')
+        router.push('/login')
+        return
+      }
       async function getData() {
         try {
           const res = await api.get(`/property/${params.id}`)

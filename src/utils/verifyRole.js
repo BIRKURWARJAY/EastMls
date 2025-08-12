@@ -4,8 +4,8 @@ export async function verifyRole(role) {
 
   try {
     const response = await api.get('/auth/verifyRole')
-
-    console.log(response.status);
+    console.log(response);
+    
     
     if (role === 'all') {
       return true

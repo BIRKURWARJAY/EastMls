@@ -18,7 +18,17 @@ function page({ params: paramsPromise }) {
 
   useEffect(() => {
     async function validate() {
-      const verified = await verifyRole("user", router);
+      const verified = await verifyRole("user");
+      if (!verified) {
+        toast.error('Your are not allowed')
+        router.push('/agent')
+        return
+      }
+      if (verified === 'login required') {
+        toast.error('login required')
+        router.push('/login')
+        return
+      }
 
     const fetchAgent = async () => {
       try {
