@@ -47,30 +47,31 @@ export default function Login() {
     validationSchema: YupValidation,
     onSubmit: async (values) => {
 
-      const res = await api.post("/auth/login", {
-        email: values.email,
-        password: values.password,
-        role: toggleButton
-      },
-        {
-          withCredentials: true,
-          validateStatus: (status) => status === 200,
-        });
+      try {
+        const res = await api.post("/auth/login", {
+          email: values.email,
+          password: values.password,
+          role: toggleButton
+        },
+          {
+            withCredentials: true,
+            validateStatus: (status) => status === 200,
+          });
 
-      console.log(res);
+        console.log(res);
 
-      if (res.status === 200) {
-
-       
-        
-        toast.success(`Welcome ${res.data.existedUser.username}`)
-        if (res.data.existedUser.role === 'user') {
-          router.replace("/buy-property")
+        if (res.status === 200) {
+          toast.success(`Welcome ${res.data.existedUser.username}`)
+          if (res.data.existedUser.role === 'user') {
+            router.replace("/buy-property")
+          } else {
+            router.replace("/agent/property")
+          }
         } else {
-          router.replace("/agent/property")
+          toast.error(res.response.data)
         }
-      } else {
-        toast.error(res.response.data.message)
+      } catch (error) {
+        toast.error(error.response.data.message)
       }
     }
 

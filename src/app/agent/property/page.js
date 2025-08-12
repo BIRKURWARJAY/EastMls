@@ -24,11 +24,21 @@ export default function BasicTable() {
   const [prop, setprop] = useState();
   const [isLoading, setLoading] = useState(true);
   const router = useRouter();
-  
+
 
   useEffect(() => {
     async function validate() {
-      const verified = verifyRole("agent", router);
+      const verified = await verifyRole("agent");
+      if (!verified) {
+        toast.error('Your are not allowed')
+        router.push('/')
+        return
+      }
+      if (verified === 'login required') {
+        toast.error('login required')
+        router.push('/login')
+        return
+      }
 
       const fetchAgentProperty = async () => {
         try {
@@ -43,7 +53,7 @@ export default function BasicTable() {
         }
       }
 
-      verified && fetchAgentProperty();
+      fetchAgentProperty()
     }
     validate();
   }, [])

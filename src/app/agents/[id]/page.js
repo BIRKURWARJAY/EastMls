@@ -25,6 +25,7 @@ function page({ params: paramsPromise }) {
         return
       }
       if (verified === 'login required') {
+        toast.error('login required')
         router.push('/login')
         return
       }

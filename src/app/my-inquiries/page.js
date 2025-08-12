@@ -5,6 +5,7 @@ import { api } from '@/utils/api'
 import { useRouter } from 'next/navigation'
 import LoadingComponent from '@/components/loading'
 import { verifyRole } from '@/utils/verifyRole'
+import toast from 'react-hot-toast'
 
 function page() {
   const router = useRouter();
@@ -23,6 +24,7 @@ function page() {
         return
       }
       if (verified === 'login required') {
+        toast.error('login required')
         router.push('/login')
         return
       }
