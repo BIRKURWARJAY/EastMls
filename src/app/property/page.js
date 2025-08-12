@@ -7,6 +7,7 @@ import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
 import decodeRole from '@/utils/decodeRole'
+import { verifyRole } from '@/utils/verifyRole'
 
 function page() {
   const router = useRouter();
@@ -20,7 +21,7 @@ function page() {
 
   useEffect(() => {
     async function validate() {
-      const tokenRes = await decodeRole("user", router);
+      const verified = await verifyRole("user", router);
 
       const fetchprop = async () => {
         try {
@@ -35,7 +36,8 @@ function page() {
           setLoading(false);
         }
       }
-      tokenRes ? fetchprop() : router.replace("/login");
+      
+      verified && fetchprop();
     }
     validate();
   }, [])

@@ -1,15 +1,7 @@
 import jwt from "jsonwebtoken";
 import userModel from "../models/user.model.js";
 
-const cookieOptions = (maxAge) => {
-  return {
-    httpOnly: true,
-    secure: true,
-    origin: process.env.FRONTEND_URI,
-    sameSite: "none",
-    expires: new Date(Date.now() + maxAge)
-  }
-};
+
 
 export default async function autoRefreshToken(req, res) {
 
@@ -44,12 +36,8 @@ export default async function autoRefreshToken(req, res) {
       expiresIn: "1h"
     })
 
-    return res.status(200)
-      .cookie("accessToken", accessToken, cookieOptions(1000 * 60 * 60))
-      .json({
-        message: "Token refreshed successfully",
-        user: user.toObject({ versionKey: false, transform: (doc, ret) => { delete ret.password; delete ret.refreshToken; } })
-      });
+    return {accessToken};
+
   } catch (error) {
     console.log(error);
     return res.status(420).clearCookie("refreshToken").json({

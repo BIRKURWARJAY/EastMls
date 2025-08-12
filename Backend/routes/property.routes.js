@@ -10,11 +10,11 @@ propertyRouter.get('/all', authenticateUser, allproperties)
 
   propertyRouter.post("/", authenticateUser, upload.fields([
     {
-      name: 'images',
+      name: 'images[]',
       maxCount: 20
     },
     {
-      name: 'videos',
+      name: 'videos[]',
       maxCount: 5
     }
   ]), addProperty)
@@ -23,11 +23,11 @@ propertyRouter.get("/search", searchproperty)
 propertyRouter.get('/:id', authenticateUser, getproperty);
 propertyRouter.put('/:id',authenticateUser, upload.fields([
   {
-    name: 'images',
+    name: 'images[]',
     maxCount: 20
   },
   {
-    name: 'videos',
+    name: 'videos[]',
     maxCount: 5
   }
 ]), updateproperty);

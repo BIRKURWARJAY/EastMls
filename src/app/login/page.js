@@ -11,9 +11,8 @@ import ErrorText from "@/components/ErrorText";
 import { useRouter } from "next/navigation";
 import { api } from "@/utils/api.js";
 import toast from "react-hot-toast";
-import { eastMlsStore } from "@/store/eastMlsStore";
 import LoadingComponent from "@/components/loading";
-import decodeRole from "@/utils/decodeRole";
+import { verifyRole } from "@/utils/verifyRole";
 
 
 export default function Login() {
@@ -21,27 +20,17 @@ export default function Login() {
   const router = useRouter();
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [toggleButton, setToggleButton] = useState("user");
-  const setIsLoggedIn = eastMlsStore(s => s.setIsLoggedIn);
-  const setRole = eastMlsStore(s => s.setRole);
-  const setName = eastMlsStore(s => s.setName);
-  const setEmail = eastMlsStore(s => s.setEmail);
-  const role = eastMlsStore(s => s.role);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-      async function validate() {
-        const tokenRes = await decodeRole(["user", "agent"], router);
-          if (tokenRes && role === "user") {
-            return router.replace("/");
-          } else if (tokenRes && role === "agent") {
-            return router.replace("/buy-property");
-          }
+    async function validate() {
+      const verified = await verifyRole("all", router, "/login");
 
-        setLoading(false);
-        return;
-      }
-      validate();
+      verified && setLoading(false);
+    }
+    validate();
   }, [])
+
 
   const Adornment = passwordVisible ? <VisibilityOffIcon /> : <VisibilityIcon />
 
@@ -72,10 +61,7 @@ export default function Login() {
 
       if (res.status === 200) {
 
-        setRole(res.data.existedUser.role, 15);
-        setName(res.data.existedUser.username, 15);
-        setIsLoggedIn(true);
-        setEmail(res.data.existedUser.email, 15);
+       
         
         toast.success(`Welcome ${res.data.existedUser.username}`)
         if (res.data.existedUser.role === 'user') {

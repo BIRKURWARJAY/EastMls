@@ -1,29 +1,20 @@
-import { eastMlsStore } from "@/store/eastMlsStore";
 import toast from "react-hot-toast";
 import { refreshAccessToken } from "./refreshAccessToken";
+import { api } from "./api";
 
 
 
 
 export default async function decodeRole(allowedRole, router) {
 
-  let currentRole = eastMlsStore.getState().role;
-  const setIsLoggedIn = eastMlsStore.getState().setIsLoggedIn;
-  const setName = eastMlsStore.getState().setName;
-  const setEmail = eastMlsStore.getState().setEmail;
-  const setRole = eastMlsStore.getState().setRole;
+  const user = await api.get("/auth/verifyRole");
+  
+  const currentRole = user.data.role;
 
   if (!currentRole) {
     const res = await refreshAccessToken();
-    if (res) {
-      setIsLoggedIn(true, 500);
-      setName(res.username, 60);
-      setEmail(res.email, 60);
-      setRole(res.role, 60);
-      currentRole = res.role;
-    } else {
-      setIsLoggedIn(false);
-      return false;
+    if (!res) {
+      return router.push("/login");
     }
   }
 
@@ -32,11 +23,11 @@ export default async function decodeRole(allowedRole, router) {
     toast.error("Not Allowed");
 
     if (currentRole === "agent") {
-      return router.replace("/agent");
+      return router.replace("/agent/property");
     }
     
-    return router.back();
+    return router.replace("/");
   }
 
-  return true;
+  return user;
 }

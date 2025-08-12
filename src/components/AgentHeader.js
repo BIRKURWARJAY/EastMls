@@ -9,14 +9,13 @@ import toast from 'react-hot-toast'
 
 function AgentHeader() {
 
-    const router = useRouter();
-    const setIsLoggedIn = eastMlsStore(s => s.setIsLoggedIn);
+  const router = useRouter()
 
     const logout = async () => {
         try {
             const response = await api.get('/auth', {withCredentials:true})
             console.log(response);
-            if (response.status === 200) {
+          if (response.status === 200) {
                 toast.success(response.data.message)
                 router.push('/login')
             }

@@ -12,20 +12,27 @@ import Stack from '@mui/material/Stack';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button, List, ListItem, ListItemText } from '@mui/material';
-import {useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { api } from '@/utils/api';
-import { eastMlsStore } from "../store/eastMlsStore.js"
 import toast from 'react-hot-toast';
+import { verifyRole } from '@/utils/verifyRole';
 
 
 
 function Header() {
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const router = useRouter();
-  const isLoggedIn = eastMlsStore(s => s.isLoggedIn);
-  const clearStore = eastMlsStore(s => s.clearStore);
-  // console.log(isLoggedIn);
+  const [headerShowable, setHeaderShowable] = React.useState(false);
 
+
+  React.useEffect(() => {
+    const fetchdata = async () => {
+      const verified = await verifyRole("user", "", "header")
+
+      verified && setHeaderShowable(true);
+    }
+    fetchdata()
+  }, [])
 
 
 
@@ -45,8 +52,6 @@ function Header() {
       if (res.data.status === "success") {
         toast.success(res.data.message)
         router.push("/login");
-        clearStore();
-        sessionStorage.clear();
       }
     } catch (error) {
       console.error("Error logging out...", error);
@@ -63,7 +68,7 @@ function Header() {
 
   return (
     <>
-      <AppBar position="sticky" sx={{ bgcolor: 'white', color: 'black', width: "100%", position: "relative", boxShadow: "0px 0px 10px #dbdbdb !important" }}>
+      {headerShowable && <AppBar position="sticky" sx={{ bgcolor: 'white', color: 'black', width: "100%", position: "relative", boxShadow: "0px 0px 10px #dbdbdb !important" }}>
         <Container sx={{ width: "100%", height: "12vh", display: "flex", zIndex: "500", minHeight: "5rem", justifyContent: "space-between", alignItems: "center" }}>
           <Toolbar sx={{ justifyContent: 'space-between', width: "100%" }}>
 
@@ -103,54 +108,13 @@ function Header() {
             </Drawer>
           </Toolbar>
 
-          <Stack
-            direction="row"
-            alignItems="center"
-            sx={{
-              position: "absolute",
-              right: "20px",
-              display: { xs: 'none', lg: 'flex' }
-            }}
-          >
-            <Button
-              sx={{ bgcolor: "orange", color: "white", mr: "1rem" }}
-              onClick={() => router.push('/agent/property/create')}
-            >
-              Sell property
-            </Button>
-
-
-            {isLoggedIn ? (
-              <Link
-                onClick={handleLogout}
-                href={'/login'}
-                sx={{
-                  color: "#faa61f",
-                  textTransform: "none",
-                  bgcolor: "transparent",
-                  "&:hover": { bgcolor: "transparent", textDecoration: "underline" }
-                }}
-              >
-                Logout
-              </Link>
-            ) : (
-              <Link
-
-                href="/login"
-                sx={{
-                  color: "#faa61f",
-                  textTransform: "none",
-                  bgcolor: "transparent",
-                  "&:hover": { bgcolor: "transparent", textDecoration: "underline" }
-                }}
-              >
-                Login
-              </Link>
-            )}
+          <Stack direction={"row"} alignItems={"center"} sx={{ position: "absolute", right: "20px", display: { xs: 'none', lg: 'flex' } }}>
+            <Button sx={{ bgcolor: "orange", color: "white", mr: "1rem" }}>Sell property</Button>
+            <Button onClick={handleLogout} style={{ color: "#faa61f", textDecoration: "none" }}>Logout</Button>
           </Stack>
 
         </Container>
-      </AppBar>
+      </AppBar>}
     </>
   );
 }

@@ -41,7 +41,7 @@ import dayjs from "dayjs"
 
 
 
-export default function PropertyFormFields({formik, handleDeleteImage, handleDeletevideo, handleImageChanges, handleVideoChanges}) {
+export default function PropertyFormFields({ formik, handleDeleteImage, handleDeletevideo, handleImageChanges, handleVideoChanges, useFor }) {
 
   const leaseTypes = ['Sell', 'Rent'];
   const statusArr = ['Available', 'Pending', 'Sold', 'Rented'];
@@ -108,7 +108,7 @@ export default function PropertyFormFields({formik, handleDeleteImage, handleDel
                 <KeyboardBackspaceIcon />
               </IconButton>
             </Link>
-            <Typography variant="h5">Edit Property Listing</Typography>
+            <Typography variant="h5">{useFor} Property Listing</Typography>
           </Stack>
 
           <form encType='multipart/form-data' onSubmit={formik.handleSubmit}>
@@ -147,7 +147,7 @@ export default function PropertyFormFields({formik, handleDeleteImage, handleDel
                       border: "1px solid",
                       minHeight: "3rem",
                       maxHeight: "5rem",
-                      height: "4rem"
+                      height: "4rem",
                     }}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
@@ -251,15 +251,20 @@ export default function PropertyFormFields({formik, handleDeleteImage, handleDel
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     input={<OutlinedInput />}
-                    renderValue={(selected) => (
-                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                        {selected.map((value) => (
-                          <Chip key={value} label={value} />
-                        ))}
-                      </Box>
-                    )}
+                    renderValue={(selected) => {
+                      if (selected.length === 0) {
+                        return <span style={{ color: 'gray' }}>Select Features</span>;
+                      }
+                      return (
+                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                          {selected.map((value) => (
+                            <Chip key={value} label={value} />
+                          ))}
+                        </Box>
+                      );
+                    }}
+                    displayEmpty
                   >
-                    <MenuItem value={" "} disabled>Features</MenuItem>
                     {propertyFeatures.map((feature) => (
                       <MenuItem key={feature} value={feature}>
                         {feature}
@@ -281,7 +286,7 @@ export default function PropertyFormFields({formik, handleDeleteImage, handleDel
                     error={formik.touched.leaseType && formik.errors.leaseType}
                   >
                     <MenuItem disabled value=" ">
-                      <em>Select Lease Type</em>
+                      <em style={{color: "gray"}}>Select Lease Type</em>
                     </MenuItem>
                     {leaseTypes.map((type) => (
                       <MenuItem key={type} value={type.toLowerCase()}>
@@ -349,6 +354,8 @@ export default function PropertyFormFields({formik, handleDeleteImage, handleDel
                     onBlur={formik.handleBlur}
                     error={formik.touched.currency && formik.errors.currency}
                   >
+                    <MenuItem value={" "}><em style={{color: "gray"}}>Select Currency</em></MenuItem>
+
                     {currencyOptions?.length > 0 ? (
                       currencyOptions.map((currency) => (
                         <MenuItem key={currency} value={currency}>
@@ -391,7 +398,7 @@ export default function PropertyFormFields({formik, handleDeleteImage, handleDel
                     error={formik.touched.propertyType && formik.errors.propertyType}
                   >
                     <MenuItem value=" " disabled>
-                      Select Property Type
+                      <em style={{color: "gray"}}>Select Property Type</em>
                     </MenuItem>
                     {propertyTypes.map((type) => (
                       <MenuItem key={type} value={type.toLowerCase()}>
@@ -414,7 +421,7 @@ export default function PropertyFormFields({formik, handleDeleteImage, handleDel
                     error={formik.touched.status && formik.errors.status}
                   >
                     <MenuItem value=" " disabled>
-                      Select Status
+                      <em style={{color: "gray"}}>Select Status</em>
                     </MenuItem>
                     {statusArr.map((type) => (
                       <MenuItem key={type} value={type.toLowerCase()}>
@@ -533,7 +540,7 @@ export default function PropertyFormFields({formik, handleDeleteImage, handleDel
                   fontWeight: 600,
                   boxShadow: '5px 5px 10px gray',
                   '&:hover': { boxShadow: "2px 2px 5px gray" }
-                }}>Edit property</Button>
+                }}>{useFor} property</Button>
               </Stack>
             </Stack>
           </form>
@@ -598,7 +605,7 @@ export default function PropertyFormFields({formik, handleDeleteImage, handleDel
                     <Stack key={index} direction={'row'} sx={{ wordWrap: "break-word", wordBreak: "break-all", maxWidth: "100%" }}>
                       <Typography variant='body1' component={"span"} sx={{
                         maxWidth: "80%", overflow: 'clip'
-                      }}>{image.slice(0, 20)}
+                      }}>{image?.name?.slice(0, 40) || image.slice(0, 30)}
                       </Typography>
                       <IconButton
                         disableFocusRipple
@@ -665,7 +672,7 @@ export default function PropertyFormFields({formik, handleDeleteImage, handleDel
                   formik.values?.videos?.length > 0 && formik.values.videos?.map((video, index) => (
                     <Stack direction={'row'} key={index}>
                       <Typography variant='body1' component={"span"} sx={{
-                        maxWidth: "80%", overflow: 'clip' 
+                        maxWidth: "80%", overflow: 'clip'
                       }}>{video[0].name}
                       </Typography>
                       <IconButton

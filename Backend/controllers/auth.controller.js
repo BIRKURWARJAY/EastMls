@@ -4,16 +4,8 @@ import { userLoginValidationSchema, userValidator } from "../validators/user.val
 import { PostError, MongoError } from '../utils/ErrorHandler.js';
 import jwt from "jsonwebtoken";
 import { tryCatchWrapper } from '../utils/transactions.js';
+import { cookieOptions } from '../utils/cookieOptions.js';
 
-const cookieOptions = (maxAge) => {
-  return {
-    httpOnly: true,
-    secure: true,
-    origin: "http://localhost:3000",
-    sameSite: "none",
-    expires: new Date(Date.now() + maxAge)
-  }
-};
 
 
 export function regiterUser() {

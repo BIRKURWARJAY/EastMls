@@ -16,7 +16,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import LoadingComponent from '@/components/loading';
 import toast from 'react-hot-toast';
-import decodeRole from '@/utils/decodeRole';
+import { verifyRole } from '@/utils/verifyRole';
 
 let timeId = null
 
@@ -29,7 +29,7 @@ function Page() {
 
   useEffect(() => {
     async function validate() {
-      const tokenRes = await decodeRole("user", router);
+      const verified = await verifyRole("user", router);
 
     const fetchagent = async () => {
       try {
@@ -43,7 +43,7 @@ function Page() {
         setLoading(false);
       }
     }
-      tokenRes ? fetchagent() : router.push("/login");
+      verified && fetchagent();
     }
     validate();
   }, [])

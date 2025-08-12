@@ -11,9 +11,8 @@ import ErrorText from "@/components/ErrorText";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { api } from "@/utils/api";
-import { eastMlsStore } from "@/store/eastMlsStore";
-import decodeRole from "@/utils/decodeRole";
 import LoadingComponent from "@/components/loading";
+import { verifyRole } from "@/utils/verifyRole";
 
 
 
@@ -22,19 +21,13 @@ export default function Login() {
   const router = useRouter();
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [toggleButton, setToggleButton] = useState("user");
-  const role = eastMlsStore(s => s.role);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function validate() {
-      const tokenRes = await decodeRole(["user", "agent"], router);
+      const verified = await verifyRole("all", router, "/register");
 
-      if (tokenRes) {
-        return router.back();
-      }
-
-      setLoading(false);
-      return;
+      verified && setLoading(false);
     }
     validate();
   }, [])

@@ -6,15 +6,17 @@ import Property from "../models/property.model.js";
 import { uploadOnCloudinary } from "../utils/uploadOnCloudinary.js";
 import { Transactions } from "../utils/transactions.js";
 import fs from "fs";
+import { cookieOptions } from "../utils/cookieOptions.js";
 
 
 const addProperty = Transactions(async (req, res, next, session) => {
 
   const data = req.body;
+  console.log(req.files);
 
-  const allImages = req.files?.images?.map((img) => img.path) || [];
+  const allImages = req.files["images[]"]?.map((img) => img.path) || [];
 
-  const allVideos = req.files?.videos?.map((video) => video.path) || [];
+  const allVideos = req.files["videos[]"]?.map((video) => video.path) || [];
 
   const uploadedImages = await Promise.all(allImages.map((img) => uploadOnCloudinary(img)));
   
@@ -183,7 +185,9 @@ const updateproperty = async (req, res) => {
       featured: data.features.length > 0,
       features: data.features,
     }, { new: true })
-    return res.status(201).json({
+    return res.status(201)
+      .cookie("accessToken", req.user.accessToken, cookieOptions(1000 * 60 * 60))
+      .json({
       message: "Property updated successfully",
       newProperty
     });

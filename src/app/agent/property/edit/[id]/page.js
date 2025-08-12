@@ -8,9 +8,9 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { api } from '@/utils/api';
 import toast from 'react-hot-toast';
-import decodeRole from '@/utils/decodeRole';
 import PropertyFormFields from '@/components/PropertyFormFields';
 import LoadingComponent from '@/components/loading';
+import { verifyRole } from '@/utils/verifyRole';
 
 export default function EditAgentProperty() {
   const router = useRouter();
@@ -25,7 +25,7 @@ export default function EditAgentProperty() {
 
   useEffect(() => {
     async function validate() {
-      const tokenRes = await decodeRole("agent", router);
+      const verified = await verifyRole("agent", router);
       async function getData() {
         try {
           const res = await api.get(`/property/${params.id}`)
@@ -41,7 +41,7 @@ export default function EditAgentProperty() {
           router.replace("/agent/property");
         }
       }
-      tokenRes ? getData() : router.push("/login");
+      verified && getData();
     }
 
     validate();
@@ -93,19 +93,21 @@ export default function EditAgentProperty() {
         formData.append("coordinates[]", "77.594566");
 
         Object?.entries(values)?.forEach(([key, value]) => {
-          formData.append(key, value);
+          if (!["images", "videos", "features"].includes(key)) {
+            formData.append(key, value);
+          }
         });
 
         formik.values.features.forEach((feature) => {
-          formData.append("features", feature)
+          formData.append("features[]", feature)
         })
 
         images?.forEach((image) => {
-          formData.append("images", image);
+          formData.append("images[]", image);
         });
 
         videos?.forEach((video) => {
-          formData.append("videos", video);
+          formData.append("videos[]", video);
         });
 
         const res = await api.put(`/property/${params.id}`, formData);
