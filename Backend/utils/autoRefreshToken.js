@@ -16,16 +16,16 @@ export default async function autoRefreshToken(req, res) {
 
     const decodedToken = jwt.verify(token, process.env.JWTSECRET);
     if (!decodedToken) {
-      return res.status(420).clearCookie("refreshToken").json({ message: "Unauthorized" });
+      return res.status(220).clearCookie("refreshToken").json({ message: "Unauthorized" });
     }
 
     const user = await userModel.findById(decodedToken.id);
     if (!user) {
-      return res.status(420).clearCookie("refreshToken").json({ message: "User not found" });
+      return res.status(220).clearCookie("refreshToken").json({ message: "User not found" });
     }
 
     if (token !== user?.refreshToken) {
-      return res.status(420).clearCookie("refreshToken").json({ meassge: "Invalid Refresh Token" });
+      return res.status(220).clearCookie("refreshToken").json({ meassge: "Invalid Refresh Token" });
     }
 
     const accessToken = jwt.sign({
@@ -40,7 +40,7 @@ export default async function autoRefreshToken(req, res) {
 
   } catch (error) {
     console.log(error);
-    return res.status(420).clearCookie("refreshToken").json({
+    return res.status(220).clearCookie("refreshToken").json({
       message: error.message
     })
   }
