@@ -19,6 +19,7 @@ export const authenticateUser = async (req, res, next) => {
       });
     }
     req.user = decoded;
+    req.user.accessToken = token;
     next();
   });
 }

@@ -10,6 +10,7 @@ import { api } from '@/utils/api';
 import toast from 'react-hot-toast';
 import decodeRole from '@/utils/decodeRole';
 import PropertyFormFields from '@/components/PropertyFormFields';
+import { verifyRole } from '@/utils/verifyRole';
 
 export default function CreateAgentProperty() {
   const router = useRouter();
@@ -21,8 +22,8 @@ export default function CreateAgentProperty() {
 
   useEffect(() => {
     async function validate() {
-      const tokenRes = await decodeRole("agent", router);
-      tokenRes ? setLoading(false) : router.push("/login");
+      const verified = await verifyRole("agent", router);
+      verified && setLoading(false);
     }
     validate();
   }, [])
@@ -56,13 +57,13 @@ export default function CreateAgentProperty() {
   const formik = useFormik({
     initialValues: {
       leaseType: " ",
-      yearOfBuild: dayjs().year(),
+      yearOfBuild: "",
       landArea: "",
       price: "",
       isPriceNegotiable: false,
       propertyType: " ",
       status: " ",
-      availableFrom: dayjs(),
+      availableFrom: "",
       bedrooms: "",
       bathrooms: "",
       areaSqFt: "",
@@ -90,19 +91,21 @@ export default function CreateAgentProperty() {
         formData.append("coordinates[]", "77.594566");
 
         Object.entries(values).forEach(([key, value]) => {
-          formData.append(key, value);
+          if (!["images", "videos", "features"].includes(key)) {
+            formData.append(key, value);
+          }
         });
 
         formik.values.features.forEach(feature => {
-          formData.append("features", feature);
+          formData.append("features[]", feature);
         })
 
         images.forEach((image) => {
-          formData.append("images", image);
+          formData.append("images[]", image);
         });
 
         videos.forEach((video) => {
-          formData.append("videos", video);
+          formData.append("videos[]", video);
         });
 
 
@@ -123,6 +126,7 @@ export default function CreateAgentProperty() {
 
   const handleImageChanges = (event) => {
     const files = Array.from(event.target.files || []);
+    console.log(files)
     formik.setFieldValue("images", files);
     setImages(files);
   };
@@ -146,7 +150,7 @@ export default function CreateAgentProperty() {
   };
 
 
-    return (
+  return (
     <>
       {isLoading ?
         <LoadingComponent /> :
@@ -156,7 +160,8 @@ export default function CreateAgentProperty() {
           handleDeleteImage={handleDeleteImage}
           handleDeletevideo={handleDeletevideo}
           handleVideoChanges={handleVideoChanges}
-      />}
+          useFor={"Create"}
+        />}
     </>
   )
 }

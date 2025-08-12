@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { api } from '@/utils/api'
 import { useRouter } from 'next/navigation'
 import LoadingComponent from '@/components/loading'
-import decodeRole from '@/utils/decodeRole'
+import { verifyRole } from '@/utils/verifyRole'
 
 function page() {
   const router = useRouter();
@@ -13,8 +13,10 @@ function page() {
 
 
   useEffect(() => {
+
     async function validate() {
-      const tokenRes = await decodeRole("user", router);
+      const verified = await verifyRole("all", router)
+      
       const getinq = async () => {
         try {
           const response = await api.get('/inquiry');
@@ -26,7 +28,7 @@ function page() {
           setLoading(false);
         }
       }
-      tokenRes ? getinq() : router.push("/login");
+      verified && getinq();
     }
     validate();
   }, []);
@@ -41,8 +43,8 @@ function page() {
 
   return (
     <>
-      {
-        isLoading ? <LoadingComponent /> : <Stack p={{ xs: "1rem", md: "2rem" }} mt={2}>
+      {isLoading ? <LoadingComponent /> :
+        <Stack p={{ xs: "1rem", md: "2rem" }} mt={2}>
           <Typography variant='h3' fontWeight={600}>My Inquiries</Typography>
           <Typography variant='body1' >There Are Currently {inquries?.length} Results</Typography>
 

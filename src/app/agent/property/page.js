@@ -16,8 +16,7 @@ import { api } from '@/utils/api';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
-import decodeRole from '@/utils/decodeRole';
-import { eastMlsStore } from '@/store/eastMlsStore';
+import { verifyRole } from '@/utils/verifyRole';
 
 
 export default function BasicTable() {
@@ -25,12 +24,11 @@ export default function BasicTable() {
   const [prop, setprop] = useState();
   const [isLoading, setLoading] = useState(true);
   const router = useRouter();
-    const role = eastMlsStore(s => s.role);
   
 
   useEffect(() => {
     async function validate() {
-      const tokenRes = decodeRole("agent", router);
+      const verified = verifyRole("agent", router);
 
       const fetchAgentProperty = async () => {
         try {
@@ -45,7 +43,7 @@ export default function BasicTable() {
         }
       }
 
-      tokenRes ? fetchAgentProperty() : router.push("/login");
+      verified && fetchAgentProperty();
     }
     validate();
   }, [])

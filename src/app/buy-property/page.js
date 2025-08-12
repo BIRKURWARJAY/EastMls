@@ -6,7 +6,7 @@ import { api } from '@/utils/api'
 import { useRouter } from 'next/navigation'
 import LoadingComponent from '@/components/loading'
 import toast from 'react-hot-toast'
-import decodeRole from '@/utils/decodeRole'
+import { verifyRole } from '@/utils/verifyRole'
 
 function page() {
   const [type, settype] = useState('')
@@ -17,7 +17,7 @@ function page() {
   
   useEffect(() => {
     async function fetchProp() {
-      const tokenRes = await decodeRole("user", router);
+      const verified = await verifyRole("user", router);
       const fetchProp = async () => {
         try {
           const response = await api.get(`/property/all`)
@@ -29,7 +29,7 @@ function page() {
           setLoading(false)
         }
       }
-      tokenRes ? fetchProp() : router.push("/login");
+      verified && fetchProp();
     }
     fetchProp();
   }, [])

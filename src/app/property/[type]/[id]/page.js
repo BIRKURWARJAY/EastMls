@@ -15,7 +15,7 @@ import Propertydetails from '@/components/Propertydetails';
 import SellerEnquiry from '@/components/SellerEnquiry';
 import { api } from '@/utils/api';
 import LoadingComponent from '@/components/loading';
-import decodeRole from '@/utils/decodeRole';
+import { verifyRole } from '@/utils/verifyRole';
 
 function page() {
   const router = useRouter();
@@ -45,20 +45,21 @@ function page() {
 
   useEffect(() => {
     async function validate() {
-      const tokenRes = await decodeRole(["user", "agent"], router);
+      const verified = await verifyRole("all", router);
 
-    const fetchprop = async () => {
-      try {
-        const response = await api.get(`/property/${params.id}`)
-        console.log(response.data);
-        setprop(response.data.propertydetails);
-        setLoading(false);
-      } catch (error) {
-        console.error(error);
-        setLoading(false);
+      const fetchprop = async () => {
+        try {
+          const response = await api.get(`/property/${params.id}`)
+          console.log(response.data);
+          setprop(response.data.propertydetails);
+          setLoading(false);
+        } catch (error) {
+          console.error(error);
+          setLoading(false);
+        }
       }
-    }
-      tokenRes ? fetchprop() : router.push("/login");
+      
+      verified && fetchprop();
     }
     validate();
   }, [])

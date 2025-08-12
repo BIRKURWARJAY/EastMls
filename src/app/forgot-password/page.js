@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import decodeRole from "@/utils/decodeRole";
 import LoadingComponent from "@/components/loading";
+import { verifyRole } from "@/utils/verifyRole";
 
 
 export default function ForgotPassword() {
@@ -18,14 +19,8 @@ export default function ForgotPassword() {
 
   useEffect(() => {
     async function validate() {
-      const tokenRes = await decodeRole(["user", "agent"], router);
-
-      if (tokenRes) {
-        return router.back();
-      }
-
-      setLoading(false);
-      return;
+      const verified = await verifyRole("all", router, "/forgot-password");
+      verified && setLoading(false);
     }
     validate();
   }, [])

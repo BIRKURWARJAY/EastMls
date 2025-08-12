@@ -47,7 +47,7 @@ const errorHandler = async (err, req, res, next) => {
   // For programming errors or other unexpected errors
   console.error("ERROR 💥", err);
 
-  res.status(500).json({
+  return res.status(500).json({
     status: "unknown error!",
     message: err.errorMessage
   });

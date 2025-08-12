@@ -7,7 +7,7 @@ import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { api } from '@/utils/api'
 import LoadingComponent from '@/components/loading';
-import decodeRole from '@/utils/decodeRole';
+import { verifyRole } from '@/utils/verifyRole';
 
 function page({ params: paramsPromise }) {
   const router = useRouter();
@@ -18,7 +18,7 @@ function page({ params: paramsPromise }) {
 
   useEffect(() => {
     async function validate() {
-      const tokenRes = await decodeRole("user", router);
+      const verified = await verifyRole("user", router);
 
     const fetchAgent = async () => {
       try {
@@ -32,7 +32,7 @@ function page({ params: paramsPromise }) {
       }
     };
 
-    tokenRes ? fetchAgent() : router.push("/login");
+    verified && fetchAgent();
     }
     validate();
   }, [params.id, router]);
