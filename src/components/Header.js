@@ -31,12 +31,12 @@ function Header() {
       if (verified === 'login required') {
         setHeaderShowable(true)
         setloggedin(false)
-        router.push('/login')
         return
       }
       if (!verified) {
         setHeaderShowable(false)
       }
+
       setloggedin(true)
     };
     fetchData();
@@ -126,8 +126,8 @@ function Header() {
                 :
                 <Button
                   onClick={() => {
-                    setloggedin(true)
-                    // router.push('/login');
+                    // setloggedin(true)
+                    router.push('/login');
                   }}
                   style={{ color: "#faa61f" }}
                 >

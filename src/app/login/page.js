@@ -24,9 +24,14 @@ export default function Login() {
 
   useEffect(() => {
     async function validate() {
-      const verified = await verifyRole("all");
-
-      verified && setLoading(false);
+      const verified = await verifyRole("check");
+      if (verified === 'user login') {
+        router.push('/')
+      }
+      if (verified === 'agent login') {
+        router.push('/agent')
+      }
+      setLoading(false)
     }
     validate();
   }, [])
