@@ -18,7 +18,7 @@ function PropertyListingCard({ data, title }) {
 
             <Stack justifyContent={'center'} gap={2} direction={'row'} alignItems={'start'} mt={8} flexWrap={'wrap'}>
                 {data && data.map((prop,index) =>
-                    <Link href={`/property/${prop?.title?.replaceAll(' ','_')}/${prop._id}`} key={index} className=' w-xl'>
+                    <Link href={`/property/${prop._id}`} key={index} className=' w-xl'>
                         <Card  variant='outlined' sx={{  position: "relative" }}  >
 
                             <Button sx={{ position: "absolute", left: "0.5rem", top: "0.5rem", bgcolor: "orange", color: "white", fontSize: "8px", fontWeight: "600", width: "1px", padding: "5px" }} >For {prop?.leaseType}</Button>

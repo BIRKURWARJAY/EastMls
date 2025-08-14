@@ -32,12 +32,12 @@ function Page() {
 
       const verified = await verifyRole("user");
       if (!verified) {
-        toast.error('Your are not allowed')
+        toast.error('You are not allowed')
         router.push('/agent')
         return
       }
       if (verified === 'login required') {
-        toast.error('login required')
+        toast.error('Login required')
         router.push('/login')
         return
       }

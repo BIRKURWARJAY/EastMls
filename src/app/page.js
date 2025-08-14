@@ -22,7 +22,7 @@ export default function Home() {
       const verified = await verifyRole("check");
 
       if (verified === 'agent login' ) {
-        toast.error('Not allowed')
+        toast.error('You are not Allowed')
         router.push('/agent')
       }
       setLoading(false)
@@ -33,7 +33,7 @@ export default function Home() {
 
   return (
     <>
-      <Header/>
+      <Header status={''}/>
       {
         loading ? <LoadingComponent /> :
           <Stack

@@ -28,7 +28,7 @@ export default function EditAgentProperty() {
     async function validate() {
       const verified = await verifyRole("agent");
       if (!verified) {
-        toast.error('Your are not allowed')
+        toast.error('You are not allowed')
         router.push('/')
         return
       }
@@ -41,7 +41,6 @@ export default function EditAgentProperty() {
         try {
           const res = await api.get(`/property/${params.id}`)
           if (res.status === 200) {
-            console.log(res.data, "??????????")
             setImages(res.data.propertydetails.images);
             setVideos(res.data.propertydetails.videos);
             setData(res.data.propertydetails)
@@ -131,9 +130,8 @@ export default function EditAgentProperty() {
       } catch (error) {
         console.error('Form submission error:', error);
         setUploading(false);
-        toast.error("Error Editing Property", {
-          duration: 2
-        })
+        
+        toast.error("Editing Property Error ")
       }
     }
   })

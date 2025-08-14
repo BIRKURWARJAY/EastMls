@@ -28,7 +28,7 @@ export default function Login() {
     async function validate() {
       const verified = await verifyRole("check");
       if (verified === 'user login') {
-        toast.success('Already login')
+        toast.success('Already Login')
         router.push('/')
       }
       if (verified === 'agent login') {

@@ -1,48 +1,55 @@
 'use client'
 import PropertyListingCard from '@/components/PropertyListingCard'
 import { Box, Button, FormControl, MenuItem, Select, Stack, TextField } from '@mui/material'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { api } from '@/utils/api'
 import { useRouter } from 'next/navigation'
 import LoadingComponent from '@/components/loading'
 import toast from 'react-hot-toast'
 import { verifyRole } from '@/utils/verifyRole'
+import { ControlPointDuplicateRounded } from '@mui/icons-material'
 
 function page() {
   const [type, settype] = useState('')
   const [keyword, setkeyword] = useState('')
-  const [prop, setprop] = useState()
-  const [isLoading, setLoading] = useState(true);
+  const [prop, setprop] = useState([])
+  const [isLoading, setLoading] = useState();
+  const doesAPIInProgress = useRef(false);
+
   const router = useRouter()
-  
+
   useEffect(() => {
     async function fetchProp() {
+      setLoading(true)
+      doesAPIInProgress.current = true;
+
       const verified = await verifyRole("user");
       if (!verified) {
-        toast.error('Your are not allowed')
+        toast.error('You are not Allowed')
         router.push('/agent')
         return
       }
       if (verified === 'login required') {
-      toast.error('login required')
+        toast.error('Login required')
         router.push('/login')
         return
       }
 
       try {
         const response = await api.get(`/property/all`)
-        console.log(response);
+        console.log('response from API',response);
         setprop(response.data.allprop);
-        setLoading(false);
       } catch (error) {
         toast.error('Error in fetch property')
         console.log(error);
+      } finally {
+        doesAPIInProgress.current = true;
         setLoading(false)
       }
-
     }
-    fetchProp();
-  }, [])
+
+    !doesAPIInProgress.current && fetchProp();
+  }, [isLoading, prop])
 
 
   const serachProp = async () => {
@@ -72,7 +79,7 @@ function page() {
         <Stack minWidth={'80%'} flexDirection={{ xs: "column", sm: "row" }} justifyContent={'center'} alignItems={'center'} gap={3}>
 
 
-          <TextField id="outlined-basic" value={keyword} placeholder="Enter keyword" variant="outlined" sx={{ width: "45%" }} onChange={(e)=>setkeyword(e.target.value)}/>
+          <TextField id="outlined-basic" value={keyword} placeholder="Enter keyword" size='small' variant="outlined" sx={{ width: "45%" }} onChange={(e) => setkeyword(e.target.value)} />
 
           <FormControl sx={{ width: '45%', minWidth: "200px" }}>
             <Select

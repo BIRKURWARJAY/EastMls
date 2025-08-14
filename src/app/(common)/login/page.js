@@ -28,9 +28,11 @@ export default function Login() {
     async function validate() {
       const verified = await verifyRole("check");
       if (verified === 'user login') {
+        toast.error('Already Login')
         router.push('/')
       }
       if (verified === 'agent login') {
+        toast.error('Already Login')
         router.push('/agent')
       }
       setLoading(false)
@@ -69,14 +71,14 @@ export default function Login() {
               email: res.data.existedUser.email,
               name: res.data.existedUser.username,
               id: res.data.existedUser._id
-           }), process.env.NEXT_PUBLIC_CRYPTOJS_SECRET_KEY).toString();
-           console.log(encryptedUser)
+            }), process.env.NEXT_PUBLIC_CRYPTOJS_SECRET_KEY).toString();
+            console.log(encryptedUser)
             setCookie("EastMlsUser", "/", encryptedUser, 15);
-         } catch (error) {
-           console.log(error);
+          } catch (error) {
+            console.log(error);
             toast.error("something went wrong")
             return;
-         }
+          }
 
           toast.success(`Welcome ${res.data.existedUser.username}`)
           if (res.data.existedUser.role === 'user') {
@@ -181,11 +183,11 @@ export default function Login() {
           </CardContent>
 
           <Typography variant="p" sx={{ fontSize: 20 }}>
-            Don't have an account?  <Link href={"/register"}  style={{color: "black", textDecoration: "none"}}>Register</Link>
+            Don't have an account?  <Link href={"/register"} style={{ color: "black", textDecoration: "none" }}>Register</Link>
           </Typography>
 
 
-          <Link href={"/forgot-password"} style={{color: "black", textDecoration: "none"}}>Forgot password?</Link>
+          <Link href={"/forgot-password"} style={{ color: "black", textDecoration: "none" }}>Forgot password?</Link>
         </Card>
       </Stack>}
     </>

@@ -23,7 +23,7 @@ export default function CreateAgentProperty() {
     async function validate() {
       const verified = await verifyRole("agent");
       if (!verified) {
-        toast.error('Your are not allowed')
+        toast.error('You are not allowed')
         router.push('/')
         return
       }
@@ -122,13 +122,13 @@ export default function CreateAgentProperty() {
         const res = await api.post("/property", formData);
         if (res?.status === 200) {
           console.log(res.data.message);
-          toast.success("Property Listed");
+          toast.success("New Property Listed");
           router.push("/agent/property");
         }
       } catch (error) {
         setUploading(false);
         console.error('Form submission error:', error);
-        toast.error("Error Listing Property");
+        toast.error("Listing Property Error");
       }
     }
   })

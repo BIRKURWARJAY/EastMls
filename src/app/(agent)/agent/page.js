@@ -34,7 +34,7 @@ function page() {
     async function validate() {
       const verified = await verifyRole("agent");
       if (!verified) {
-        toast.error('Your are not allowed')
+        toast.error('You are not allowed')
         router.push('/')
         return
       }
