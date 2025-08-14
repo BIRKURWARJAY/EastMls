@@ -2,13 +2,10 @@
 import UpdateAgent from '@/components/UpdateAgent'
 import { api } from '@/utils/api'
 import { Box, Stack, Tabs, Typography } from '@mui/material'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Tab from '@mui/material/Tab';
 import UpdatePassword from '@/components/UpdatePassword'
-import { verifyRole } from '@/utils/verifyRole'
 import toast from 'react-hot-toast'
-import { useRouter } from 'next/navigation'
-import LoadingComponent from '@/components/loading'
 
 function page() {
   const [agent, setAgent] = useState({
@@ -21,9 +18,9 @@ function page() {
     linkedin: ''
   })
 
-  const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [value, setValue] = React.useState('one');
+  const apiRef = useRef(false);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -31,27 +28,20 @@ function page() {
 
 
   useEffect(() => {
-    async function validate() {
-      const verified = await verifyRole("agent");
-      if (!verified) {
-        toast.error('Your are not allowed')
-        router.push('/')
-        return
-      }
-      if (verified === 'login required') {
-        toast.error('login required')
-        router.push('/login')
-        return
-      }
-      const fetchagent = async () => {
-        const response = await api.get('/agent', { withCredentials: true })
-        console.log(response.data.agent);
-        setAgent(response.data.agent)
-        setLoading(false);
-      }
-      fetchagent()
+    const fetchagent = async () => {
+     try {
+       const response = await api.get('/agent')
+       apiRef.current = true;
+       console.log(response.data.agent);
+       setAgent(response.data.agent)
+       setLoading(false);
+     } catch (error) {
+       console.error(error);
+        apiRef.current = false;
+       toast.error(error.response.data.message);
+     }
     }
-    validate()
+    !apiRef.current && fetchagent()
   }, [])
 
 

@@ -12,53 +12,38 @@ import {
   Typography,
 } from '@mui/material';
 import Link from 'next/link';
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import LoadingComponent from '@/components/loading';
+import React, { useEffect, useRef, useState } from 'react';
+import LoadingComponent from '@/components/Loading';
 import toast from 'react-hot-toast';
-import { verifyRole } from '@/utils/verifyRole';
 
 let timeId = null
 
 function Page() {
-  const router = useRouter();
   const [value, setvalue] = useState(10);
-  const [data, setdata] = useState();
-  const [isLoading, setLoading] = useState(true);
+  const [data, setdata] = useState([]);
+  const [isLoading, setLoading] = useState();
+  const apiRef = useRef(false);
 
 
   useEffect(() => {
-    async function validate() {
-
-      const verified = await verifyRole("user");
-      if (!verified) {
-        toast.error('Your are not allowed')
-        router.push('/agent')
-        return
-      }
-      if (verified === 'login required') {
-        toast.error('login required')
-        router.push('/login')
-        return
-      }
-
-    const fetchagent = async () => {
+    async function fetchAgents() {
       try {
         setLoading(true);
         const response = await api.get('/agent/all')
-        console.log(response, data);
+        apiRef.current = true;
         setdata(response.data.agents)
         setLoading(false);
       } catch (error) {
         console.log(error);
+        apiRef.current = false;
         setLoading(false);
       }
     }
-      verified && fetchagent();
-    }
-    validate();
+    
+   !apiRef.current && fetchAgents();
   }, [])
 
+        console.log('hhhhhhhhhhh', data);
 
   const breadcrumbs = [
     <Link key="1" color="inherit" href="/">
@@ -74,7 +59,7 @@ function Page() {
     if (timeId) {
       clearTimeout(timeId)
     }
-    
+
     const timeout = setTimeout(async () => {
       // console.log("called");
       try {
@@ -110,7 +95,10 @@ function Page() {
           gap={4}
         >
           <Box flex={1}>
-            <AgentCard temp={data} />
+            {data?.map((agent,index) => 
+              <AgentCard agent={agent} key={index}/>
+              
+            )}
           </Box>
 
           <Stack

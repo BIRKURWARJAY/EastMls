@@ -7,21 +7,15 @@ import FacebookIcon from '@mui/icons-material/Facebook';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
-function AgentCard({ temp }) {
+function AgentCard({ agent }) {
     const router = useRouter();
-    const [detail, setdetail] = useState([]);
-
-    useEffect(() => {
-        if (!temp) return;
-        setdetail(Array.isArray(temp) ? temp : [temp]);
-    }, [temp]);
+   console.log(agent,'///////////');
+   
 
     return (
         <div className='w-full'>
-            {detail.map((data) => (
                 <Stack
-                    key={data._id}
-                    onClick={() => router.push(`/agents/${data._id}`)}
+                    onClick={() => router.push(`/agents/${agent._id}`)}
                     sx={{
                         cursor: "pointer",
                         width: "100%",
@@ -49,25 +43,25 @@ function AgentCard({ temp }) {
                             objectFit: "cover",
                             borderRadius: "10px"
                         }}
-                        src={data.profileImage || '/default-profile.jpg'}
-                        alt={`${data.username}'s Profile Picture`}
+                        src={agent.profileImage || '/default-profile.jpg'}
+                        alt={`${agent.username}'s Profile Picture`}
                     />
 
                     <Box display='flex' flexDirection='column' justifyContent='start' alignItems='stretch' gap={0.5}>
-                        <Typography variant='h5' fontWeight={700}>{data.username}</Typography>
-                        <Typography variant='body1'>{data.role}</Typography>
+                        <Typography variant='h5' fontWeight={700}>{agent.username}</Typography>
+                        <Typography variant='body1'>{agent.role}</Typography>
 
                         <Box display='flex' gap={1} mt={3}>
                             <PhoneCallbackIcon />
-                            <Typography>{data.number}</Typography>
+                            <Typography>{agent.number}</Typography>
                         </Box>
                         <Box display='flex' gap={1}>
                             <DraftsOutlinedIcon />
-                            <Typography>{data.email}</Typography>
+                            <Typography>{agent.email}</Typography>
                         </Box>
                         <Box display='flex' gap={1}>
                             <HomeOutlinedIcon />
-                            <Typography>{data.property || "No Properties Listed"}</Typography>
+                            <Typography>{agent.property || "No Properties Listed"}</Typography>
                         </Box>
 
                         <Box borderTop='1px solid #dbdbdb'>
@@ -75,7 +69,6 @@ function AgentCard({ temp }) {
                         </Box>
                     </Box>
                 </Stack>
-            ))}
         </div>
     );
 }

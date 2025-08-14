@@ -1,13 +1,45 @@
+'use client'
+
 import AgentHeader from '@/components/AgentHeader'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation';
+import { verifyRole } from '@/utils/verifyRole';
+import toast from 'react-hot-toast';
+import LoadingComponent from '@/components/Loading';
 
 function layout({ children }) {
-    return (
-        <div>
-            <AgentHeader />
-            {children}
-        </div>
-    )
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
+
+
+  useEffect(() => {
+    async function validate() {
+      const verified = await verifyRole("agent");
+      if (!verified) {
+        toast.error('Your are not allowed')
+        router.back();
+        return;
+      }
+      if (verified === 'login required') {
+        toast.error('login required')
+        router.push('/login')
+        return;
+      }
+      setLoading(false);
+    }
+    validate()
+  }, [children])
+
+
+  return (
+    <>
+      {loading ? <LoadingComponent /> : <>
+        <AgentHeader />
+        {children}
+      </>
+      }
+    </>
+  )
 }
 
 export default layout

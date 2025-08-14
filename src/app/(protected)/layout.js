@@ -15,28 +15,37 @@ export default function Layout({ children }) {
   const [loading, setLoading] = useState(true);
   const [state, setState] = useState();
 
+
   useEffect(() => {
     async function validate() {
-
-      const verified = await verifyRole("all");
+      const verified = await verifyRole("check");
 
       if (verified === "login required") {
-        toast.error("please Login");
-        router.replace("/login");
+        setState(false);
+        setLoading(false)
         return;
       }
 
+      if (verified === 'user login') {
+        router.back()
+        return;
+      }
+      if (verified === 'agent login') {
+        router.back();
+        return;
+      }
+      
       setState(true);
       setLoading(false)
     }
     validate();
-  }, [children])
+  }, [])
 
 
   return (
     <>
       {loading ? <LoadingComponent /> : <>
-        <Header />
+        <Header state={state}/>
         {children}
       </>
       }

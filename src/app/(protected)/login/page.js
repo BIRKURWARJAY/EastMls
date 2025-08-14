@@ -3,7 +3,7 @@
 import { Button, FormLabel, Stack, TextField, Typography, Card, InputAdornment, CardContent, IconButton } from "@mui/material";
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -11,8 +11,6 @@ import ErrorText from "@/components/ErrorText";
 import { useRouter } from "next/navigation";
 import { api } from "@/utils/api.js";
 import toast from "react-hot-toast";
-import LoadingComponent from "@/components/loading";
-import { verifyRole } from "@/utils/verifyRole";
 import CryptoJS from "crypto-js";
 import { setCookie } from "@/utils/cookies";
 
@@ -22,21 +20,7 @@ export default function Login() {
   const router = useRouter();
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [toggleButton, setToggleButton] = useState("user");
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    async function validate() {
-      const verified = await verifyRole("check");
-      if (verified === 'user login') {
-        router.push('/')
-      }
-      if (verified === 'agent login') {
-        router.push('/agent')
-      }
-      setLoading(false)
-    }
-    validate();
-  }, [])
 
 
   const Adornment = passwordVisible ? <VisibilityOffIcon /> : <VisibilityIcon />
@@ -69,14 +53,14 @@ export default function Login() {
               email: res.data.existedUser.email,
               name: res.data.existedUser.username,
               id: res.data.existedUser._id
-           }), process.env.NEXT_PUBLIC_CRYPTOJS_SECRET_KEY).toString();
-           console.log(encryptedUser)
+            }), process.env.NEXT_PUBLIC_CRYPTOJS_SECRET_KEY).toString();
+            console.log(encryptedUser)
             setCookie("EastMlsUser", "/", encryptedUser, 15);
-         } catch (error) {
-           console.log(error);
+          } catch (error) {
+            console.log(error);
             toast.error("something went wrong")
             return;
-         }
+          }
 
           toast.success(`Welcome ${res.data.existedUser.username}`)
           if (res.data.existedUser.role === 'user') {
@@ -99,7 +83,7 @@ export default function Login() {
 
   return (
     <>
-      {loading ? <LoadingComponent /> : <Stack id="loginPage" sx={{ height: "88vh", minHeight: "50rem", backgroundImage: 'url(/eastmls/registerbg.webp)' }} display={'flex'} justifyContent={'center'} alignItems={'center'}>
+      <Stack id="loginPage" sx={{ height: "88vh", minHeight: "50rem", backgroundImage: 'url(/eastmls/registerbg.webp)' }} display={'flex'} justifyContent={'center'} alignItems={'center'}>
 
         <Card className="Login-modal" sx={{ maxWidth: "50rem", marginBlock: 2, bgcolor: "#e2e2e2cc", borderRadius: "20px", padding: 4, paddingInline: 2, alignItems: "center", justifyContent: "center", display: "flex", flexDirection: "column", gap: 2 }}>
           <Typography variant="h1" sx={{ fontSize: 30, fontWeight: 800 }}>
@@ -181,13 +165,13 @@ export default function Login() {
           </CardContent>
 
           <Typography variant="p" sx={{ fontSize: 20 }}>
-            Don't have an account?  <Link href={"/register"}  style={{color: "black", textDecoration: "none"}}>Register</Link>
+            Don't have an account?  <Link href={"/register"} style={{ color: "black", textDecoration: "none" }}>Register</Link>
           </Typography>
 
 
-          <Link href={"/forgot-password"} style={{color: "black", textDecoration: "none"}}>Forgot password?</Link>
+          <Link href={"/forgot-password"} style={{ color: "black", textDecoration: "none" }}>Forgot password?</Link>
         </Card>
-      </Stack>}
+      </Stack>
     </>
   )
 }

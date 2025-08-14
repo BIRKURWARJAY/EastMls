@@ -1,47 +1,35 @@
 'use client'
 import PropertyListingCard from '@/components/PropertyListingCard'
-import { Box, Button, FormControl, MenuItem, Select, Stack, TextField } from '@mui/material'
-import React, { useEffect, useState } from 'react'
+import { Box, Button, FormControl, MenuItem, Select, Stack, TextField, Typography } from '@mui/material'
+import React, { useEffect, useRef, useState } from 'react'
 import { api } from '@/utils/api'
-import { useRouter } from 'next/navigation'
-import LoadingComponent from '@/components/loading'
+import LoadingComponent from '@/components/Loading'
 import toast from 'react-hot-toast'
-import { verifyRole } from '@/utils/verifyRole'
 
 function page() {
   const [type, settype] = useState('')
   const [keyword, setkeyword] = useState('')
   const [prop, setprop] = useState()
-  const [isLoading, setLoading] = useState(true);
-  const router = useRouter()
-  
+  const [isLoading, setLoading] = useState();
+  const apiRef = useRef(false);
+
   useEffect(() => {
     async function fetchProp() {
-      const verified = await verifyRole("user");
-      if (!verified) {
-        toast.error('Your are not allowed')
-        router.push('/agent')
-        return
-      }
-      if (verified === 'login required') {
-      toast.error('login required')
-        router.push('/login')
-        return
-      }
-
       try {
-        const response = await api.get(`/property/all`)
-        console.log(response);
+        setLoading(true)
+        const response = await api.get(`/property/all`);
+        apiRef.current = true;
         setprop(response.data.allprop);
         setLoading(false);
       } catch (error) {
         toast.error('Error in fetch property')
+        apiRef.current = false;
         console.log(error);
         setLoading(false)
       }
 
     }
-    fetchProp();
+    !apiRef.current && fetchProp();
   }, [])
 
 
@@ -72,7 +60,7 @@ function page() {
         <Stack minWidth={'80%'} flexDirection={{ xs: "column", sm: "row" }} justifyContent={'center'} alignItems={'center'} gap={3}>
 
 
-          <TextField id="outlined-basic" value={keyword} placeholder="Enter keyword" variant="outlined" sx={{ width: "45%" }} onChange={(e)=>setkeyword(e.target.value)}/>
+          <TextField id="outlined-basic" value={keyword} placeholder="Enter keyword" variant="outlined" sx={{ width: "45%" }} onChange={(e) => setkeyword(e.target.value)} />
 
           <FormControl sx={{ width: '45%', minWidth: "200px" }}>
             <Select
@@ -95,7 +83,10 @@ function page() {
         </Stack>
 
         <Stack sx={{ mt: "3rem" }} padding={2}>
-          <PropertyListingCard data={prop} title={'Buy Property listing'} />
+          <Typography variant='h6' fontSize={10}>There Are Currently {prop?.length} Results</Typography>
+          {prop?.map((property, index) => (
+            <PropertyListingCard prop={property} key={index}  title={'Buy Property listing'} />
+          ))}
         </Stack>
       </Box>}
     </>
@@ -104,4 +95,4 @@ function page() {
 }
 
 
-export default page;
+export default React.memo(page);

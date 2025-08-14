@@ -3,54 +3,39 @@
 import PropertyListingCard from '@/components/PropertyListingCard'
 import { api } from '@/utils/api'
 import { Box, Button, FormControl, MenuItem, Select, Stack, TextField, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material'
-import React, { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import React, { useEffect, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
-import { verifyRole } from '@/utils/verifyRole'
+import LoadingComponent from '@/components/Loading'
 
 function page() {
-  const router = useRouter();
   const [isLoading, setLoading] = useState(true);
   const [value, setvalue] = useState([])
   const [prop, setprop] = useState()
   const [type, settype] = useState('')
   const [keyword, setkeyword] = useState('')
+  const apiRef = useRef(false);
 
 
 
   useEffect(() => {
-    async function validate() {
-      const verified = await verifyRole("user");
-      if (!verified) {
-        toast.error('Your are not allowed')
-        router.push('/agent')
-        return
-      }
-      if (verified === 'login required') {
-      toast.error('login required')
-        router.push('/login')
-        return
-      }
 
-
-
-      const fetchprop = async () => {
-        try {
-          const response = await api.get(`/property/all`)
-          console.log(response.data);
-          if (response?.status === 200) {
-            setprop(response.data.allprop)
-            setLoading(false);
-          }
-        } catch (error) {
-          console.error(error);
+    const fetchprop = async () => {
+      try {
+        const response = await api.get(`/property/all`)
+        apiRef.current = true;
+        console.log(response.data);
+        if (response?.status === 200) {
+          setprop(response.data.allprop)
           setLoading(false);
         }
+      } catch (error) {
+        console.error(error);
+        apiRef.current = false;
+        setLoading(false);
       }
-      
-      verified && fetchprop();
     }
-    validate();
+
+    !apiRef.current && fetchprop();
   }, [])
 
 
@@ -75,7 +60,7 @@ function page() {
 
   return (
     <>
-      {!isLoading && <>
+      {isLoading ? <LoadingComponent /> : <>
         <Stack flexDirection={{ xs: "column", sm: "row" }} display={'flex'} alignItems={'center'} justifyContent={'center'} flexWrap={'wrap'} boxShadow={"0px 1px 10px 1px #d6d6d6"} py={2} gap={2}>
           <ToggleButtonGroup
             sx={{
@@ -120,7 +105,10 @@ function page() {
         </Stack>
 
         <Stack sx={{ mt: "3rem" }} padding={2}>
-          <PropertyListingCard data={prop} title={'Property listing'} />
+          <Typography variant='h6' fontSize={10}>There Are Currently {prop?.length} Results</Typography>
+          {prop?.map((property, index) => (
+            <PropertyListingCard prop={property} key={index} title={'Buy Property listing'} />
+          ))}
         </Stack>
       </>
       }
