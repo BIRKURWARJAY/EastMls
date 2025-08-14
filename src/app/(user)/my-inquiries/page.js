@@ -1,19 +1,18 @@
 'use client'
 import { Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, CircularProgress, Box } from '@mui/material'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { api } from '@/utils/api'
-import { useRouter } from 'next/navigation'
-import LoadingComponent from '@/components/loading'
-import { verifyRole } from '@/utils/verifyRole'
-import toast from 'react-hot-toast'
+import LoadingComponent from '@/components/Loading'
+
 
 function page() {
-  const router = useRouter();
   const [inquries, setinquries] = useState();
   const [isLoading, setLoading] = useState(true);
+  const apiRef = useRef(false);
 
 
   useEffect(() => {
+<<<<<<< HEAD
 
     async function validate() {
 
@@ -42,8 +41,21 @@ function page() {
         }
       }
       verified && getinq();
+=======
+    const getinq = async () => {
+      try {
+        const response = await api.get('/inquiry');
+        apiRef.current = true;
+        setinquries(response.data.allInq);
+        setLoading(false);
+      } catch (error) {
+        console.log(error);
+        apiRef.current = false;
+        setLoading(false);
+      }
+>>>>>>> cea54376ca957957c169f476c786a5ae4bf13c00
     }
-    validate();
+    !apiRef.current && getinq();
   }, []);
 
   if (isLoading) {

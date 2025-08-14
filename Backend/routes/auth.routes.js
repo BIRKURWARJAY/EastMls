@@ -18,10 +18,4 @@ router.put("/", authenticateUser, updateUserDetails());
 
 router.delete("/", authenticateUser, softDeleteUser());
 
-router.get("/verifyRole", authenticateUser, (req, res) => {
-  return res.status(200).json({
-    role: req?.user?.role
-  })
-})
-
 export default router;

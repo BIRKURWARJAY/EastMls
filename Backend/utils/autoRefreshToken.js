@@ -31,7 +31,9 @@ export default async function autoRefreshToken(req, res) {
 
     const accessToken =  jwt.sign({
       id: user._id,
-      role: user.role
+      role: user.role,
+      email: user.email,
+      name: user.username
     }, process.env.JWTSECRET, {
       algorithm: "HS256",
       expiresIn: "1h"

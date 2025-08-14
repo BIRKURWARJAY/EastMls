@@ -3,7 +3,7 @@
 import { Button, Stack, TextField, Typography, Card, InputAdornment, CardContent, IconButton, FormLabel } from "@mui/material";
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -11,8 +11,7 @@ import ErrorText from "@/components/ErrorText";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { api } from "@/utils/api";
-import LoadingComponent from "@/components/loading";
-import { verifyRole } from "@/utils/verifyRole";
+
 
 
 
@@ -21,8 +20,8 @@ export default function Login() {
   const router = useRouter();
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [toggleButton, setToggleButton] = useState("user");
-  const [loading, setLoading] = useState(true);
 
+<<<<<<< HEAD:src/app/(common)/register/page.js
   useEffect(() => {
 
     async function validate() {
@@ -39,6 +38,8 @@ export default function Login() {
     }
     validate()
   }, [])
+=======
+>>>>>>> cea54376ca957957c169f476c786a5ae4bf13c00:src/app/(protected)/register/page.js
 
   const Adornment = passwordVisible ? <VisibilityOffIcon /> : <VisibilityIcon />
 
@@ -72,17 +73,15 @@ export default function Login() {
       if (res.status === 200) {
         toast.success('Register sucessfully')
         router.push("/login");
-
       } else {
         toast.error(res.response.data.message)
-
       }
     }
   })
 
   return (
     <>
-      {loading ? <LoadingComponent /> : <Stack id={"registerPage"} sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "88vh", backgroundImage: 'url(/eastmls/registerbg.webp)' }}>
+    <Stack id={"registerPage"} sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "88vh", backgroundImage: 'url(/eastmls/registerbg.webp)' }}>
 
         <Card className="Login-modal scrollbar-hidden" sx={{
           overflow: "auto", scrollbarWidth: "none", msOverflowStyle: "none", "&::-webkit-scrollbar": {
@@ -203,7 +202,7 @@ export default function Login() {
             Already have an account?  <Link href={"/login"}  style={{color: "black", textDecoration: "none"}}>Login</Link>
           </Typography>
         </Card>
-      </Stack >}
+      </Stack >
     </>
   )
 }

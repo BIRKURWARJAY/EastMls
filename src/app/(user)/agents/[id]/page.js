@@ -3,20 +3,20 @@ import AgentCard from '@/components/AgentCard';
 import BreadCrumbs from '@/components/BreadCrumbs';
 import { Box, Stack, Typography } from '@mui/material';
 import Link from 'next/link';
-import React, { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import React, { useEffect, useRef, useState } from 'react'
 import { api } from '@/utils/api'
-import LoadingComponent from '@/components/loading';
-import { verifyRole } from '@/utils/verifyRole';
+import LoadingComponent from '@/components/Loading';
 
 function page({ params: paramsPromise }) {
-  const router = useRouter();
   const [isLoading, setLoading] = useState(true);
   const [agent, setAgent] = useState();
+  const apiRef = useRef(false);
 
-  const params = React.use(paramsPromise);  
+
+  const params = React.use(paramsPromise);
 
   useEffect(() => {
+<<<<<<< HEAD
     async function validate() {
       const verified = await verifyRole("user");
       if (!verified) {
@@ -30,22 +30,24 @@ function page({ params: paramsPromise }) {
         return
       }
 
+=======
+>>>>>>> cea54376ca957957c169f476c786a5ae4bf13c00
     const fetchAgent = async () => {
       try {
         setLoading(true);
         const response = await api.get(`/user/agent/${params.id}`);
+        apiRef.current = true;
         setAgent(response.data.agent);
         setLoading(false);
       } catch (error) {
         console.error(error);
+        apiRef.current = false;
         setLoading(false);
       }
     };
 
-    verified && fetchAgent();
-    }
-    validate();
-  }, [params.id, router]);
+    !apiRef.current && fetchAgent();
+  }, []);
 
 
 
@@ -67,7 +69,7 @@ function page({ params: paramsPromise }) {
 
         <Box display={'flex'} flexDirection={{ xs: 'column', md: 'row' }} mt={6} justifyContent={'space-between'} >
           <Box >
-            <AgentCard temp={agent} />
+            <AgentCard agent={agent} />
             <Box p={3} boxShadow={'0px 0px 10px 0px #dbdbdb'} borderRadius={5}>
               <Typography variant='h6' fontWeight={600} mb={3}>About Hussen ali</Typography>
               <Typography variant='body1' fontWeight={500}>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Accusamus commodi tempore maxime ad, asperiores id, assumenda illum obcaecati quibusdam doloremque veniam ducimus fuga officiis minima consectetur, dolorum laborum nulla aliquam. Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat, quod!</Typography>
@@ -75,7 +77,6 @@ function page({ params: paramsPromise }) {
             </Box>
           </Box>
 
-          {/* <SellerEnquiry data={agent} /> */}
         </Box>
       </Stack>}
 

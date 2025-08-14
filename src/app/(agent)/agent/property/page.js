@@ -2,7 +2,7 @@
 import * as React from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
-import LoadingComponent from "@/components/loading";
+import LoadingComponent from "@/components/Loading";
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
@@ -13,49 +13,34 @@ import { useState } from 'react';
 import { DeleteOutlineOutlined, EditCalendarOutlined, RemoveRedEyeOutlined } from '@mui/icons-material';
 import { Box, IconButton } from '@mui/material';
 import { api } from '@/utils/api';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
-import { verifyRole } from '@/utils/verifyRole';
 
 
 export default function BasicTable() {
 
   const [prop, setprop] = useState();
   const [isLoading, setLoading] = useState(true);
-  const router = useRouter();
+  const apiRef = React.useRef(false);
 
 
   useEffect(() => {
-    async function validate() {
-      const verified = await verifyRole("agent");
-      if (!verified) {
-        toast.error('You are not allowed')
-        router.push('/')
-        return
-      }
-      if (verified === 'login required') {
-        toast.error('login required')
-        router.push('/login')
-        return
-      }
-
-      const fetchAgentProperty = async () => {
-        try {
-          const response = await api.get('/property/agent')
-          if (response.status === 200) {
-            setprop(response?.data.allprop)
-          }
-          setLoading(false);
-        } catch (error) {
-          console.error(error);
-          setLoading(false);
+    const fetchAgentProperty = async () => {
+      try {
+        const response = await api.get('/property/agent')
+        apiRef.current = true;
+        if (response.status === 200) {
+          setprop(response?.data.allprop)
         }
+        setLoading(false);
+      } catch (error) {
+        console.error(error);
+        apiRef.current = false;
+        setLoading(false);
       }
-
-      fetchAgentProperty()
     }
-    validate();
+
+    !apiRef.current && fetchAgentProperty()
   }, [])
 
   const deleteproperty = async (id) => {

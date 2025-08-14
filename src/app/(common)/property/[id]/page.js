@@ -2,8 +2,8 @@
 import BreadCrumbs from '@/components/BreadCrumbs';
 import { Box, IconButton, Stack, Typography } from '@mui/material';
 import Link from 'next/link';
-import { useParams, useRouter } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
+import { useParams } from 'next/navigation'
+import React, { useEffect, useRef, useState } from 'react'
 import MapOutlinedIcon from '@mui/icons-material/MapOutlined';
 import DateRangeOutlinedIcon from '@mui/icons-material/DateRangeOutlined';
 import BedOutlinedIcon from '@mui/icons-material/BedOutlined';
@@ -14,15 +14,15 @@ import Overview from '@/components/Overview';
 import Propertydetails from '@/components/Propertydetails';
 import SellerEnquiry from '@/components/SellerEnquiry';
 import { api } from '@/utils/api';
-import LoadingComponent from '@/components/loading';
-import { verifyRole } from '@/utils/verifyRole';
+import LoadingComponent from '@/components/Loading';
 
 function page() {
-  const router = useRouter();
   const params = useParams()
   const [isLoading, setLoading] = useState(true);
 
   const [prop, setprop] = useState()
+  const apiRef = useRef(false);
+
 
   const breadcrumbs = [
     <Link underline="hover" key="1" color="inherit" href="/" >
@@ -44,24 +44,23 @@ function page() {
 
 
   useEffect(() => {
-    async function validate() {
-      const verified = await verifyRole("all", router);
 
-      const fetchprop = async () => {
-        try {
-          const response = await api.get(`/property/${params.id}`)
-          console.log(response.data);
-          setprop(response.data.propertydetails);
-          setLoading(false);
-        } catch (error) {
-          console.error(error);
-          setLoading(false);
-        }
+    const fetchprop = async () => {
+      try {
+        const response = await api.get(`/property/${params.id}`)
+        apiRef.current = true;
+        console.log(response.data);
+        setprop(response.data.propertydetails);
+        setLoading(false);
+      } catch (error) {
+        console.error(error);
+        apiRef.current = false;
+        setLoading(false);
       }
-      
-      verified && fetchprop();
     }
-    validate();
+
+    !apiRef.current && fetchprop();
+
   }, [])
 
   return (

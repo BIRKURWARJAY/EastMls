@@ -3,38 +3,19 @@
 import dayjs from 'dayjs';
 import { useFormik } from 'formik';
 import * as Yup from "yup";
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import LoadingComponent from '@/components/loading';
 import { api } from '@/utils/api';
 import toast from 'react-hot-toast';
 import PropertyFormFields from '@/components/PropertyFormFields';
-import { verifyRole } from '@/utils/verifyRole';
 
 export default function CreateAgentProperty() {
   const router = useRouter();
   const propertyTypes = ['Apartment', 'House', 'Condo', 'Villa', 'Commercial'];
-  const [isLoading, setLoading] = useState(true);
   const [images, setImages] = useState([]);
   const [videos, setVideos] = useState([]);
   const [uploading, setUploading] = useState(false);
 
-  useEffect(() => {
-    async function validate() {
-      const verified = await verifyRole("agent");
-      if (!verified) {
-        toast.error('You are not allowed')
-        router.push('/')
-        return
-      }
-      if (verified === 'login required') {
-        toast.error('login required')
-        router.push('/login')
-        return
-      }
-    }
-    validate();
-  }, [])
 
   const YupValidation = Yup.object().shape({
     leaseType: Yup.string('numbers is not allowed').oneOf(['sell', 'rent'], 'leaseType must be one of "sell" or "rent"').required('leaseType is required'),
@@ -161,17 +142,15 @@ export default function CreateAgentProperty() {
 
   return (
     <>
-      {isLoading ?
-        <LoadingComponent /> :
-        <PropertyFormFields
-          formik={formik}
-          handleImageChanges={handleImageChanges}
-          handleDeleteImage={handleDeleteImage}
-          handleDeletevideo={handleDeletevideo}
-          handleVideoChanges={handleVideoChanges}
-          useFor={"Create"}
-          uploading={uploading}
-        />}
+      <PropertyFormFields
+        formik={formik}
+        handleImageChanges={handleImageChanges}
+        handleDeleteImage={handleDeleteImage}
+        handleDeletevideo={handleDeletevideo}
+        handleVideoChanges={handleVideoChanges}
+        useFor={"Create"}
+        uploading={uploading}
+      />
     </>
   )
 }

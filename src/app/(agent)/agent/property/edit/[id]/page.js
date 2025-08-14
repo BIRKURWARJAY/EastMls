@@ -4,13 +4,12 @@
 import dayjs from 'dayjs';
 import { useFormik } from 'formik';
 import * as Yup from "yup";
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { api } from '@/utils/api';
 import toast from 'react-hot-toast';
 import PropertyFormFields from '@/components/PropertyFormFields';
-import LoadingComponent from '@/components/loading';
-import { verifyRole } from '@/utils/verifyRole';
+import LoadingComponent from '@/components/Loading';
 
 export default function EditAgentProperty() {
   const router = useRouter();
@@ -21,40 +20,29 @@ export default function EditAgentProperty() {
   const params = useParams();
   const [isLoading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
+  const apiRef = useRef(false)
 
 
 
   useEffect(() => {
-    async function validate() {
-      const verified = await verifyRole("agent");
-      if (!verified) {
-        toast.error('You are not allowed')
-        router.push('/')
-        return
-      }
-      if (verified === 'login required') {
-        toast.error('login required')
-        router.push('/login')
-        return
-      }
-      async function getData() {
-        try {
-          const res = await api.get(`/property/${params.id}`)
-          if (res.status === 200) {
-            setImages(res.data.propertydetails.images);
-            setVideos(res.data.propertydetails.videos);
-            setData(res.data.propertydetails)
-            setLoading(false);
-          }
-        } catch (error) {
-          console.error(error);
-          return router.replace("/agent/property");
+    async function getData() {
+      try {
+        const res = await api.get(`/property/${params.id}`)
+        apiRef.current = true;
+        if (res.status === 200) {
+          console.log(res.data, "??????????")
+          setImages(res.data.propertydetails.images);
+          setVideos(res.data.propertydetails.videos);
+          setData(res.data.propertydetails)
+          setLoading(false);
         }
+      } catch (error) {
+        console.error(error);
+        apiRef.current = false;
+        return router.replace("/agent/property");
       }
-      verified && getData();
     }
-
-    validate();
+    !apiRef.current && getData();
   }, [])
 
 
@@ -175,7 +163,7 @@ export default function EditAgentProperty() {
           handleVideoChanges={handleVideoChanges}
           uploading={uploading}
           useFor={"Edit"}
-      />}
+        />}
     </>
   )
 }
