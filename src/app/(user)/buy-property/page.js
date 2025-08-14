@@ -31,6 +31,7 @@ function page() {
 
       try {
         const response = await api.get(`/property/all`)
+        console.log(response);
         setprop(response.data.allprop);
         setLoading(false);
       } catch (error) {

@@ -15,6 +15,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { api } from '@/utils/api';
 import toast from 'react-hot-toast';
 import { verifyRole } from '@/utils/verifyRole';
+import { deleteCookie } from '@/utils/cookies';
 
 function Header() {
   const router = useRouter();
@@ -27,16 +28,18 @@ function Header() {
   React.useEffect(() => {
     const fetchData = async () => {
       const verified = await verifyRole("user");
-
+      console.log('verified res 😊😊😊😊', verified);
+      
       if (verified === 'login required') {
         setHeaderShowable(true)
         setloggedin(false)
+        console.log('login res 😊', loggedin);
         return
       }
       if (!verified) {
         setHeaderShowable(false)
       }
-
+      
       setloggedin(true)
     };
     fetchData();
@@ -52,6 +55,7 @@ function Header() {
     try {
       const res = await api.get("/auth", { withCredentials: true });
       if (res.data.status === "success") {
+        deleteCookie('EastMlsUser', '/')
         toast.success(res.data.message);
         setloggedin(false)
         setHeaderShowable(true)

@@ -8,7 +8,6 @@ export default async function autoRefreshToken(req, res) {
 
   try {
     const token = req?.cookies?.refreshToken;
-    console.log("Refresh Token:", token);
     if (!token) {
       return res.status(220)
       .json({
@@ -38,7 +37,6 @@ export default async function autoRefreshToken(req, res) {
       expiresIn: "1h"
     })
     
-    console.log("New Access Token:", accessToken);
     
     return {
     accessToken

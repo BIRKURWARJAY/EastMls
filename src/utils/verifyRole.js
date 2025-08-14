@@ -1,19 +1,25 @@
-import { api } from "./api";
+import CryptoJS from "crypto-js";
+import { getCookie } from "./cookies";
 
 export async function verifyRole(role) {
-
   try {
-    const response = await api.get('/auth/verifyRole')
+    const encrytedUser = getCookie("EastMlsUser");
+    console.log("Called ?>?>?>?>?>", encrytedUser)
+    if (!encrytedUser) return "login required";
 
-    console.log(response);
-    
-    if (response.status === 220  || !response) {
+    const decrytedUser = JSON.parse(CryptoJS.AES.decrypt(encrytedUser, process.env.NEXT_PUBLIC_CRYPTOJS_SECRET_KEY).toString(CryptoJS.enc.Utf8));
+
+    console.log(decrytedUser, ">>>>>>>>>>>>>>>")
+
+    if (!decrytedUser) {
       return 'login required'
     }
     if (role === 'check') {
-      if (response.data.role === 'user') {
+      console.log('cvdsgcgdscgs', decrytedUser.role);
+
+      if (decrytedUser.role === 'user') {
         return 'user login'
-      }else{
+      } else {
         return 'agent login'
       }
     }
@@ -23,7 +29,7 @@ export async function verifyRole(role) {
     }
 
 
-    if (role !==  response.data.role) {
+    if (role !== decrytedUser.role) {
       return false;
     }
 

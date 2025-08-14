@@ -13,6 +13,8 @@ import { api } from "@/utils/api.js";
 import toast from "react-hot-toast";
 import LoadingComponent from "@/components/loading";
 import { verifyRole } from "@/utils/verifyRole";
+import CryptoJS from "crypto-js";
+import { setCookie } from "@/utils/cookies";
 
 
 export default function Login() {
@@ -57,15 +59,25 @@ export default function Login() {
           email: values.email,
           password: values.password,
           role: toggleButton
-        },
-          {
-            withCredentials: true,
-            validateStatus: (status) => status === 200,
-          });
+        });
 
-        console.log(res);
 
         if (res.status === 200) {
+          try {
+            const encryptedUser = CryptoJS.AES.encrypt(JSON.stringify({
+              role: res.data.existedUser.role,
+              email: res.data.existedUser.email,
+              name: res.data.existedUser.username,
+              id: res.data.existedUser._id
+           }), process.env.NEXT_PUBLIC_CRYPTOJS_SECRET_KEY).toString();
+           console.log(encryptedUser)
+            setCookie("EastMlsUser", "/", encryptedUser, 15);
+         } catch (error) {
+           console.log(error);
+            toast.error("something went wrong")
+            return;
+         }
+
           toast.success(`Welcome ${res.data.existedUser.username}`)
           if (res.data.existedUser.role === 'user') {
             router.replace("/buy-property")
@@ -76,6 +88,7 @@ export default function Login() {
           toast.error(res.response.data)
         }
       } catch (error) {
+        console.log(error)
         toast.error(error.response.data.message)
       }
     }

@@ -8,7 +8,7 @@ export function getAllAgents() {
   return tryCatchWrapper(async (req, res, next) => {
     const agents = await userModel.find({
       role: "agent",
-      isDeleted: "false"
+      isDeleted: false
     }).select("-refreshToken -password");
     if (!agents) return res.status(200).json({
       message: "no agent found",

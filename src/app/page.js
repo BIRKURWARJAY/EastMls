@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import LoadingComponent from "@/components/loading";
 import { verifyRole } from "@/utils/verifyRole";
 import toast from "react-hot-toast";
+import Header from "@/components/Header";
 
 
 
@@ -32,6 +33,7 @@ export default function Home() {
 
   return (
     <>
+      <Header/>
       {
         loading ? <LoadingComponent /> :
           <Stack

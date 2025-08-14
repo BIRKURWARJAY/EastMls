@@ -86,7 +86,6 @@ export default function ForgotPassword() {
             </Stack>
 
             <Button variant="contained" onClick={() => validateEmail(emailRef?.current)} sx={{ paddingBlock: 1.5, bgcolor: "rgb(255 138 0)" }} disabled={!emailRef?.current?.trim()}>
-            <Button variant="contained" onClick={() => validateEmail(emailRef?.current)} sx={{ paddingBlock: 1.5, bgcolor: "rgb(255 138 0)" }} disabled={!emailRef?.current?.trim()}>
               Submit
             </Button>
           </FormControl>
