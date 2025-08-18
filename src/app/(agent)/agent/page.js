@@ -29,9 +29,9 @@ function page() {
 
   useEffect(() => {
     const fetchagent = async () => {
-     try {
-       const response = await api.get('/agent')
+      try {
        apiRef.current = true;
+       const response = await api.get('/agent')
        console.log(response.data.agent);
        setAgent(response.data.agent)
        setLoading(false);

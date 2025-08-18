@@ -40,9 +40,11 @@ export default async function autoRefreshToken(req, res) {
     })
     
     
-    return {
-    accessToken
-  }    
+    return res.status(200)
+      .cookie("accessToken", accessToken, cookieOptions(1000 * 60 * 60))
+      .json({
+        token: accessToken
+      });
 
   } catch (error) {
     console.log(error);

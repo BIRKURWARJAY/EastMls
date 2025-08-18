@@ -11,27 +11,27 @@ function page() {
   const [keyword, setkeyword] = useState('')
   const [prop, setprop] = useState()
   const [isLoading, setLoading] = useState();
-  const apiRef = useRef(false);
+  const apiRef = useRef(null);
 
   useEffect(() => {
     async function fetchProp() {
       try {
+        apiRef.current = true;
         setLoading(true)
         const response = await api.get(`/property/all`);
-        apiRef.current = true;
         setprop(response.data.allprop);
-        setLoading(false);
       } catch (error) {
         toast.error('Error in fetch property')
         apiRef.current = false;
         console.log(error);
+      } finally {
         setLoading(false)
       }
-
     }
+
     !apiRef.current && fetchProp();
   }, [])
-
+  console.log('>> component rerender', prop)
 
   const serachProp = async () => {
     try {

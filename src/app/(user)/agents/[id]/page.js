@@ -18,9 +18,9 @@ function page({ params: paramsPromise }) {
   useEffect(() => {
     const fetchAgent = async () => {
       try {
+        apiRef.current = true;
         setLoading(true);
         const response = await api.get(`/user/agent/${params.id}`);
-        apiRef.current = true;
         setAgent(response.data.agent);
         setLoading(false);
       } catch (error) {

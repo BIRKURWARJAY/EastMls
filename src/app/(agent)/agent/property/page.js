@@ -27,8 +27,8 @@ export default function BasicTable() {
   useEffect(() => {
     const fetchAgentProperty = async () => {
       try {
-        const response = await api.get('/property/agent')
         apiRef.current = true;
+        const response = await api.get('/property/agent')
         if (response.status === 200) {
           setprop(response?.data.allprop)
         }

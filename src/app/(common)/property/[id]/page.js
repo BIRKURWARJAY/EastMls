@@ -47,8 +47,8 @@ function page() {
 
     const fetchprop = async () => {
       try {
-        const response = await api.get(`/property/${params.id}`)
         apiRef.current = true;
+        const response = await api.get(`/property/${params.id}`)
         console.log(response.data);
         setprop(response.data.propertydetails);
         setLoading(false);
