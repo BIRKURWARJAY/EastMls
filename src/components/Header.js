@@ -66,7 +66,7 @@ function Header({state}) {
               </IconButton>
             </Box>
 
-            <Image src="/eastmls/logo.webp" alt="Logo" width={80} height={80} />
+            <Image src="/eastmls/logo.webp" alt="Logo" width={70} height={70} />
 
             <Box sx={{ flexGrow: 1, display: { xs: 'none', lg: 'flex' }, justifyContent: 'center' }}>
               <Stack direction="row">

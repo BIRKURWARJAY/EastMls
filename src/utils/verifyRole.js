@@ -1,11 +1,28 @@
 import CryptoJS from "crypto-js";
-import { getCookie } from "./cookies";
+import { getCookie, setCookie } from "./cookies";
+import { api } from "./api";
 
 export async function verifyRole(role) {
   try {
-    console.log('>> verify role called', role)
-    const encrytedUser = getCookie("EastMlsUser");
-    if (!encrytedUser) return "login required";
+    let encrytedUser = getCookie("EastMlsUser");
+    if (!encrytedUser) {
+      const res = await api.get("/auth/refresh-token");
+
+      if (res.status === 200) {
+        encrytedUser = CryptoJS.AES.encrypt(JSON.stringify({
+          role: res.data.user.role,
+          email: res.data.user.email,
+          id: res.data.user._id,
+          name: res.data.user.name
+        }), process.env.NEXT_PUBLIC_CRYPTOJS_SECRET_KEY).toString();
+
+        setCookie("EastMlsUser", "/", encrytedUser, 60);
+
+      } else {
+        toast.error("please Login");
+        return;
+      }
+    };
 
     const decrytedUser = JSON.parse(CryptoJS.AES.decrypt(encrytedUser, process.env.NEXT_PUBLIC_CRYPTOJS_SECRET_KEY).toString(CryptoJS.enc.Utf8));
 

@@ -20,7 +20,7 @@ export default async function autoRefreshToken(req, res) {
       return res.status(220).clearCookie("refreshToken").json({ message: "Unauthorized" });
     }
     
-    const user = await userModel.findById(decodedToken.id);
+    const user = await userModel.findById(decodedToken.id).select("-password");
     if (!user) {
       return res.status(220).clearCookie("refreshToken").json({ message: "User not found" });
     }
@@ -43,7 +43,11 @@ export default async function autoRefreshToken(req, res) {
     return res.status(200)
       .cookie("accessToken", accessToken, cookieOptions(1000 * 60 * 60))
       .json({
-        token: accessToken
+        token: accessToken,
+        user: user.toObject({
+          versionKey: false, transform: (doc, ret) => {
+          delete ret.refreshToken
+        }})
       });
 
   } catch (error) {
