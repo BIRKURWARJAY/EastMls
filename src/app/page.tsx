@@ -2,21 +2,22 @@
 
 import SearchProperty from "../components/SearchProperty";
 import { Stack, Typography } from "@mui/material";
-import LoadingComponent from "@/components/Loading";
+import LoadingComponent from "../components/Loading";
 
-import Header from "@/components/Header";
+import Header from "../components/Header";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { verifyRole } from "@/utils/verifyRole";
+import { verifyRole } from "../utils/verifyRole";
+import toast from "react-hot-toast";
 
 
 
-export default function Home() {
+export default function Home(){
 
 
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
-  const [state, setState] = useState();
+  const [loading, setLoading] = useState<boolean>(true);
+  const [state, setState] = useState<boolean>(false);
 
   useEffect(() => {
     async function validate() {

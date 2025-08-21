@@ -1,13 +1,22 @@
 import mongoose from "mongoose";
+import { Request, Response, NextFunction } from "express";
 
-function PostError(message, statusCode) {
-  const error = new Error();
+function PostError(message: string | string[], statusCode: number) {
+  const error = new Error(Array.isArray(message) ? message.join(", ") : message) as any;
   Error.captureStackTrace(error, PostError);
   const errorMessage = message || error.message;
   return { error, errorMessage, statusCode, isOperational: true }
 }
 
-const errorHandler = async (err, req, res, next) => {
+type ErrType = {
+  error: Error;
+  errorMessage: string;
+  statusCode: number;
+  isOperational: boolean;
+  code?: number
+}
+
+const errorHandler = async (err: ErrType, req: Request, res: Response, next: NextFunction) => {
 // return res.send(err)
   if (err instanceof MongoError) {
     if (err.isOperational) {
@@ -18,10 +27,8 @@ const errorHandler = async (err, req, res, next) => {
           }`;
       } else if (err instanceof mongoose.Error.CastError) {
         message = `Mongoose cast error:: Invalid value for ${err.path}: ${err.value}`;
-      } else if (err?.originError?.code === 11000) {
-        const field = Object.keys(err.originError.keyValue)[0];
-        const value = Object.values(err.originError.keyValue)[0];
-        message = `Mongoose duplication error:: The ${field} field with value '${value}' already exists.`;
+      } else if (err?.code === 11000) {
+        message = `Mongoose duplication error:: The field already exists.`;
       } else {
         message = "Mongoose unknown error";
       }
@@ -54,11 +61,11 @@ const errorHandler = async (err, req, res, next) => {
 };
 
 // Define specific MongoDB/Mongoose error handlers
-function MongoError(message, statusCode) {
-  const error = new Error();
+function MongoError(err: any, statusCode: number) {
+  const error = new Error(err?.message || "") as any;
   Error.captureStackTrace(error, MongoError);
-  const errorMessage = message || error.message;
-  return { error, errorMessage, statusCode, isOperational: true }
+  const errorMessage = err?.message || error.message;
+  return { err, errorMessage, statusCode, isOperational: true }
 }
 
 export { PostError, errorHandler, MongoError };

@@ -1,10 +1,11 @@
 import jwt from "jsonwebtoken";
-import userModel from "../models/user.model.js";
+import userModel, { userModelInterface } from "../models/user.model.js";
 import { cookieOptions } from "./cookieOptions.js";
+import { Request, Response } from "express";
 
 
 
-export default async function autoRefreshToken(req, res) {
+export default async function autoRefreshToken(req: Request, res: Response) {
 
   try {
     const token = req?.cookies?.refreshToken;
@@ -15,12 +16,12 @@ export default async function autoRefreshToken(req, res) {
         })
     }
     
-    const decodedToken = jwt.verify(token, process.env.JWTSECRET);
+    const decodedToken: any = jwt.verify(token, process.env.JWTSECRET!);
     if (!decodedToken) {
       return res.status(220).clearCookie("refreshToken").json({ message: "Unauthorized" });
     }
     
-    const user = await userModel.findById(decodedToken.id).select("-password");
+    const user: userModelInterface = await userModel.findById(decodedToken.id).select("-password");
     if (!user) {
       return res.status(220).clearCookie("refreshToken").json({ message: "User not found" });
     }
@@ -34,7 +35,7 @@ export default async function autoRefreshToken(req, res) {
       role: user.role,
       email: user.email,
       name: user.username
-    }, process.env.JWTSECRET, {
+    }, process.env.JWTSECRET!, {
       algorithm: "HS256",
       expiresIn: "1h"
     })
@@ -45,12 +46,12 @@ export default async function autoRefreshToken(req, res) {
       .json({
         token: accessToken,
         user: user.toObject({
-          versionKey: false, transform: (doc, ret) => {
+          versionKey: false, transform: (doc, ret:any) => {
           delete ret.refreshToken
         }})
       });
 
-  } catch (error) {
+  } catch (error: any) {
     console.log(error);
     return res.status(220).clearCookie("refreshToken").json({
       message: error.message

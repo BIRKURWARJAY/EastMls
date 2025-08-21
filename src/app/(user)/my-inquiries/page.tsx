@@ -1,8 +1,8 @@
 'use client'
 import { Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, CircularProgress, Box } from '@mui/material'
 import React, { useEffect, useRef, useState } from 'react'
-import { api } from '@/utils/api'
-import LoadingComponent from '@/components/Loading'
+import { api } from '../../../utils/api'
+import LoadingComponent from '../../../components/Loading'
 
 
 function page() {

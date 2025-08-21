@@ -1,9 +1,11 @@
-import mongoose from "mongoose";
+import mongoose, {ClientSession} from "mongoose";
 import { ValidationError } from "yup";
 import { PostError, MongoError } from "./ErrorHandler.js";
+import { Response, Request, NextFunction } from "express";
 
 
-const Transactions = (fn) => async (req, res, next) => {
+
+const Transactions = (fn: (req: Request, res: Response, next: NextFunction, session: ClientSession) => Promise<{ status: number; message: string; data: any }>) => async (req: Request, res: Response, next: NextFunction) => {
   const session = await mongoose.startSession();
   try {
     session.startTransaction();
@@ -17,31 +19,31 @@ const Transactions = (fn) => async (req, res, next) => {
         message,
         data
       });
-  } catch (error) {
+  } catch (error: any) {
     await session.abortTransaction();
 
     if (error instanceof mongoose.Error || error.code === 11000) {
-      return next(new MongoError(error.message, 409, error));
+      return next(MongoError(error, 409));
     }
     if (error instanceof ValidationError) {
-      return next(new PostError(error.errors, 409));
+      return next(PostError(error.errors, 409));
     }
 
-    return next(new PostError(error.message, 409));
+    return next(PostError(error.message, 409));
   } finally {
     await session.endSession();
   }
 };
 
-const tryCatchWrapper = (fn) => async (req, res, next) => {
+const tryCatchWrapper = (fn: (req: Request, res: Response, next: NextFunction) => Promise<any>) => async (req: Request, res: Response, next: NextFunction): Promise<any> => {
   try {
     await fn(req, res, next);
-  } catch (error) {
+  } catch (error: any) {
     if (error instanceof mongoose.Error || error.code === 11000) {
-      return next(MongoError("Mongoose Errr", 409, error));
+      return next(MongoError("Mongoose Errr", 409));
     }
     if (error instanceof ValidationError) {
-      return next(PostError(error.errors));
+      return next(PostError(error.errors, 409));
     }
     return next(PostError(error.message, 409));
   }

@@ -1,8 +1,9 @@
-import { Transactions, tryCatchWrapper } from "../utils/transactions.js";
-import { PostError, MongoError } from "../utils/ErrorHandler.js";
+import { tryCatchWrapper } from "../utils/transactions.js";
+import { PostError } from "../utils/ErrorHandler.js";
 import userModel from "../models/user.model.js";
 import { hashPassword } from "../utils/hashPassword.js";
 import bcrypt from 'bcrypt'
+import { Request, Response, NextFunction } from "express";
 
 
 
@@ -18,8 +19,8 @@ export function getUserDetails() {
 
 export function getUserDetailsById() {
   return tryCatchWrapper(async (req, res, next) => {
-    const user = req.Model.findById(req.user.id).select("-password -refreshToken");
-    if (!user) return next(PostError("User Doesn't Exists"));
+    const user = userModel.findById(req.user.id).select("-password -refreshToken");
+    if (!user) return next(PostError("User Doesn't Exists", 404));
 
     return res.status(200).json({
       user
@@ -47,7 +48,7 @@ export function validateEmail() {
 export function forgotPassword() {
   return tryCatchWrapper(async (req, res, next) => {
     const { email, password } = req.body;
-    if (!email || !password) return next(PostError("Email and Password is required"));
+    if (!email || !password) return next(PostError("Email and Password is required", 400));
 
     const existedUser = await userModel.findOne({
       email
@@ -96,7 +97,7 @@ export function getAgentDetailById() {
     console.log(id);
 
     const agent = await userModel.findById(id).select("-password -refreshToken");
-    if (!agent) return next(PostError("Agent Doesn't Exists"));
+    if (!agent) return next(PostError("Agent Doesn't Exists", 404));
 
     return res.status(200).json({
       message: "agent fetch sucessfully",

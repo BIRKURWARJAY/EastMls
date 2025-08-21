@@ -1,7 +1,8 @@
 import Inquiry from "../models/inquiry.model.js";
 import Property from "../models/property.model.js";
+import { Request, Response } from "express";
 
-const getInquiry = async (req, res) => {
+const getInquiry = async (req: Request, res: Response) => {
     try {
         console.log(req.user.id);
 
@@ -30,7 +31,7 @@ const getInquiry = async (req, res) => {
 };
 
 
-const addInquiry = async (req, res) => {
+const addInquiry = async (req: Request, res: Response) => {
     try {
 
         const { name, email, phone, message, propertyId, agentId, status } = req.body
@@ -65,7 +66,7 @@ const addInquiry = async (req, res) => {
     }
 }
 
-const deleteInquiry = async (req, res) => {
+const deleteInquiry = async (req: Request, res: Response) => {
     try {
 
         const { id } = req.params
@@ -94,7 +95,7 @@ const deleteInquiry = async (req, res) => {
     }
 }
 
-const updateInquiry = async (req, res) => {
+const updateInquiry = async (req: Request, res: Response) => {
     try {
         const { id } = req.params
 

@@ -2,6 +2,7 @@ import { Router } from "express";
 import { getAgent, getAllAgents, searchAgent, updateAgent } from "../controllers/agent.controller.js";
 import { authenticateUser } from "../middlewares/auth.js";
 
+
 const router = Router();
 
 router.get("/all", authenticateUser, getAllAgents());

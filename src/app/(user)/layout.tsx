@@ -1,17 +1,17 @@
 'use client'
 
 
-import Header from "@/components/Header";
+import Header from "../../components/Header";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import LoadingComponent from "@/components/Loading";
+import LoadingComponent from "../../components/Loading";
 import toast from "react-hot-toast";
-import { verifyRole } from "@/utils/verifyRole";
+import { verifyRole } from "../../utils/verifyRole";
 
 export default function Layout({ children }) {
 
-  const [loading, setLoading] = useState(true);
-  const [state, setState] = useState();
+  const [loading, setLoading] = useState<boolean>(true);
+  const [state, setState] = useState<boolean>(false);
   const router = useRouter();
 
   useEffect(() => {

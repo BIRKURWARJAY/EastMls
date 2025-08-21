@@ -100,5 +100,5 @@ export const propertyValidator = Yup.object().shape({
     .of(Yup.string().required('features must be a string')),
   
   coordinates: Yup.array()
-    .optional('coordinates is required'),
+    .optional(),
 });
