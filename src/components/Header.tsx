@@ -12,12 +12,19 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Button, List, ListItem, ListItemText } from '@mui/material';
 import { useRouter } from 'next/navigation';
-import { api } from '@/utils/api';
+import { api } from '../utils/api';
 import toast from 'react-hot-toast';
-import { deleteCookie } from '@/utils/cookies';
+import { deleteCookie } from '../utils/cookies';
 
-function Header({state}) {
+type HeaderProps = {
+  state: boolean ;
+};
+
+
+function Header({state}:HeaderProps) {
   const router = useRouter();
+  console.log('↗️↗️',state);
+  
 
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [loggedin, setloggedin] = React.useState(false);
@@ -26,7 +33,7 @@ function Header({state}) {
     setloggedin(state)
   }, []);
 
-  const toggleDrawer = (open) => (event) => {
+  const toggleDrawer = (open:boolean) => (event:any) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) return;
     setDrawerOpen(open);
   };
@@ -85,7 +92,7 @@ function Header({state}) {
                 <List>
                   {links.map(link => (
                     <Link key={link.href} href={link.href} style={{ color: "black", textDecoration: "none" }}>
-                      <ListItem button>
+                      <ListItem >
                         <ListItemText>{link.text}</ListItemText>
                       </ListItem>
                     </Link>
