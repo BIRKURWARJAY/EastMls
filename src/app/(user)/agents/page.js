@@ -28,9 +28,9 @@ function Page() {
   useEffect(() => {
     async function fetchAgents() {
       try {
+        apiRef.current = true;
         setLoading(true);
         const response = await api.get('/agent/all')
-        apiRef.current = true;
         setdata(response.data.agents)
         setLoading(false);
       } catch (error) {

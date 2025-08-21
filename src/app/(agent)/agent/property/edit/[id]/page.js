@@ -27,8 +27,8 @@ export default function EditAgentProperty() {
   useEffect(() => {
     async function getData() {
       try {
-        const res = await api.get(`/property/${params.id}`)
         apiRef.current = true;
+        const res = await api.get(`/property/${params.id}`)
         if (res.status === 200) {
           console.log(res.data, "??????????")
           setImages(res.data.propertydetails.images);

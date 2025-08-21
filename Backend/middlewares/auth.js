@@ -6,23 +6,16 @@ export const authenticateUser = async (req, res, next) => {
   let token = req?.cookies?.accessToken;
 
   if (!token) {
-    if (req?.cookies?.refreshToken) {
-      const resp = await autoRefreshToken(req, res);
-      
-      if (resp?.accessToken) {
-        res.cookie("accessToken", resp.accessToken, cookieOptions(1000 * 60 * 60))
-        token = resp.accessToken;
-      }
-    }
+    await autoRefreshToken(req, res);
   }
 
   jwt.verify(token, process.env.JWTSECRET, (err, decoded) => {
     if (err?.name === "TokenExpiredError") {
-      return res.status(220).json({
+      return res.status(401).json({
         message: "session Expired please login",
       });
     } else if (err) {
-      return res.status(220).json({
+      return res.status(401).json({
         message: "Unauthorized",
       });
     }

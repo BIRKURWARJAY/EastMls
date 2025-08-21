@@ -14,8 +14,8 @@ function page() {
   useEffect(() => {
     const getinq = async () => {
       try {
-        const response = await api.get('/inquiry');
         apiRef.current = true;
+        const response = await api.get('/inquiry');
         setinquries(response.data.allInq);
         setLoading(false);
       } catch (error) {

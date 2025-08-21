@@ -36,7 +36,7 @@ export default function Layout({ children }) {
   return (
     <>
       {loading ? <LoadingComponent /> : <>
-        <Header />
+        <Header state={state}/>
         {children}
       </>
       }

@@ -11,12 +11,13 @@ function page() {
   const [keyword, setkeyword] = useState('')
   const [prop, setprop] = useState()
   const [isLoading, setLoading] = useState();
-  const apiRef = useRef(false);
+  const apiRef = useRef(null);
 
   useEffect(() => {
     async function fetchProp() {
       apiRef.current = true;
       try {
+        apiRef.current = true;
         setLoading(true)
         const response = await api.get(`/property/all`);
         setprop(response.data.allprop);
@@ -28,9 +29,10 @@ function page() {
         setLoading(false)
       }
     }
+
     !apiRef.current && fetchProp();
   }, [])
-
+  console.log('>> component rerender', prop)
 
   const serachProp = async () => {
     try {

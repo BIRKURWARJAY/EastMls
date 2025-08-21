@@ -21,8 +21,8 @@ function page() {
 
     const fetchprop = async () => {
       try {
-        const response = await api.get(`/property/all`)
         apiRef.current = true;
+        const response = await api.get(`/property/all`)
         console.log(response.data);
         if (response?.status === 200) {
           setprop(response.data.allprop)
