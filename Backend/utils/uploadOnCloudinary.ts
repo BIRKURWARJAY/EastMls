@@ -2,7 +2,7 @@ import cloudinary from "cloudinary";
 
 
 
-export async function uploadOnCloudinary(filePath) {
+export async function uploadOnCloudinary(filePath: string): Promise<string | null> {
   try {
     cloudinary.config({
       cloud_name: process.env.CLOUD_NAME,

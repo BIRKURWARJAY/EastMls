@@ -1,5 +1,18 @@
-import mongoose from "mongoose";
+import mongoose, {Document} from "mongoose";
 import bcrypt from "bcrypt";
+
+
+export interface userModelInterface extends Document {
+  username: String;
+  email: string;
+  password: string;
+  isDeleted: boolean;
+  deleteAt?: Date | null;
+  role: string;
+  profileImage: string;
+  refreshToken: string | null;
+  isPasswordCorrect(password: string): Promise<boolean>;
+}
 
 const userSchema = new mongoose.Schema({
   username: {
@@ -33,9 +46,9 @@ const userSchema = new mongoose.Schema({
   }
 }, { timestamps: true, strict: false });
 
-userSchema.methods.isPasswordCorrect = async function (password) {
+userSchema.methods.isPasswordCorrect = async function (password: string): Promise<boolean> {
   return await bcrypt.compare(password, this.password);
 }
 
 
-export default mongoose.model('User', userSchema);
+export default mongoose.model<userModelInterface>('User', userSchema);

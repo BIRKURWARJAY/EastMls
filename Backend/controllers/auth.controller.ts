@@ -1,15 +1,16 @@
 import bcrypt from 'bcrypt';
 import userModel from '../models/user.model.js';
-import { userLoginValidationSchema, userValidator } from "../validators/user.validator.js";
+import { userLoginValidationSchema, userValidator } from "../validators/user.validator";
 import { PostError, MongoError } from '../utils/ErrorHandler.js';
 import jwt from "jsonwebtoken";
 import { tryCatchWrapper } from '../utils/transactions.js';
 import { cookieOptions } from '../utils/cookieOptions.js';
+import { Request, Response, NextFunction } from 'express';
 
 
 
 export function regiterUser() {
-  return tryCatchWrapper(async (req, res, next) => {
+  return tryCatchWrapper(async (req: Request, res: Response, next: NextFunction) => {
     await userValidator.validate(req.body);
     const { email, password } = req.body;
     const existedUser = await userModel.findOne({
@@ -43,7 +44,7 @@ export function regiterUser() {
 }
 
 export function loginUser() {
-  return tryCatchWrapper(async (req, res, next) => {
+  return tryCatchWrapper(async (req: Request, res: Response, next: NextFunction) => {
     await userLoginValidationSchema.validate(req.body);
 
     const existedUser = await userModel.findOne({
@@ -66,7 +67,7 @@ export function loginUser() {
       id: existedUser._id,
       role: req.body.role
     },
-      process.env.JWTSECRET,
+      process.env.JWTSECRET!,
       {
         algorithm: "HS256",
         expiresIn: "15m"
@@ -78,7 +79,7 @@ export function loginUser() {
     const refreshToken = jwt.sign({
       id: existedUser._id
     },
-      process.env.JWTSECRET,
+      process.env.JWTSECRET!,
       {
         algorithm: "HS256",
         expiresIn: "7d"
@@ -96,13 +97,13 @@ export function loginUser() {
       .cookie("refreshToken", refreshToken, cookieOptions(1000 * 60 * 60 * 24 * 7))
       .json({
         message: "User Logged in successfully",
-        existedUser: existedUser.toObject({ versionKey: false, transform: (doc, ret) => { delete ret.password; delete ret.refreshToken; } }),
+        existedUser: existedUser.toObject({ versionKey: false, transform: (doc, ret: any) => { delete ret.password; delete ret.refreshToken; } }),
       });
   })
 }
 
 export function logoutUser() {
-  return tryCatchWrapper(async (req, res, next) => {
+  return tryCatchWrapper(async (req: Request, res: Response, next: NextFunction) => {
     const user = await userModel.findById(req.user?.id);
     if (!user) {
       return next(PostError("User is already not loggedIn", 404));
@@ -118,7 +119,7 @@ export function logoutUser() {
 }
 
 export function updateUserDetails() {
-  return tryCatchWrapper(async (req, res, next) => {
+  return tryCatchWrapper(async (req: Request, res: Response, next: NextFunction) => {
     const { fullName, email } = req.body;
 
     const updatedUser = await userModel.findByIdAndUpdate(
@@ -136,7 +137,7 @@ export function updateUserDetails() {
 }
 
 export function softDeleteUser() {
-  return tryCatchWrapper(async (req, res, next) => {
+  return tryCatchWrapper(async (req: Request, res: Response, next: NextFunction) => {
     const user = await userModel.findById(req.user.id);
     if (!user) {
       return next(PostError("User not found", 404));
@@ -151,14 +152,11 @@ export function softDeleteUser() {
   });
 }
 
-userModel.createIndexes(
-  { deleteAt: 1 },
-  { expireAfterSeconds: 0 }
-)
+
 
 /////////////////////////////
 export function deleteUserPermanently() {
-  return tryCatchWrapper(async (req, res, next) => {
+  return tryCatchWrapper(async (req: Request, res: Response, next: NextFunction) => {
 
   })
 }

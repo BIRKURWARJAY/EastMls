@@ -1,26 +1,26 @@
 import Location from "../models/location.model.js";
 import City from "../models/city.model.js";
 import Country from "../models/country.model.js";
-import { propertyValidator } from "../validators/property.validator.js";
+import { propertyValidator } from "../validators/property.validator";
 import Property from "../models/property.model.js";
 import { uploadOnCloudinary } from "../utils/uploadOnCloudinary.js";
 import { Transactions } from "../utils/transactions.js";
 import fs from "fs";
 import { cookieOptions } from "../utils/cookieOptions.js";
+import { Request, Response, NextFunction } from "express";
 
 
-const addProperty = Transactions(async (req, res, next, session) => {
+const addProperty = Transactions(async (req:any, res:Response, next:NextFunction, session) => {
 
   const data = req.body;
-  console.log(req.files);
 
-  const allImages = req.files["images[]"]?.map((img) => img.path) || [];
+  const allImages = req.files["images[]"]?.map((img:any) => img.path) || [];
 
-  const allVideos = req.files["videos[]"]?.map((video) => video.path) || [];
+  const allVideos = req.files["videos[]"]?.map((video:any) => video.path) || [];
 
-  const uploadedImages = await Promise.all(allImages.map((img) => uploadOnCloudinary(img)));
-  
-  const uploadedVideos = await Promise.all(allVideos.map(video => uploadOnCloudinary(video)));
+  const uploadedImages = await Promise.all(allImages.map((img:any) => uploadOnCloudinary(img)));
+
+  const uploadedVideos = await Promise.all(allVideos.map((video:any) => uploadOnCloudinary(video)));
 
   await propertyValidator.validate({
     ...data,
@@ -77,11 +77,11 @@ const addProperty = Transactions(async (req, res, next, session) => {
   }], { session })
 
 
-  req.files?.images?.forEach(image => (
+  req.files?.images?.forEach((image:any) => (
     fs.unlinkSync(image.path)
   ))
 
-  req.files?.videos?.forEach(video => (
+  req.files?.videos?.forEach((video:any )=> (
     fs.unlinkSync(video.path)
   ))
 
@@ -92,7 +92,7 @@ const addProperty = Transactions(async (req, res, next, session) => {
   }
 })
 
-const getproperty = async (req, res) => {
+const getproperty = async (req: Request, res: Response) => {
   try {
     const { id } = req.params
     console.log(id);
@@ -117,7 +117,7 @@ const getproperty = async (req, res) => {
 
 
 
-  } catch (error) {
+  } catch (error: any) {
     console.error("Add Property Error:", error);
     res.status(500).json({
       message: "Error request property",
@@ -126,7 +126,7 @@ const getproperty = async (req, res) => {
   }
 }
 
-const updateproperty = async (req, res) => {
+const updateproperty = async (req: Request, res: Response) => {
   try {
     const { id } = req.params
     console.log(id)
@@ -194,7 +194,7 @@ const updateproperty = async (req, res) => {
 
 
 
-  } catch (error) {
+  } catch (error: any) {
     console.error("Add Property Error:", error);
     res.status(500).json({
       message: "Error request property",
@@ -203,7 +203,7 @@ const updateproperty = async (req, res) => {
   }
 }
 
-const deleteproperty = async (req, res) => {
+const deleteproperty = async (req: Request, res: Response) => {
   try {
     const { id } = req.params
     console.log(id);
@@ -246,7 +246,7 @@ const deleteproperty = async (req, res) => {
     });
 
 
-  } catch (error) {
+  } catch (error: any) {
     console.error("Add Property Error:", error);
     res.status(500).json({
       message: "Error request property",
@@ -255,7 +255,7 @@ const deleteproperty = async (req, res) => {
   }
 }
 
-const allproperties = async (req, res) => {
+const allproperties = async (req: Request, res: Response) => {
   try {
 
     const allprop = await Property.find()
@@ -280,14 +280,15 @@ const allproperties = async (req, res) => {
   }
 }
 
-const searchproperty = async (req, res) => {
+const searchproperty = async (req: Request, res: Response) => {
   try {
 
-    console.log("propertyType", req.query)
-    let { propertyType, leaseType, title } = req.query;
+    let { propertyType, leaseType, title } :any= req.query;
 
 
-    const matchStage = {};
+    const matchStage: any = {
+      
+    };
 
     if (leaseType) {
       leaseType = Array.isArray(leaseType)
@@ -326,7 +327,7 @@ const searchproperty = async (req, res) => {
       propertydetails
     });
 
-  } catch (error) {
+  } catch (error: any) {
     console.error("Search Property Error:", error);
     res.status(500).json({
       message: "Error fetching properties",
@@ -335,7 +336,7 @@ const searchproperty = async (req, res) => {
   }
 };
 
-const agentProperty = async (req, res) => {
+const agentProperty = async (req: Request, res: Response) => {
   try {
     const agentId = req.user.id;
 
@@ -352,7 +353,7 @@ const agentProperty = async (req, res) => {
       allprop
     });
 
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error in agentProperty:", error);
     return res.status(500).json({
       message: "Server error while fetching properties",

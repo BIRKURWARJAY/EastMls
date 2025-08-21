@@ -1,11 +1,12 @@
 import userModel from "../models/user.model.js";
 import { MongoError, PostError } from "../utils/ErrorHandler.js";
 import { tryCatchWrapper } from "../utils/transactions.js";
+import {Request, Response, NextFunction} from "express"
 
 
 
 export function getAllAgents() {
-  return tryCatchWrapper(async (req, res, next) => {
+  return tryCatchWrapper(async (req: Request, res: Response, next: NextFunction) => {
     const agents = await userModel.find({
       role: "agent",
       isDeleted: false
@@ -23,7 +24,7 @@ export function getAllAgents() {
 }
 
 export function updateAgent() {
-  return tryCatchWrapper(async (req, res, next) => {
+  return tryCatchWrapper(async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.user
     const { email, username, licenseNumber, phone, instagram, facebook, linkedin } = req.body;
     if (!id || !email.trim() || !username.trim()) return next(PostError("Fields are Missing", 304));
@@ -51,7 +52,7 @@ export function updateAgent() {
 }
 
 export function getAgent() {
-  return tryCatchWrapper(async (req, res, next) => {
+  return tryCatchWrapper(async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.user;
     console.log(id);
 
@@ -67,15 +68,18 @@ export function getAgent() {
   })
 }
 
-export async function searchAgent(req, res) {
+export async function searchAgent(req: Request, res: Response) {
   try {
+    interface pop {
+      username?: string
+    }
 
-    // console.log("agent details", req.query)
-    let { username } = req.query;
-    console.log(username);
+    let { username }:pop = req.query;
+    if (!username) {
+      return res.status(404).send("username is req")
+    }
 
-
-    const matchStage = {
+    const matchStage: any = {
       role: "agent",
     };
 
@@ -102,7 +106,7 @@ export async function searchAgent(req, res) {
       agentdetails
     });
 
-  } catch (error) {
+  } catch (error: any) {
     console.error("Search agent Error:", error);
     res.status(500).json({
       message: "Error fetching agent",

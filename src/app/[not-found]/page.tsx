@@ -4,9 +4,9 @@ import Link from 'next/link';
 export default function Custom404() {
 
   return (
-    <div style={styles.body}>
-      <div style={styles.stars} className="stars" />
-      <div style={styles.center}>
+    <div style={styles?.body}>
+      <div style={styles?.stars} className="stars" />
+      <div style={styles?.center}>
         <div style={styles.astronaut} className="astronaut" />
         <h1 style={styles.h1}>404</h1>
         <p style={styles.p}>Oops! Looks like you're lost in space.</p>

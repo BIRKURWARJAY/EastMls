@@ -3,7 +3,10 @@ import { Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow
 import React, { useEffect, useRef, useState } from 'react'
 import { api } from '../../../utils/api'
 import LoadingComponent from '../../../components/Loading'
+<<<<<<< HEAD
 
+=======
+>>>>>>> 3b39480be3f0db9b16c0a84bebce6c3af2eef4e2
 
 
 function page() {

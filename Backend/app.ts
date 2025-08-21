@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import { configDotenv } from "dotenv";
 import propertyRouter from "./routes/property.routes.js";
-import connect from "./db/connect.js";
+import connect from "./db/connect";
 import authRouter from "./routes/auth.routes.js";
 import { errorHandler } from "./utils/ErrorHandler.js";
 import userRouter from "./routes/user.routes.js";
