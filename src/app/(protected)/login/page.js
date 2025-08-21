@@ -21,24 +21,6 @@ export default function Login() {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [toggleButton, setToggleButton] = useState("user");
 
-<<<<<<< HEAD:src/app/(common)/login/page.js
-  useEffect(() => {
-    async function validate() {
-      const verified = await verifyRole("check");
-      if (verified === 'user login') {
-        toast.error('Already Login')
-        router.push('/')
-      }
-      if (verified === 'agent login') {
-        toast.error('Already Login')
-        router.push('/agent')
-      }
-      setLoading(false)
-    }
-    validate();
-  }, [])
-=======
->>>>>>> cea54376ca957957c169f476c786a5ae4bf13c00:src/app/(protected)/login/page.js
 
 
   const Adornment = passwordVisible ? <VisibilityOffIcon /> : <VisibilityIcon />

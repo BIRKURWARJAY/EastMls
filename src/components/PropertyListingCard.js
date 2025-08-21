@@ -10,16 +10,9 @@ function PropertyListingCard({ prop, title }) {
 
 
 
-<<<<<<< HEAD
-            <Stack justifyContent={'center'} gap={2} direction={'row'} alignItems={'start'} mt={8} flexWrap={'wrap'}>
-                {data && data.map((prop,index) =>
-                    <Link href={`/property/${prop._id}`} key={index} className=' w-xl'>
-                        <Card  variant='outlined' sx={{  position: "relative" }}  >
-=======
   return (
     <>
       <Typography variant='h4' fontWeight={750} fontSize={30}>{title}</Typography>
->>>>>>> cea54376ca957957c169f476c786a5ae4bf13c00
 
       <Stack justifyContent={'center'} gap={2} direction={'row'} alignItems={'start'} mt={8} flexWrap={'wrap'}>
         <Link href={`/property/${prop._id}`} className=' w-xl'>

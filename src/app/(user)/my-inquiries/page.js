@@ -12,36 +12,6 @@ function page() {
 
 
   useEffect(() => {
-<<<<<<< HEAD
-
-    async function validate() {
-
-      const verified = await verifyRole("user");
-      if (!verified) {
-        toast.error('You are not Allowed')
-        router.push('/agent')
-        return
-      }
-      if (verified === 'login required') {
-        toast.error('Login required')
-        router.push('/login')
-        return
-      }
-
-
-      const getinq = async () => {
-        try {
-          const response = await api.get('/inquiry');
-          console.log(response.data);
-          setinquries(response.data.allInq);
-          setLoading(false);
-        } catch (error) {
-          console.log(error);
-          setLoading(false);
-        }
-      }
-      verified && getinq();
-=======
     const getinq = async () => {
       try {
         const response = await api.get('/inquiry');
@@ -53,7 +23,6 @@ function page() {
         apiRef.current = false;
         setLoading(false);
       }
->>>>>>> cea54376ca957957c169f476c786a5ae4bf13c00
     }
     !apiRef.current && getinq();
   }, []);

@@ -38,7 +38,6 @@ function Header({state}) {
         deleteCookie('EastMlsUser', '/')
         toast.success(res.data.message);
         setloggedin(false)
-        setHeaderShowable(true)
         router.push("/login");
       }
     } catch (error) {
