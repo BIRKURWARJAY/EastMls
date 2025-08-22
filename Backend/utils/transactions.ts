@@ -1,6 +1,6 @@
 import mongoose, {ClientSession} from "mongoose";
 import { ValidationError } from "yup";
-import { PostError, MongoError } from "./ErrorHandler.js";
+import { PostError, MongoError } from "./ErrorHandler";
 import { Response, Request, NextFunction } from "express";
 
 

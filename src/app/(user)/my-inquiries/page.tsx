@@ -1,25 +1,25 @@
 'use client'
 import { Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, CircularProgress, Box } from '@mui/material'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { ReactNode, useEffect, useRef, useState } from 'react'
 import { api } from '../../../utils/api'
 import LoadingComponent from '../../../components/Loading'
-<<<<<<< HEAD
-
-=======
->>>>>>> 3b39480be3f0db9b16c0a84bebce6c3af2eef4e2
+import inquiryInterface from '@/src/interfaces/inquiry.interface'
+import PropertyInterface from '@/src/interfaces/property.interface'
 
 
-function page() {
-  const [inquries, setinquries] = useState([]);
-  const [isLoading, setLoading] = useState(true);
-  const apiRef = useRef(false);
+interface myInquiryInterface extends PropertyInterface<string[]>, inquiryInterface {}
+
+function page(): ReactNode {
+  const [inquries, setinquries] = useState<myInquiryInterface[]>([]);
+  const [isLoading, setLoading] = useState<boolean>(true);
+  const apiRef: React.RefObject<boolean>= useRef(false);
 
 
   useEffect(() => {
-    const getinq = async () => {
+    const getinq = async (): Promise<void> => {
       try {
         apiRef.current = true;
-        const response = await api.get('/inquiry');
+        const response: Axios.AxiosXHR<any> = await api.get('/inquiry');
         setinquries(response.data.allInq);
         setLoading(false);
       } catch (error) {

@@ -2,13 +2,14 @@ import mongoose from "mongoose";
 
 const citySchema = new mongoose.Schema({
     cityCode: {
-        type: String,
+        type: Number,
         required: true,
 
     },
     country: {
-        type: String,
-        required: true,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Country",
+      required: true
     },
     cityName: {
         type: String,

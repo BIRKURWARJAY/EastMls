@@ -15,20 +15,21 @@ import { Box, IconButton } from '@mui/material';
 import { api } from '@/src/utils/api';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
+import PropertyInterface from '@/src/interfaces/property.interface';
 
 
-export default function BasicTable() {
+export default function BasicTable(): React.ReactNode {
 
-  const [prop, setprop] = useState<any>();
-  const [isLoading, setLoading] = useState(true);
-  const apiRef = React.useRef(false);
+  const [prop, setprop] = useState<PropertyInterface<string[]>[]>();
+  const [isLoading, setLoading] = useState<boolean>(true);
+  const apiRef: React.RefObject<boolean> = React.useRef(false);
 
 
   useEffect(() => {
-    const fetchAgentProperty = async () => {
+    const fetchAgentProperty = async (): Promise<void> => {
       try {
         apiRef.current = true;
-        const response = await api.get('/property/agent')
+        const response: Axios.AxiosXHR<any> = await api.get('/property/agent')
         if (response.status === 200) {
           setprop(response?.data.allprop)
         }
@@ -43,8 +44,8 @@ export default function BasicTable() {
     !apiRef.current && fetchAgentProperty()
   }, [])
 
-  const deleteproperty = async (id:string) => {
-    const response = await api.delete(`/property/${id}`)
+  const deleteproperty = async (id:string): Promise<void> => {
+    const response: Axios.AxiosXHR<any> = await api.delete(`/property/${id}`)
     console.log(response.data);
     if (response.status === 200) {
       toast.success(response.data.message)

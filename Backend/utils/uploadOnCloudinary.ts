@@ -1,4 +1,4 @@
-import cloudinary from "cloudinary";
+import {v2 as cloudinary} from "cloudinary";
 
 
 
@@ -12,7 +12,7 @@ export async function uploadOnCloudinary(filePath: string): Promise<string | nul
 
     if (!filePath) return null;
     
-    const upload = await cloudinary.v2.uploader.upload(filePath);
+    const upload = await cloudinary.uploader.upload(filePath);
 
     if (!upload) return null;
     return upload?.url;

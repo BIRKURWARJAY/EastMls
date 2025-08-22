@@ -1,21 +1,20 @@
 import CryptoJS from "crypto-js";
 import { getCookie, setCookie } from "./cookies";
-import { api } from "./api";
-import toast from "react-hot-toast";
+import { refreshAccessToken } from "./refreshAccessToken";
 
 
-export async function verifyRole(role:any) {
+export async function verifyRole(role:string): Promise<string | boolean> {
   try {
-    let encrytedUser = getCookie("EastMlsUser");
+    let encrytedUser: string | null | undefined = getCookie("EastMlsUser");
     if (!encrytedUser) {
-      const res = await api.get("/auth/refresh-token");
+      const res: any = await refreshAccessToken();
 
-      if (res?.status === 200) {
+      if(res) {
         encrytedUser = CryptoJS.AES.encrypt(JSON.stringify({
-          role: res.data.user.role,
-          email: res.data.user.email,
-          id: res.data.user._id,
-          name: res.data.user.name
+          role: res.role,
+          email: res.email,
+          id: res.id,
+          name: res.name
         }), process.env.NEXT_PUBLIC_CRYPTOJS_SECRET_KEY!).toString();
 
         setCookie("EastMlsUser", "/", encrytedUser, 60);
@@ -23,9 +22,9 @@ export async function verifyRole(role:any) {
       } else {
         return "login required";
       }
-    };
+    }
 
-    const decrytedUser = JSON.parse(CryptoJS.AES.decrypt(encrytedUser, process.env.NEXT_PUBLIC_CRYPTOJS_SECRET_KEY !).toString(CryptoJS.enc.Utf8));
+    const decrytedUser: any = JSON.parse(CryptoJS.AES.decrypt(encrytedUser, process.env.NEXT_PUBLIC_CRYPTOJS_SECRET_KEY !).toString(CryptoJS.enc.Utf8));
 
 
     if (!decrytedUser) {

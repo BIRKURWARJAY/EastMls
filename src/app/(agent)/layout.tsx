@@ -1,19 +1,19 @@
 'use client'
 
 import AgentHeader from '@/src/components/AgentHeader'
-import React, { useEffect, useState } from 'react'
+import React, { ReactNode, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation';
 import { verifyRole } from '@/src/utils/verifyRole';
 import toast from 'react-hot-toast';
 import LoadingComponent from '@/src/components/Loading';
 
-function layout({ children }:any) {
-  const [loading, setLoading] = useState(true);
+function layout({ children }:{children: ReactNode}): ReactNode {
+  const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
 
 
   useEffect(() => {
-    async function validate() {
+    async function validate(): Promise<void> {
       const verified = await verifyRole("agent");
       if (!verified) {
         toast.error('Your are not allowed')

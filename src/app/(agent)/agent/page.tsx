@@ -2,38 +2,36 @@
 import UpdateAgent from '@/src/components/UpdateAgent'
 import { api } from '@/src/utils/api'
 import { Box, Stack, Tabs, Typography } from '@mui/material'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { ChangeEvent, ReactNode, useEffect, useRef, useState } from 'react'
 import Tab from '@mui/material/Tab';
 import UpdatePassword from '@/src/components/UpdatePassword'
 import toast from 'react-hot-toast'
 import LoadingComponent from '@/src/components/Loading'
+import userInterface from '@/src/interfaces/user.interface'
 
-function page() {
-  const [agent, setAgent] = useState<any>({
-    username: '',
-    email: '',
-    phone: '',
-    licenseNumber: '',
-    instagram: '',
-    facebook: '',
-    linkedin: '',
-    profileImage:''
-  })
+interface agentInterface extends userInterface {
+  instagram?: string;
+  facebook?: string;
+  linkedin?: string;
+} {}
 
-  const [loading, setLoading] = useState(true);
-  const [value, setValue] = React.useState('one');
-  const apiRef = useRef(false);
+export default function page(): ReactNode {
+  const [agent, setAgent] = useState<agentInterface>()
 
-  const handleChange = (event:any, newValue:string) => {
+  const [loading, setLoading] = useState<boolean>(true);
+  const [value, setValue] = React.useState<string>('one');
+  const apiRef: React.RefObject<boolean>= useRef(false);
+
+  const handleChange = (event: ChangeEvent<any>, newValue:string): void => {
     setValue(newValue);
   };
 
 
   useEffect(() => {
-    const fetchagent = async () => {
+    const fetchagent = async (): Promise<void> => {
       try {
        apiRef.current = true;
-       const response = await api.get('/agent')
+       const response: Axios.AxiosXHR<any> = await api.get('/agent')
        console.log(response.data.agent);
        setAgent(response.data.agent)
        setLoading(false);
@@ -88,4 +86,3 @@ function page() {
   )
 }
 
-export default page

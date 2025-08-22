@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { loginUser, logoutUser, regiterUser, softDeleteUser, updateUserDetails } from "../controllers/auth.controller.js";
-import { authenticateUser } from "../middlewares/auth.js";
-import autoRefreshToken from "../utils/autoRefreshToken.js";
+import { loginUser, logoutUser, regiterUser, softDeleteUser, updateUserDetails } from "../controllers/auth.controller";
+import { authenticateUser } from "../middlewares/auth";
+import autoRefreshToken from "../utils/autoRefreshToken";
 
 
 const router = Router();

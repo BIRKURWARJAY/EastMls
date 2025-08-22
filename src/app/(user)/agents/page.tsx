@@ -12,25 +12,25 @@ import {
   Typography,
 } from '@mui/material';
 import Link from 'next/link';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { ReactNode, useEffect, useRef, useState } from 'react';
 import LoadingComponent from '@/src/components/Loading';
 import toast from 'react-hot-toast';
+import userInterface from '@/src/interfaces/user.interface';
 
 let timeId: NodeJS.Timeout | null = null
 
-function Page() {
-  const [value, setvalue] = useState(10);
-  const [data, setdata] = useState([]);
-  const [isLoading, setLoading] = useState<boolean>();
-  const apiRef = useRef(false);
+function Page(): ReactNode {
+  const [value, setvalue] = useState<number>(10);
+  const [data, setdata] = useState<userInterface[]>([]);
+  const [isLoading, setLoading] = useState<boolean>(true);
+  const apiRef: React.RefObject<boolean> = useRef(false);
 
 
   useEffect(() => {
-    async function fetchAgents() {
+    async function fetchAgents(): Promise<void> {
       try {
         apiRef.current = true;
-        setLoading(true);
-        const response = await api.get('/agent/all')
+        const response: Axios.AxiosXHR<any> = await api.get('/agent/all')
         setdata(response.data.agents)
         setLoading(false);
       } catch (error) {
@@ -43,7 +43,6 @@ function Page() {
     !apiRef.current && fetchAgents();
   }, [])
 
-  console.log('hhhhhhhhhhh', data);
 
   const breadcrumbs = [
     <Link key="1" color="inherit" href="/">
@@ -54,17 +53,15 @@ function Page() {
     </Typography>,
   ];
 
-  const searchAgent = (keyword:string) => {
+  const searchAgent = (keyword:string): void => {
 
     if (timeId) {
       clearTimeout(timeId)
     }
 
     const timeout = setTimeout(async () => {
-      // console.log("called");
       try {
-        const response = await api.get(`/agent/search?username=${keyword}`)
-        console.log(response);
+        const response: Axios.AxiosXHR<any> = await api.get(`/agent/search?username=${keyword}`)
         setdata(response.data.agentdetails)
         toast.success(response.data.message)
       } catch (error:any) {
@@ -97,7 +94,6 @@ function Page() {
           <Box flex={1}>
             {data?.map((agent, index) =>
               <AgentCard agent={agent} key={index} />
-
             )}
           </Box>
 

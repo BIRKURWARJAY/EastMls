@@ -1,10 +1,10 @@
 import bcrypt from 'bcrypt';
-import userModel from '../models/user.model.js';
+import userModel from '../models/user.model';
 import { userLoginValidationSchema, userValidator } from "../validators/user.validator";
-import { PostError, MongoError } from '../utils/ErrorHandler.js';
+import { PostError, MongoError } from '../utils/ErrorHandler';
 import jwt from "jsonwebtoken";
-import { tryCatchWrapper } from '../utils/transactions.js';
-import { cookieOptions } from '../utils/cookieOptions.js';
+import { tryCatchWrapper } from '../utils/transactions';
+import { cookieOptions } from '../utils/cookieOptions';
 import { Request, Response, NextFunction } from 'express';
 
 

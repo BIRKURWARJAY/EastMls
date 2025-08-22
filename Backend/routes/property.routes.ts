@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { addProperty, agentProperty, allproperties, deleteproperty, getproperty, searchproperty, updateproperty } from "../controllers/property.controller";
-import { authenticateUser } from "../middlewares/auth.js";
-import { upload } from "../middlewares/multer.js";
+import { authenticateUser } from "../middlewares/auth";
+import { upload } from "../middlewares/multer";
 
 const propertyRouter = Router();
 

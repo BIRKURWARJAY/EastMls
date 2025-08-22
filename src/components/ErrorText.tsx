@@ -1,12 +1,13 @@
 import { Typography , TypographyProps } from "@mui/material";
+import { ReactNode } from "react";
 
 type ErrorTextProps = {
     variant?: TypographyProps["variant"];
     comp?: TypographyProps["component"];
-    helperText:any
+    helperText:string
 }
 
-export default function ErrorText({variant = "body1", comp = "span", helperText}:ErrorTextProps) {
+export default function ErrorText({variant = "body1", comp = "span", helperText}:ErrorTextProps): ReactNode {
   
 
   return (

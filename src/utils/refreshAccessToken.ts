@@ -1,8 +1,8 @@
 import axios from "axios";
 
-export async function refreshAccessToken() {
+export async function refreshAccessToken(): Promise<any> {
   try {
-   const res = await axios.get("http://localhost:5000/api/auth/refresh-token", {
+   const res: any = await axios.get("http://localhost:5000/api/auth/refresh-token", {
       withCredentials: true
    });
  

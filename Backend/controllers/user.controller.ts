@@ -1,7 +1,7 @@
-import { tryCatchWrapper } from "../utils/transactions.js";
-import { PostError } from "../utils/ErrorHandler.js";
-import userModel from "../models/user.model.js";
-import { hashPassword } from "../utils/hashPassword.js";
+import { tryCatchWrapper } from "../utils/transactions";
+import { PostError } from "../utils/ErrorHandler";
+import userModel from "../models/user.model";
+import { hashPassword } from "../utils/hashPassword";
 import bcrypt from 'bcrypt'
 import { Request, Response, NextFunction } from "express";
 
@@ -91,17 +91,3 @@ export function changePassword() {
   })
 }
 
-export function getAgentDetailById() {
-  return tryCatchWrapper(async (req, res, next) => {
-    const { id } = await req.params
-    console.log(id);
-
-    const agent = await userModel.findById(id).select("-password -refreshToken");
-    if (!agent) return next(PostError("Agent Doesn't Exists", 404));
-
-    return res.status(200).json({
-      message: "agent fetch sucessfully",
-      agent
-    })
-  })
-}

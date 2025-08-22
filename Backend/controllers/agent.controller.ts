@@ -1,6 +1,6 @@
-import userModel from "../models/user.model.js";
-import { MongoError, PostError } from "../utils/ErrorHandler.js";
-import { tryCatchWrapper } from "../utils/transactions.js";
+import userModel from "../models/user.model";
+import { MongoError, PostError } from "../utils/ErrorHandler";
+import { tryCatchWrapper } from "../utils/transactions";
 import {Request, Response, NextFunction} from "express"
 
 
@@ -22,6 +22,21 @@ export function getAllAgents() {
     })
   })
 }
+
+export function getAgentDetailById() {
+  return tryCatchWrapper(async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = req.params
+
+    const agent = await userModel.findById(id).select("-password -refreshToken");
+    if (!agent) return next(PostError("Agent Doesn't Exists", 404));
+
+    return res.status(200).json({
+      message: "agent fetch sucessfully",
+      agent
+    })
+  })
+}
+
 
 export function updateAgent() {
   return tryCatchWrapper(async (req: Request, res: Response, next: NextFunction) => {

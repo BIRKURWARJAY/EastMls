@@ -27,10 +27,11 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/axios": "^0.9.36",
     "@types/crypto-js": "^4.2.2",
     "@types/node": "^24.1.0",
     "@types/react": "^19.1.8",
     "tailwindcss": "^4",
-    "typescript": "^5.8.3"
+    "typescript": "^5.9.2"
   }
 }

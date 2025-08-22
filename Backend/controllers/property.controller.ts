@@ -1,16 +1,17 @@
-import Location from "../models/location.model.js";
-import City from "../models/city.model.js";
-import Country from "../models/country.model.js";
+import Location from "../models/location.model";
+import City from "../models/city.model";
+import Country from "../models/country.model";
 import { propertyValidator } from "../validators/property.validator";
-import Property from "../models/property.model.js";
-import { uploadOnCloudinary } from "../utils/uploadOnCloudinary.js";
-import { Transactions } from "../utils/transactions.js";
+import Property from "../models/property.model";
+import { uploadOnCloudinary } from "../utils/uploadOnCloudinary";
+import { Transactions } from "../utils/transactions";
 import fs from "fs";
-import { cookieOptions } from "../utils/cookieOptions.js";
+import { cookieOptions } from "../utils/cookieOptions";
 import { Request, Response, NextFunction } from "express";
+import { ClientSession } from "mongoose";
 
 
-const addProperty = Transactions(async (req:any, res:Response, next:NextFunction, session) => {
+const addProperty = Transactions(async (req:any, res:Response, next:NextFunction, session: ClientSession) => {
 
   const data = req.body;
 
@@ -41,7 +42,7 @@ const addProperty = Transactions(async (req:any, res:Response, next:NextFunction
 
   const city = await City.create([{
     cityCode: data.cityCode,
-    country: data.countryName,
+    country: country[0]._id,
     cityName: data.cityName,
     state: data.state,
   }], { session })

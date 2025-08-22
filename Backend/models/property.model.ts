@@ -52,7 +52,7 @@ const propertySchema = new mongoose.Schema({
     required: true,
   },
   postalCode: {
-    type: String,
+    type: Number,
     required: true,
   },
   bathrooms: {
@@ -96,6 +96,7 @@ const propertySchema = new mongoose.Schema({
   },
   availableFrom: {
     type: Date,
+    required: true
   },
   verification: {
     type: Boolean,

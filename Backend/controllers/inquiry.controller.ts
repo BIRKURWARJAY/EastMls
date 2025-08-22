@@ -1,5 +1,5 @@
-import Inquiry from "../models/inquiry.model.js";
-import Property from "../models/property.model.js";
+import Inquiry from "../models/inquiry.model";
+import Property from "../models/property.model";
 import { Request, Response } from "express";
 
 const getInquiry = async (req: Request, res: Response) => {

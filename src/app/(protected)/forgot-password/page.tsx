@@ -3,22 +3,22 @@
 import { api } from "@/src/utils/api";
 import { Button, FormControl, FormLabel, Stack, TextField, Typography, Card, CardContent } from "@mui/material";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
 
-export default function ForgotPassword() {
+export default function ForgotPassword(): ReactNode {
 
   const router = useRouter();
   const emailRef = useRef<string | null>(null);
 
 
-  const validateEmail = async (email: string) => {
+  const validateEmail = async (email: string): Promise<void> => {
     try {
       if (!(email?.trim())) {
         return alert("email is required");
       }
-      const res = await api.post("/user/validateEmail", {
+      const res: Axios.AxiosXHR<any> = await api.post("/user/validateEmail", {
         email
       });
       if (res.data.status === "success") {
@@ -32,7 +32,7 @@ export default function ForgotPassword() {
     }
   }
 
-  const resetPassword = async (email: string, password: string) => {
+  const resetPassword = async (email: string, password: string): Promise<void> => {
     try {
       if (!email?.trim()) {
         return alert("email is required");

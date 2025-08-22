@@ -1,7 +1,8 @@
 'use client'
 
 import Link from 'next/link';
-export default function Custom404() {
+import { ReactNode } from 'react';
+export default function Custom404(): ReactNode {
 
   return (
     <div style={styles?.body}>

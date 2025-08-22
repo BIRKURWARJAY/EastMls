@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { authenticateUser } from "../middlewares/auth.js";
+import { authenticateUser } from "../middlewares/auth";
 import { changePassword, forgotPassword, getAgentDetailById, getUserDetails, getUserDetailsById, validateEmail } from "../controllers/user.controller";
 
 const router = Router();
@@ -13,7 +13,6 @@ router.put("/change-password", authenticateUser, changePassword());
 router.get("/", authenticateUser, getUserDetails());
 
 router.post("/:id", authenticateUser, getUserDetailsById());
-router.get("/agent/:id", authenticateUser, getAgentDetailById());
 
 
 

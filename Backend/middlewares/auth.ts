@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
-import autoRefreshToken from "../utils/autoRefreshToken.js";
+import autoRefreshToken from "../utils/autoRefreshToken";
 import { NextFunction, Request, Response } from "express";
+
 
 export const authenticateUser = async (req: Request, res: Response, next: NextFunction) => {
   let token: string = req?.cookies?.accessToken;
