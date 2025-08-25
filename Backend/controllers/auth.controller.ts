@@ -123,7 +123,7 @@ export function updateUserDetails() {
     const { fullName, email } = req.body;
 
     const updatedUser = await userModel.findByIdAndUpdate(
-      req.user.id,
+      req?.user?.id,
       { fullName, email },
       { new: true }
     );
@@ -138,7 +138,7 @@ export function updateUserDetails() {
 
 export function softDeleteUser() {
   return tryCatchWrapper(async (req: Request, res: Response, next: NextFunction) => {
-    const user = await userModel.findById(req.user.id);
+    const user = await userModel.findById(req?.user?.id);
     if (!user) {
       return next(PostError("User not found", 404));
     }

@@ -29,7 +29,6 @@ app.use(express.urlencoded({
 app.use(express.static("./public"));
 
 
-// app.get("/", authenticateUser)
 
 app.use("/api/property", propertyRouter);
 app.use("/api/inquiry", inquiryRouter);

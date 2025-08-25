@@ -1,9 +1,13 @@
- import 'express'; // Important for declaration merging to work correctly
+import { Request } from 'express';
 
-    declare global {
-        namespace Express {
-            interface Request {
-                user?: any; // Or a more specific type if you have one, e.g., 'User'
-            }
-        }
+declare global {
+  namespace Express {
+    interface Request {
+      user?: {
+        id: string;
+        role: string;
+      };
     }
+  }
+}
+

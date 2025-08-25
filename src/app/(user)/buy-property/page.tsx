@@ -19,8 +19,8 @@ function page(): ReactNode {
       try {
         apiRef.current = true;
         setLoading(true)
-        const response: Axios.AxiosXHR<any> = await api.get(`/property/all`);
-        setprop(response.data.allprop);
+        const response = await api.get<{allProp: PropertyInterface<string[]>[]}>(`/property/all`);
+        setprop(response.data.allProp);
       } catch (error) {
         toast.error('Error in fetch property')
         apiRef.current = false;

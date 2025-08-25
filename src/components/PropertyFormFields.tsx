@@ -67,8 +67,10 @@ export default function PropertyFormFields({
     "Commercial",
   ];
 
-  const [images, setImages] = useState<globalThis.File[]>([]);
-  const [videos, setVideos] = useState<globalThis.File[]>([]);
+  const [images, setImages] = useState<string[]>([]);
+  const [newImages, setNewImages] = useState<globalThis.File[]>([]);
+  const [newVideos, setNewVideos] = useState<globalThis.File[]>([]);
+  const [videos, setVideos] = useState<string[] | undefined>([]);
   const [isLoading, setLoading] = useState<boolean>(true);
   const [uploading, setUploading] = useState<boolean>(false);
   const router: AppRouterInstance = useRouter();
@@ -134,7 +136,7 @@ export default function PropertyFormFields({
       return;
     }
     formik.setFieldValue("images", files);
-    setImages(files);
+    setNewImages(files);
   };
 
   const handleDeleteImage = (idx: number): void => {
@@ -146,7 +148,7 @@ export default function PropertyFormFields({
   };
 
   const handleDeletevideo = (idx: number): void => {
-    setVideos((prev) => prev.filter((_, index) => index !== idx));
+    setVideos((prev) => prev?.filter((_, index) => index !== idx));
     const newVideos: globalThis.File[] = formik.values.videos.filter(
       (_: any, index: number) => index !== idx
     );
@@ -164,14 +166,14 @@ export default function PropertyFormFields({
       return;
     }
     formik.setFieldValue("videos", files);
-    setVideos(files);
+    setNewVideos(files);
   };
 
   useEffect(() => {
     async function getData() {
       try {
         apiRef.current = true;
-        const res: Axios.AxiosXHR<any> = await api.get(
+        const res = await api.get<{propertydetails: PropertyInterface<string[]>}>(
           `/property/${params.id}`
         );
         if (res.status === 200) {
@@ -308,11 +310,11 @@ export default function PropertyFormFields({
           formData.append("features[]", feature);
         });
 
-        images?.forEach((image: any) => {
+        newImages?.forEach((image: any) => {
           formData.append("images[]", image);
         });
 
-        videos?.forEach((video: any) => {
+        newVideos?.forEach((video: any) => {
           formData.append("videos[]", video);
         });
 

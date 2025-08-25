@@ -25,7 +25,6 @@ function Page(): ReactNode {
   const [isLoading, setLoading] = useState<boolean>(true);
   const apiRef: React.RefObject<boolean> = useRef(false);
 
-
   useEffect(() => {
     async function fetchAgents(): Promise<void> {
       try {

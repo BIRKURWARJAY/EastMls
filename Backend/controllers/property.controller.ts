@@ -6,7 +6,6 @@ import Property from "../models/property.model";
 import { uploadOnCloudinary } from "../utils/uploadOnCloudinary";
 import { Transactions } from "../utils/transactions";
 import fs from "fs";
-import { cookieOptions } from "../utils/cookieOptions";
 import { Request, Response, NextFunction } from "express";
 import { ClientSession } from "mongoose";
 
@@ -161,7 +160,7 @@ const updateproperty = async (req: Request, res: Response) => {
     })
 
     const newProperty = await Property.findByIdAndUpdate(id, {
-      agentId: req.user.id,
+      agentId: req?.user?.id,
       title: data.title,
       address: data.address,
       propertyDescription: data.propertyDescription,
@@ -187,7 +186,6 @@ const updateproperty = async (req: Request, res: Response) => {
       features: data.features,
     }, { new: true })
     return res.status(201)
-      .cookie("accessToken", req.user.accessToken, cookieOptions(1000 * 60 * 60))
       .json({
       message: "Property updated successfully",
       newProperty
@@ -339,7 +337,7 @@ const searchproperty = async (req: Request, res: Response) => {
 
 const agentProperty = async (req: Request, res: Response) => {
   try {
-    const agentId = req.user.id;
+    const agentId = req?.user?.id;
 
     if (!agentId) {
       return res.status(400).json({
