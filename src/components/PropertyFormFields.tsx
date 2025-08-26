@@ -78,6 +78,10 @@ export default function PropertyFormFields({
   const [data, setData] = useState<PropertyInterface<string[]>>();
   const params = useParams();
 
+   const apiEndpoint = (data: any) => {
+    return useFor === "Edit" ? api.put(`/property/${params.id}`, data) : api.post("/property", data);
+  }
+
   const apiRef: React.RefObject<boolean>= useRef(false);
 
   const propertyFeatures: string[] = [
@@ -177,8 +181,6 @@ export default function PropertyFormFields({
           `/property/${params.id}`
         );
         if (res.status === 200) {
-          setImages(res.data.propertydetails.images);
-          setVideos(res.data.propertydetails.videos);
           setData(res.data.propertydetails);
           setLoading(false);
         }
@@ -254,7 +256,7 @@ export default function PropertyFormFields({
       .required("status is required"),
     availableFrom: Yup.date()
       .min(
-        dayjs(data?.availableFrom),
+        dayjs(data?.availableFrom || dayjs()),
         `availableFrom must be atleast ${data?.availableFrom}`
       )
       .max(
@@ -318,10 +320,7 @@ export default function PropertyFormFields({
           formData.append("videos[]", video);
         });
 
-        const res: Axios.AxiosXHR<any> = await api.put(
-          `/property/${params.id}`,
-          formData
-        );
+        const res: Axios.AxiosXHR<any> = await apiEndpoint(formData);
         if (res?.status === 201) {
           console.log(res.data.message);
           toast.success("Property Edited");
