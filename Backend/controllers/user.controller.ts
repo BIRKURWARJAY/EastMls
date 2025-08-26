@@ -4,12 +4,13 @@ import userModel from "../models/user.model";
 import { hashPassword } from "../utils/hashPassword";
 import bcrypt from 'bcrypt'
 import { Request, Response, NextFunction } from "express";
+import { RequestWithUser } from "../types/express";
 
 
 
 export function getUserDetails() {
-  return tryCatchWrapper(async (req:any, res, next) => {
-    const user = await userModel.findById(req.user.id).select("-password -refreshToken");
+  return tryCatchWrapper(async (req: RequestWithUser, res, next) => {
+    const user = await userModel.findById(req?.user?.id).select("-password -refreshToken");
     if (!user) {
       return next(PostError("User not found", 404));
     }
@@ -18,8 +19,8 @@ export function getUserDetails() {
 }
 
 export function getUserDetailsById() {
-  return tryCatchWrapper(async (req:any, res, next) => {
-    const user = userModel.findById(req.user.id).select("-password -refreshToken");
+  return tryCatchWrapper(async (req: RequestWithUser, res, next) => {
+    const user = userModel.findById(req?.user?.id).select("-password -refreshToken");
     if (!user) return next(PostError("User Doesn't Exists", 404));
 
     return res.status(200).json({
@@ -29,7 +30,7 @@ export function getUserDetailsById() {
 }
 
 export function validateEmail() {
-  return tryCatchWrapper(async (req:any, res, next) => {
+  return tryCatchWrapper(async (req: RequestWithUser, res:Response, next:NextFunction) => {
     const { email } = req.body;
     if (!email) return next(PostError("Email is required", 304));
 
@@ -46,7 +47,7 @@ export function validateEmail() {
 }
 
 export function forgotPassword() {
-  return tryCatchWrapper(async (req:any, res, next) => {
+  return tryCatchWrapper(async (req: RequestWithUser, res, next) => {
     const { email, password } = req.body;
     if (!email || !password) return next(PostError("Email and Password is required", 400));
 
@@ -68,14 +69,14 @@ export function forgotPassword() {
 }
 
 export function changePassword() {
-  return tryCatchWrapper(async (req:any, res, next) => {
+  return tryCatchWrapper(async (req: RequestWithUser, res, next) => {
     const { oldpassword, newpassword } = req.body;
     console.log(req.body);
 
     if (!oldpassword || !newpassword || newpassword.trim().length < 6) return next(PostError("password is not valid", 301));
 
 
-    const user = await userModel.findById(req.user.id);
+    const user = await userModel.findById(req?.user?.id);
     if (!user) return next(PostError("user doesn't exist", 404));
 
     const hashedPassword = await bcrypt.compare(oldpassword, user.password);

@@ -7,6 +7,7 @@ import inquiryInterface from '@/src/interfaces/inquiry.interface'
 import PropertyInterface from '@/src/interfaces/property.interface'
 
 
+
 interface myInquiryInterface extends PropertyInterface<string[]>, inquiryInterface {}
 
 function page(): ReactNode {

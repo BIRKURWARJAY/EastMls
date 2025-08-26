@@ -46,7 +46,7 @@ export default function Login(): ReactNode {
         });
 
 
-        if (res.status === 200) {
+        if (res?.status === 200) {
           try {
             const encryptedUser = CryptoJS.AES.encrypt(JSON.stringify({
               role: res.data.existedUser.role,

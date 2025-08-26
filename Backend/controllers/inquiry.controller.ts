@@ -1,12 +1,13 @@
 import Inquiry from "../models/inquiry.model";
 import Property from "../models/property.model";
 import { Request, Response } from "express";
+import { RequestWithUser } from "../types/express";
 
-const getInquiry = async (req: any, res: Response) => {
+const getInquiry = async (req: RequestWithUser, res: Response) => {
     try {
-        console.log(req.user.id);
+        console.log(req?.user?.id);
 
-        const allInq = await Inquiry.find({ userId: req.user.id }).populate("propertyId", "", Property);
+        const allInq = await Inquiry.find({ userId: req?.user?.id }).populate("propertyId", "", Property);
         console.log(allInq);
         
 
@@ -31,7 +32,7 @@ const getInquiry = async (req: any, res: Response) => {
 };
 
 
-const addInquiry = async (req: any, res: Response) => {
+const addInquiry = async (req: RequestWithUser, res: Response) => {
     try {
 
         const { name, email, phone, message, propertyId, agentId, status } = req.body
@@ -47,7 +48,7 @@ const addInquiry = async (req: any, res: Response) => {
             message,
             propertyId,
             agentId,
-            userId: req.user.id,
+            userId: req?.user?.id,
             status
         })
 
@@ -66,7 +67,7 @@ const addInquiry = async (req: any, res: Response) => {
     }
 }
 
-const deleteInquiry = async (req: any, res: Response) => {
+const deleteInquiry = async (req: RequestWithUser, res: Response) => {
     try {
 
         const { id } = req.params
@@ -95,7 +96,7 @@ const deleteInquiry = async (req: any, res: Response) => {
     }
 }
 
-const updateInquiry = async (req: any, res: Response) => {
+const updateInquiry = async (req: RequestWithUser, res: Response) => {
     try {
         const { id } = req.params
 

@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import autoRefreshToken from "../utils/autoRefreshToken";
 import { NextFunction, Request, Response } from "express";
+import { RequestWithUser } from "../types/express";
 
 interface DecodedJWT {
   id: string;
@@ -8,7 +9,7 @@ interface DecodedJWT {
 }
 
 export const authenticateUser = async (
-  req: Request,
+  req: RequestWithUser,
   res: Response,
   next: NextFunction
 ) => {

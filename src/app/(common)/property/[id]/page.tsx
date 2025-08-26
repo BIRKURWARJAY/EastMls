@@ -41,7 +41,6 @@ type propertyProps = {
 function page(): ReactNode {
   const params = useParams()
   const [isLoading, setLoading] = useState<boolean>(true);
-  const [isLoading, setLoading] = useState<boolean>(true);
 
   const [prop, setprop] = useState<propertyProps | undefined | null>()
   const apiRef = useRef<boolean>(false);

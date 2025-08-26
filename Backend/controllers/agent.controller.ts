@@ -6,7 +6,7 @@ import {Request, Response, NextFunction} from "express"
 
 
 export function getAllAgents() {
-  return tryCatchWrapper(async (req: any, res: Response, next: NextFunction) => {
+  return tryCatchWrapper(async (req: RequestWithUser, res: Response, next: NextFunction) => {
     const agents = await userModel.find({
       role: "agent",
       isDeleted: false
@@ -39,7 +39,7 @@ export function getAgentDetailById() {
 
 
 export function updateAgent() {
-  return tryCatchWrapper(async (req: any, res: Response, next: NextFunction) => {
+  return tryCatchWrapper(async (req: RequestWithUser, res: Response, next: NextFunction) => {
     const { id } = req.user
     const { email, username, licenseNumber, phone, instagram, facebook, linkedin } = req.body;
     if (!id || !email.trim() || !username.trim()) return next(PostError("Fields are Missing", 304));
@@ -67,7 +67,7 @@ export function updateAgent() {
 }
 
 export function getAgent() {
-  return tryCatchWrapper(async (req: any, res: Response, next: NextFunction) => {
+  return tryCatchWrapper(async (req: RequestWithUser, res: Response, next: NextFunction) => {
     const { id } = req.user;
     console.log(id);
 
@@ -83,7 +83,7 @@ export function getAgent() {
   })
 }
 
-export async function searchAgent(req: any, res: Response) {
+export async function searchAgent(req: RequestWithUser, res: Response) {
   try {
     interface pop {
       username?: string

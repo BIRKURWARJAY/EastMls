@@ -1,17 +1,17 @@
 import bcrypt from 'bcrypt';
 import userModel from '../models/user.model';
-import userModel from '../models/user.model';
 import { userLoginValidationSchema, userValidator } from "../validators/user.validator";
 import { PostError, MongoError } from '../utils/ErrorHandler';
 import jwt from "jsonwebtoken";
 import { tryCatchWrapper } from '../utils/transactions';
 import { cookieOptions } from '../utils/cookieOptions';
 import { Request, Response, NextFunction } from 'express';
+import { RequestWithUser } from '../types/express';
 
 
 
 export function regiterUser() {
-  return tryCatchWrapper(async (req: any, res: Response, next: NextFunction) => {
+  return tryCatchWrapper(async (req: RequestWithUser, res: Response, next: NextFunction) => {
     await userValidator.validate(req.body);
     const { email, password } = req.body;
     const existedUser = await userModel.findOne({
@@ -45,7 +45,7 @@ export function regiterUser() {
 }
 
 export function loginUser() {
-  return tryCatchWrapper(async (req: any, res: Response, next: NextFunction) => {
+  return tryCatchWrapper(async (req: RequestWithUser, res: Response, next: NextFunction) => {
     await userLoginValidationSchema.validate(req.body);
 
     const existedUser = await userModel.findOne({
@@ -104,8 +104,10 @@ export function loginUser() {
 }
 
 export function logoutUser() {
-  return tryCatchWrapper(async (req: any, res: Response, next: NextFunction) => {
-    const user = await userModel.findById(req.user?.id);
+  return tryCatchWrapper(async (req: RequestWithUser, res: Response, next: NextFunction) => {
+    console.log('>> auth controller > logoutUser', req?.user )
+
+    const user = await userModel.findById(req?.user?.id);
     if (!user) {
       return next(PostError("User is already not loggedIn", 404));
     }
@@ -120,7 +122,7 @@ export function logoutUser() {
 }
 
 export function updateUserDetails() {
-  return tryCatchWrapper(async (req: any, res: Response, next: NextFunction) => {
+  return tryCatchWrapper(async (req: RequestWithUser , res: Response, next: NextFunction) => {
     const { fullName, email } = req.body;
 
     const updatedUser = await userModel.findByIdAndUpdate(
@@ -138,7 +140,7 @@ export function updateUserDetails() {
 }
 
 export function softDeleteUser() {
-  return tryCatchWrapper(async (req: Request, res: Response, next: NextFunction) => {
+  return tryCatchWrapper(async (req: RequestWithUser, res: Response, next: NextFunction) => {
     const user = await userModel.findById(req?.user?.id);
     if (!user) {
       return next(PostError("User not found", 404));
@@ -157,7 +159,7 @@ export function softDeleteUser() {
 
 /////////////////////////////
 export function deleteUserPermanently() {
-  return tryCatchWrapper(async (req: any, res: Response, next: NextFunction) => {
+  return tryCatchWrapper(async (req: RequestWithUser, res: Response, next: NextFunction) => {
 
   })
 }
