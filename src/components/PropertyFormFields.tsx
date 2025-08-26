@@ -71,7 +71,7 @@ export default function PropertyFormFields({
   const [newImages, setNewImages] = useState<globalThis.File[]>([]);
   const [newVideos, setNewVideos] = useState<globalThis.File[]>([]);
   const [videos, setVideos] = useState<string[] | undefined>([]);
-  const [isLoading, setLoading] = useState<boolean>(true);
+  const [isLoading, setLoading] = useState<boolean>(false);
   const [uploading, setUploading] = useState<boolean>(false);
   const router: AppRouterInstance = useRouter();
 
@@ -296,7 +296,7 @@ export default function PropertyFormFields({
     onSubmit: async (values) => {
       console.log("Submitting form with values:", values);
       try {
-        setUploading(true);
+        // setUploading(true);
         const formData = new FormData();
 
         formData.append("coordinates[]", "12.9715987");

@@ -87,7 +87,7 @@ export default function BasicTable(): React.ReactNode {
                   <TableCell align="left">{row.viewCount}</TableCell>
                   <TableCell align="left">{row.status}</TableCell>
                   <TableCell align="right">
-                    <Link href={`/property/${row?.title}/${row?._id}`}>
+                    <Link href={`/property/${row?._id}`}>
                       <IconButton aria-label="fingerprint" color="success" >
                         <RemoveRedEyeOutlined sx={{ color: "orange" }} />
                       </IconButton>

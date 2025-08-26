@@ -11,19 +11,19 @@ import { ClientSession } from "mongoose";
 import { RequestWithFiles, RequestWithUser } from "../types/express";
 
 
-const addProperty:any = Transactions(async (req: RequestWithFiles | RequestWithUser, res:Response, next:NextFunction, session: ClientSession) => {
+const addProperty: any = Transactions(async (req: RequestWithFiles | RequestWithUser, res: Response, next: NextFunction, session: ClientSession) => {
 
   const data = req.body;
 
-  const allImages = req?.files["images[]"]?.map((img:any) => img.path) || [];
+  const allImages = req?.files["images[]"]?.map((img: any) => img.path) || [];
   console.log(allImages, "?????????????")
 
-  const allVideos = req?.files["videos[]"]?.map((video:any) => video.path) || [];
+  const allVideos = req?.files["videos[]"]?.map((video: any) => video.path) || [];
 
-  const uploadedImages = await Promise.all(allImages.map((img:any) => uploadOnCloudinary(img)));
+  const uploadedImages = await Promise.all(allImages.map((img: any) => uploadOnCloudinary(img)));
   console.log(uploadedImages, "??????????")
 
-  const uploadedVideos = await Promise.all(allVideos.map((video:any) => uploadOnCloudinary(video)));
+  const uploadedVideos = await Promise.all(allVideos.map((video: any) => uploadOnCloudinary(video)));
 
   await propertyValidator.validate({
     ...data,
@@ -80,11 +80,11 @@ const addProperty:any = Transactions(async (req: RequestWithFiles | RequestWithU
   }], { session })
 
 
-  req.files?.images?.forEach((image:any) => (
+  req.files?.images?.forEach((image: any) => (
     fs.unlinkSync(image.path)
   ))
 
-  req.files?.videos?.forEach((video:any )=> (
+  req.files?.videos?.forEach((video: any) => (
     fs.unlinkSync(video.path)
   ))
 
@@ -95,7 +95,7 @@ const addProperty:any = Transactions(async (req: RequestWithFiles | RequestWithU
   }
 })
 
-const getproperty:any = async (req: RequestWithUser, res: Response) => {
+const getproperty: any = async (req: RequestWithUser, res: Response) => {
   try {
     const { id } = req.params
     console.log(id);
@@ -129,7 +129,7 @@ const getproperty:any = async (req: RequestWithUser, res: Response) => {
   }
 }
 
-const updateproperty:any = async (req: RequestWithUser, res: Response) => {
+const updateproperty: any = async (req: RequestWithUser, res: Response) => {
   try {
     const { id } = req.params
     console.log(id)
@@ -143,8 +143,13 @@ const updateproperty:any = async (req: RequestWithUser, res: Response) => {
       })
     }
     const data = req.body
+    console.log(data, 'mmmmmmmmmm');
 
-    data.image = [...propertydetails.image, ...data.images];
+    data.images = [
+      ...(propertydetails?.images || []),
+      ...(Array.isArray(data?.images) ? data.images : [])
+    ];
+
 
     await propertyValidator.validate(data)
 
@@ -194,9 +199,9 @@ const updateproperty:any = async (req: RequestWithUser, res: Response) => {
     }, { new: true })
     return res.status(201)
       .json({
-      message: "Property updated successfully",
-      newProperty
-    });
+        message: "Property updated successfully",
+        newProperty
+      });
 
 
 
@@ -209,7 +214,7 @@ const updateproperty:any = async (req: RequestWithUser, res: Response) => {
   }
 }
 
-const deleteproperty:any = async (req: RequestWithUser, res: Response) => {
+const deleteproperty: any = async (req: RequestWithUser, res: Response) => {
   try {
     const { id } = req.params
     console.log(id);
@@ -261,7 +266,7 @@ const deleteproperty:any = async (req: RequestWithUser, res: Response) => {
   }
 }
 
-const allproperties:any = async (req: RequestWithUser, res: Response) => {
+const allproperties: any = async (req: RequestWithUser, res: Response) => {
   try {
 
     const allprop = await Property.find()
@@ -286,14 +291,14 @@ const allproperties:any = async (req: RequestWithUser, res: Response) => {
   }
 }
 
-const searchproperty:any = async (req: RequestWithUser, res: Response) => {
+const searchproperty: any = async (req: RequestWithUser, res: Response) => {
   try {
 
-    let { propertyType, leaseType, title } :any= req.query;
+    let { propertyType, leaseType, title }: any = req.query;
 
 
     const matchStage: any = {
-      
+
     };
 
     if (leaseType) {
@@ -342,7 +347,7 @@ const searchproperty:any = async (req: RequestWithUser, res: Response) => {
   }
 };
 
-const agentProperty:any = async (req: RequestWithUser, res: Response) => {
+const agentProperty: any = async (req: RequestWithUser, res: Response) => {
   try {
     const agentId = req?.user?.id;
 
