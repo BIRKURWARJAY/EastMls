@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { Request, Response, NextFunction } from "express";
+import { RequestWithUser } from "../types/express";
 
 function PostError(message: string | string[], statusCode: number) {
   const error = new Error(Array.isArray(message) ? message.join(", ") : message) as any;

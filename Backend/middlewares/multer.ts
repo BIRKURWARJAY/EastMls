@@ -1,6 +1,7 @@
 import multer from "multer";
 import path from "path";
 import { Request } from "express";
+import { RequestWithUser } from "../types/express";
 
 // Use project root/public instead of __dirname
 const folder = path.join(process.cwd(), "public");

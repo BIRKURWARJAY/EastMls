@@ -2,11 +2,11 @@ import mongoose, {ClientSession} from "mongoose";
 import { ValidationError } from "yup";
 import { PostError, MongoError } from "./ErrorHandler";
 import { Response, Request, NextFunction } from "express";
-import { RequestWithUser } from "../types/express";
+import { RequestWithFiles, RequestWithUser } from "../types/express";
 
 
 
-const Transactions = (fn: (req: RequestWithUser, res: Response, next: NextFunction, session: ClientSession) => Promise<{ status: number; message: string; data: any }>) => async (req: RequestWithUser, res: Response, next: NextFunction) => {
+const Transactions = (fn: (req: RequestWithFiles | RequestWithUser, res: Response, next: NextFunction, session: ClientSession) => Promise<{ status: number; message: string; data: any }>) => async (req: RequestWithUser, res: Response, next: NextFunction) => {
   const session = await mongoose.startSession();
   try {
     session.startTransaction();
@@ -38,7 +38,6 @@ const Transactions = (fn: (req: RequestWithUser, res: Response, next: NextFuncti
 
 const tryCatchWrapper = (fn: (req: RequestWithUser, res: Response, next: NextFunction) => Promise<any>) => async (req: RequestWithUser, res: Response, next: NextFunction): Promise<any> => {
   try {
-    console.log('hhhhhhhhhh', req);
     
     await fn(req, res, next);
   } catch (error: any) {

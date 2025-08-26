@@ -5,5 +5,7 @@ export interface RequestWithUser extends Request {
     id: string;
     role: string;
   };
-  files:any
+}
+export interface RequestWithFiles extends RequestWithUser{
+  files: any
 }

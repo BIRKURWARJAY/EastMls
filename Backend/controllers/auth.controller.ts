@@ -10,7 +10,7 @@ import { RequestWithUser } from '../types/express';
 
 
 
-export function regiterUser() {
+export function regiterUser():any {
   return tryCatchWrapper(async (req: RequestWithUser, res: Response, next: NextFunction) => {
     await userValidator.validate(req.body);
     const { email, password } = req.body;
@@ -44,7 +44,7 @@ export function regiterUser() {
   })
 }
 
-export function loginUser() {
+export function loginUser():any {
   return tryCatchWrapper(async (req: RequestWithUser, res: Response, next: NextFunction) => {
     await userLoginValidationSchema.validate(req.body);
 
@@ -103,7 +103,7 @@ export function loginUser() {
   })
 }
 
-export function logoutUser() {
+export function logoutUser():any {
   return tryCatchWrapper(async (req: RequestWithUser, res: Response, next: NextFunction) => {
     console.log('>> auth controller > logoutUser', req?.user )
 
@@ -121,7 +121,7 @@ export function logoutUser() {
   })
 }
 
-export function updateUserDetails() {
+export function updateUserDetails():any {
   return tryCatchWrapper(async (req: RequestWithUser , res: Response, next: NextFunction) => {
     const { fullName, email } = req.body;
 
@@ -139,7 +139,7 @@ export function updateUserDetails() {
   });
 }
 
-export function softDeleteUser() {
+export function softDeleteUser():any {
   return tryCatchWrapper(async (req: RequestWithUser, res: Response, next: NextFunction) => {
     const user = await userModel.findById(req?.user?.id);
     if (!user) {

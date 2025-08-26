@@ -1,11 +1,12 @@
 import userModel from "../models/user.model";
+import { RequestWithUser } from "../types/express";
 import { MongoError, PostError } from "../utils/ErrorHandler";
 import { tryCatchWrapper } from "../utils/transactions";
 import {Request, Response, NextFunction} from "express"
 
 
 
-export function getAllAgents() {
+export function getAllAgents():any {
   return tryCatchWrapper(async (req: RequestWithUser, res: Response, next: NextFunction) => {
     const agents = await userModel.find({
       role: "agent",
@@ -23,7 +24,7 @@ export function getAllAgents() {
   })
 }
 
-export function getAgentDetailById() {
+export function getAgentDetailById():any {
   return tryCatchWrapper(async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params
 
@@ -38,9 +39,9 @@ export function getAgentDetailById() {
 }
 
 
-export function updateAgent() {
+export function updateAgent():any {
   return tryCatchWrapper(async (req: RequestWithUser, res: Response, next: NextFunction) => {
-    const { id } = req.user
+    const id =  req?.user?.id
     const { email, username, licenseNumber, phone, instagram, facebook, linkedin } = req.body;
     if (!id || !email.trim() || !username.trim()) return next(PostError("Fields are Missing", 304));
 
@@ -66,9 +67,9 @@ export function updateAgent() {
   })
 }
 
-export function getAgent() {
+export function getAgent():any {
   return tryCatchWrapper(async (req: RequestWithUser, res: Response, next: NextFunction) => {
-    const { id } = req.user;
+    const id  = req?.user?.id;
     console.log(id);
 
 
@@ -83,7 +84,7 @@ export function getAgent() {
   })
 }
 
-export async function searchAgent(req: RequestWithUser, res: Response) {
+export async function searchAgent(req: RequestWithUser, res: Response):Promise<any> {
   try {
     interface pop {
       username?: string
@@ -116,7 +117,7 @@ export async function searchAgent(req: RequestWithUser, res: Response) {
       });
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       message: "agent fetched successfully",
       agentdetails
     });

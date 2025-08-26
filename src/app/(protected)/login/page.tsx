@@ -69,11 +69,11 @@ export default function Login(): ReactNode {
             router.replace("/agent/property")
           }
         } else {
-          toast.error(res.response.data)
+          toast.error(res?.response.data)
         }
       } catch (error:any) {
         console.log(error)
-        toast.error(error.response.data.message)
+        toast.error(error?.response.data.message)
       }
     }
 

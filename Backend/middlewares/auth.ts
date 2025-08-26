@@ -8,11 +8,11 @@ interface DecodedJWT {
   role: string;
 }
 
-export const authenticateUser = async (
+export const authenticateUser:any = async (
   req: RequestWithUser,
   res: Response,
   next: NextFunction
-) => {
+)=> {
   let token: string = req?.cookies?.accessToken;
 
   if (!token) {

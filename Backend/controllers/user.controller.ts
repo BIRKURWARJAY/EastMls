@@ -8,7 +8,7 @@ import { RequestWithUser } from "../types/express";
 
 
 
-export function getUserDetails() {
+export function getUserDetails():any {
   return tryCatchWrapper(async (req: RequestWithUser, res, next) => {
     const user = await userModel.findById(req?.user?.id).select("-password -refreshToken");
     if (!user) {
@@ -18,7 +18,7 @@ export function getUserDetails() {
   })
 }
 
-export function getUserDetailsById() {
+export function getUserDetailsById():any {
   return tryCatchWrapper(async (req: RequestWithUser, res, next) => {
     const user = userModel.findById(req?.user?.id).select("-password -refreshToken");
     if (!user) return next(PostError("User Doesn't Exists", 404));
@@ -29,7 +29,7 @@ export function getUserDetailsById() {
   })
 }
 
-export function validateEmail() {
+export function validateEmail():any {
   return tryCatchWrapper(async (req: RequestWithUser, res:Response, next:NextFunction) => {
     const { email } = req.body;
     if (!email) return next(PostError("Email is required", 304));
@@ -46,7 +46,7 @@ export function validateEmail() {
   })
 }
 
-export function forgotPassword() {
+export function forgotPassword():any {
   return tryCatchWrapper(async (req: RequestWithUser, res, next) => {
     const { email, password } = req.body;
     if (!email || !password) return next(PostError("Email and Password is required", 400));
@@ -68,7 +68,7 @@ export function forgotPassword() {
   })
 }
 
-export function changePassword() {
+export function changePassword():any {
   return tryCatchWrapper(async (req: RequestWithUser, res, next) => {
     const { oldpassword, newpassword } = req.body;
     console.log(req.body);

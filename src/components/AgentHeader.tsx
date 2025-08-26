@@ -22,7 +22,7 @@ function AgentHeader(): ReactNode {
       }
     } catch (error) {
       console.log(error);
-      toast.error('Refresh the Page')
+      toast.error('Error in logout')
     }
 
   }

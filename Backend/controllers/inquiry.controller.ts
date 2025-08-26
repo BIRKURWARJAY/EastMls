@@ -3,7 +3,7 @@ import Property from "../models/property.model";
 import { Request, Response } from "express";
 import { RequestWithUser } from "../types/express";
 
-const getInquiry = async (req: RequestWithUser, res: Response) => {
+const getInquiry:any = async (req: RequestWithUser, res: Response) => {
     try {
         console.log(req?.user?.id);
 
@@ -32,7 +32,7 @@ const getInquiry = async (req: RequestWithUser, res: Response) => {
 };
 
 
-const addInquiry = async (req: RequestWithUser, res: Response) => {
+const addInquiry:any = async (req: RequestWithUser, res: Response) => {
     try {
 
         const { name, email, phone, message, propertyId, agentId, status } = req.body
@@ -67,7 +67,7 @@ const addInquiry = async (req: RequestWithUser, res: Response) => {
     }
 }
 
-const deleteInquiry = async (req: RequestWithUser, res: Response) => {
+const deleteInquiry:any = async (req: RequestWithUser, res: Response) => {
     try {
 
         const { id } = req.params
@@ -96,7 +96,7 @@ const deleteInquiry = async (req: RequestWithUser, res: Response) => {
     }
 }
 
-const updateInquiry = async (req: RequestWithUser, res: Response) => {
+const updateInquiry:any = async (req: RequestWithUser, res: Response) => {
     try {
         const { id } = req.params
 

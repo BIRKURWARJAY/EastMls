@@ -8,10 +8,10 @@ import { Transactions } from "../utils/transactions";
 import fs from "fs";
 import { Request, Response, NextFunction } from "express";
 import { ClientSession } from "mongoose";
-import { RequestWithUser } from "../types/express";
+import { RequestWithFiles, RequestWithUser } from "../types/express";
 
 
-const addProperty = Transactions(async (req: RequestWithUser, res:Response, next:NextFunction, session: ClientSession) => {
+const addProperty:any = Transactions(async (req: RequestWithFiles | RequestWithUser, res:Response, next:NextFunction, session: ClientSession) => {
 
   const data = req.body;
 
@@ -95,7 +95,7 @@ const addProperty = Transactions(async (req: RequestWithUser, res:Response, next
   }
 })
 
-const getproperty = async (req: RequestWithUser, res: Response) => {
+const getproperty:any = async (req: RequestWithUser, res: Response) => {
   try {
     const { id } = req.params
     console.log(id);
@@ -129,7 +129,7 @@ const getproperty = async (req: RequestWithUser, res: Response) => {
   }
 }
 
-const updateproperty = async (req: RequestWithUser, res: Response) => {
+const updateproperty:any = async (req: RequestWithUser, res: Response) => {
   try {
     const { id } = req.params
     console.log(id)
@@ -209,7 +209,7 @@ const updateproperty = async (req: RequestWithUser, res: Response) => {
   }
 }
 
-const deleteproperty = async (req: RequestWithUser, res: Response) => {
+const deleteproperty:any = async (req: RequestWithUser, res: Response) => {
   try {
     const { id } = req.params
     console.log(id);
@@ -261,7 +261,7 @@ const deleteproperty = async (req: RequestWithUser, res: Response) => {
   }
 }
 
-const allproperties = async (req: RequestWithUser, res: Response) => {
+const allproperties:any = async (req: RequestWithUser, res: Response) => {
   try {
 
     const allprop = await Property.find()
@@ -286,7 +286,7 @@ const allproperties = async (req: RequestWithUser, res: Response) => {
   }
 }
 
-const searchproperty = async (req: RequestWithUser, res: Response) => {
+const searchproperty:any = async (req: RequestWithUser, res: Response) => {
   try {
 
     let { propertyType, leaseType, title } :any= req.query;
@@ -342,7 +342,7 @@ const searchproperty = async (req: RequestWithUser, res: Response) => {
   }
 };
 
-const agentProperty = async (req: RequestWithUser, res: Response) => {
+const agentProperty:any = async (req: RequestWithUser, res: Response) => {
   try {
     const agentId = req?.user?.id;
 
