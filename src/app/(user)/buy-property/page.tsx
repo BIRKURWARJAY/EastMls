@@ -7,11 +7,11 @@ import LoadingComponent from '../../../components/Loading'
 import toast from 'react-hot-toast'
 import PropertyInterface from '@/src/interfaces/property.interface'
 
-function page(): ReactNode {
+function page() {
   const [type, settype] = useState<string>('')
   const [keyword, setkeyword] = useState<string>('')
   const [prop, setprop] = useState<PropertyInterface<string[]>[]>([])
-  const [isLoading, setLoading] = useState<boolean>();
+  const [isLoading, setLoading] = useState<boolean>(false);
   const apiRef: React.RefObject<boolean>= useRef(false);
 
   useEffect(() => {
@@ -19,8 +19,10 @@ function page(): ReactNode {
       try {
         apiRef.current = true;
         setLoading(true)
-        const response = await api.get<{allProp: PropertyInterface<string[]>[]}>(`/property/all`);
-        setprop(response.data.allProp);
+        const response  = await api.get<{allprop: PropertyInterface<string[]>[]}>(`/property/all`);
+
+        
+        setprop(response.data.allprop);
       } catch (error) {
         toast.error('Error in fetch property')
         apiRef.current = false;
@@ -83,9 +85,9 @@ function page(): ReactNode {
 
         <Stack sx={{ mt: "3rem" }} padding={2}>
           <Typography variant='h6' fontSize={10}>There Are Currently {prop?.length} Results</Typography>
-          {prop?.map((property, index) => (
+          {prop?.map((property, index) => 
             <PropertyListingCard prop={property} key={index} title={'Buy Property listing'} />
-          ))}
+          )}
         </Stack>
       </Box>}
     </>

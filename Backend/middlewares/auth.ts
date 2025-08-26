@@ -16,7 +16,7 @@ export const authenticateUser:any = async (
   let token: string = req?.cookies?.accessToken;
 
   if (!token) {
-    await autoRefreshToken(req, res);
+    return await autoRefreshToken(req, res);
   }
 
   jwt.verify(token, process.env.JWTSECRET!, (err, decoded) => {
