@@ -8,12 +8,12 @@ import toast from 'react-hot-toast'
 import LoadingComponent from '@/src/components/Loading'
 
 function page() {
-  const [isLoading, setLoading] = useState(true);
-  const [value, setvalue] = useState([])
-  const [prop, setprop] = useState([])
-  const [type, settype] = useState('')
-  const [keyword, setkeyword] = useState('')
-  const apiRef = useRef(false);
+  const [isLoading, setLoading] = useState<boolean>(true);
+  const [value, setvalue] = useState<any[]>([])
+  const [prop, setprop] = useState<any[]>([])
+  const [type, settype] = useState<string>('')
+  const [keyword, setkeyword] = useState<string>('')
+  const apiRef = useRef<boolean>(false);
 
 
 

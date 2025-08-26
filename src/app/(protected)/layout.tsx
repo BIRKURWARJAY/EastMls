@@ -12,7 +12,7 @@ import toast from "react-hot-toast";
 export default function Layout({ children }:any) {
 
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
   const [state, setState] = useState<boolean>(false);
 
 

@@ -8,7 +8,7 @@ import toast from 'react-hot-toast';
 import LoadingComponent from '@/src/components/Loading';
 
 function layout({ children }:any) {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
 
 

@@ -20,9 +20,9 @@ function page() {
     profileImage:''
   })
 
-  const [loading, setLoading] = useState(true);
-  const [value, setValue] = React.useState('one');
-  const apiRef = useRef(false);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [value, setValue] = useState<string>('one');
+  const apiRef = useRef<boolean>(false);
 
   const handleChange = (event:any, newValue:string) => {
     setValue(newValue);

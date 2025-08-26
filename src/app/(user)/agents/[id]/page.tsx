@@ -10,8 +10,8 @@ import LoadingComponent from '@/src/components/Loading';
 
 
 function page({ params }:any) {
-  const [isLoading, setLoading] = useState(true);
-  const [agent, setAgent] = useState();
+  const [isLoading, setLoading] = useState<boolean>(true);
+  const [agent, setAgent] = useState<any>();
   const apiRef = useRef(false);
 
 

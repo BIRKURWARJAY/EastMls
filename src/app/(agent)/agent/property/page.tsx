@@ -20,8 +20,8 @@ import toast from 'react-hot-toast';
 export default function BasicTable() {
 
   const [prop, setprop] = useState<any>();
-  const [isLoading, setLoading] = useState(true);
-  const apiRef = React.useRef(false);
+  const [isLoading, setLoading] = useState<boolean>(true);
+  const apiRef = React.useRef<boolean>(false);
 
 
   useEffect(() => {

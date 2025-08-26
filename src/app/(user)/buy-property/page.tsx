@@ -7,9 +7,9 @@ import LoadingComponent from '../../../components/Loading'
 import toast from 'react-hot-toast'
 
 function page() {
-  const [type, settype] = useState('')
-  const [keyword, setkeyword] = useState('')
-  const [prop, setprop] = useState([])
+  const [type, settype] = useState<string>('')
+  const [keyword, setkeyword] = useState<string>('')
+  const [prop, setprop] = useState<any[]>([])
   const [isLoading, setLoading] = useState<boolean>();
   const apiRef = useRef<boolean | null>(null);
 
@@ -40,7 +40,7 @@ function page() {
 
       const response = await api.get(`/property/search?propertyType=${type}&title=${keyword}`);
       console.log(response?.data?.propertydetails);
-      if (response.status === 200) {
+      if (response?.status === 200) {
         setprop(response.data.propertydetails);
         toast.success(response.data.message)
       }

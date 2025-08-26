@@ -18,8 +18,8 @@ import { setCookie } from "@/src/utils/cookies";
 export default function Login() {
 
   const router = useRouter();
-  const [passwordVisible, setPasswordVisible] = useState(false);
-  const [toggleButton, setToggleButton] = useState("user");
+  const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
+  const [toggleButton, setToggleButton] = useState<string>("user");
 
 
 

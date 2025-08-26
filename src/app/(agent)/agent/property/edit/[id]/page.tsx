@@ -13,14 +13,14 @@ import LoadingComponent from '@/src/components/Loading';
 
 export default function EditAgentProperty() {
   const router = useRouter();
-  const [images, setImages] = useState([]);
-  const [videos, setVideos] = useState([]);
+  const [images, setImages] = useState<any[]>([]);
+  const [videos, setVideos] = useState<any[]>([]);
   const propertyTypes = ['Apartment', 'House', 'Condo', 'Villa', 'Commercial'];
   const [data, setData] = useState<any>();
   const params = useParams();
-  const [isLoading, setLoading] = useState(true);
-  const [uploading, setUploading] = useState(false);
-  const apiRef = useRef(false)
+  const [isLoading, setLoading] = useState<boolean>(true);
+  const [uploading, setUploading] = useState<boolean>(false);
+  const apiRef = useRef<boolean>(false)
 
 
 

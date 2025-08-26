@@ -38,10 +38,10 @@ type propertyProps = {
 
 function page() {
   const params = useParams()
-  const [isLoading, setLoading] = useState(true);
+  const [isLoading, setLoading] = useState<boolean>(true);
 
   const [prop, setprop] = useState<propertyProps | undefined | null>()
-  const apiRef = useRef(false);
+  const apiRef = useRef<boolean>(false);
 
 
   const breadcrumbs = [

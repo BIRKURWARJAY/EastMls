@@ -6,9 +6,9 @@ import LoadingComponent from '../../../components/Loading'
 
 
 function page() {
-  const [inquries, setinquries] = useState([]);
-  const [isLoading, setLoading] = useState(true);
-  const apiRef = useRef(false);
+  const [inquries, setinquries] = useState<any[]>([]);
+  const [isLoading, setLoading] = useState<boolean>(true);
+  const apiRef = useRef<boolean>(false);
 
 
   useEffect(() => {

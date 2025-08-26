@@ -19,10 +19,10 @@ import toast from 'react-hot-toast';
 let timeId: NodeJS.Timeout | null = null
 
 function Page() {
-  const [value, setvalue] = useState(10);
-  const [data, setdata] = useState([]);
+  const [value, setvalue] = useState<number>(10);
+  const [data, setdata] = useState<any[]>([]);
   const [isLoading, setLoading] = useState<boolean>();
-  const apiRef = useRef(false);
+  const apiRef = useRef<boolean>(false);
 
 
   useEffect(() => {
