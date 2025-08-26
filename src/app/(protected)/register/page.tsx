@@ -3,7 +3,7 @@
 import { Button, Stack, TextField, Typography, Card, InputAdornment, CardContent, IconButton, FormLabel } from "@mui/material";
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import Link from "next/link";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -16,13 +16,13 @@ import { api } from "@/src/utils/api";
 
 
 
-export default function Login() {
+export default function Login(): ReactNode {
   const router = useRouter();
   const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
   const [toggleButton, setToggleButton] = useState<string>("user");
 
 
-  const Adornment = passwordVisible ? <VisibilityOffIcon /> : <VisibilityIcon />
+  const Adornment: ReactNode = passwordVisible ? <VisibilityOffIcon /> : <VisibilityIcon />
 
   const YupValidation = Yup.object().shape({
     fullName: Yup.string().trim('fullName is required').min(1).required('fullName is required'),

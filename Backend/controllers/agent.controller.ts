@@ -23,6 +23,21 @@ export function getAllAgents() {
   })
 }
 
+export function getAgentDetailById() {
+  return tryCatchWrapper(async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = req.params
+
+    const agent = await userModel.findById(id).select("-password -refreshToken");
+    if (!agent) return next(PostError("Agent Doesn't Exists", 404));
+
+    return res.status(200).json({
+      message: "agent fetch sucessfully",
+      agent
+    })
+  })
+}
+
+
 export function updateAgent() {
   return tryCatchWrapper(async (req: any, res: Response, next: NextFunction) => {
     const { id } = req.user

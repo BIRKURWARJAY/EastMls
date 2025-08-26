@@ -1,6 +1,6 @@
 import { AspectRatioOutlined, BathroomOutlined, BedOutlined, CalendarTodayOutlined, HomeOutlined, SensorDoorOutlined, WarehouseOutlined } from '@mui/icons-material'
-import { Box, Grid, Paper, Stack, Typography } from '@mui/material'
-import React from 'react'
+import { Box, Grid, Paper, Typography } from '@mui/material'
+import React, { ReactNode } from 'react'
 
 type OverviewProps = {
     data: {
@@ -13,7 +13,7 @@ type OverviewProps = {
     }
 }
 
-function Overview({ data }: OverviewProps) {
+function Overview({ data }: OverviewProps): ReactNode {
 
     const temp = [
         {

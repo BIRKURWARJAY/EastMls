@@ -1,13 +1,12 @@
 import { Breadcrumbs, colors, Stack, Typography } from '@mui/material'
-import React from 'react'
+import React, { ReactNode } from 'react'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import Link from 'next/link';
 
 type BreadCrumbsProps = {
     array:any[]
 }
 
-function BreadCrumbs({ array }:BreadCrumbsProps) {
+function BreadCrumbs({ array }:BreadCrumbsProps): ReactNode {
     
     return (
         <>

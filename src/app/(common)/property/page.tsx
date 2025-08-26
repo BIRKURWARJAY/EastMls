@@ -3,26 +3,27 @@
 import PropertyListingCard from '@/src/components/PropertyListingCard'
 import { api } from '@/src/utils/api'
 import { Box, Button, FormControl, MenuItem, Select, Stack, TextField, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { ReactNode, useEffect, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
 import LoadingComponent from '@/src/components/Loading'
+import PropertyInterface from '@/src/interfaces/property.interface'
 
-function page() {
+function page(): ReactNode {
   const [isLoading, setLoading] = useState<boolean>(true);
-  const [value, setvalue] = useState<any[]>([])
-  const [prop, setprop] = useState<any[]>([])
+  const [value, setvalue] = useState<string[]>([])
+  const [prop, setprop] = useState<PropertyInterface<string[]>[]>([])
   const [type, settype] = useState<string>('')
   const [keyword, setkeyword] = useState<string>('')
-  const apiRef = useRef<boolean>(false);
+  const apiRef: React.RefObject<boolean> = useRef(false);
 
 
 
   useEffect(() => {
 
-    const fetchprop = async () => {
+    const fetchprop = async (): Promise<void> => {
       try {
         apiRef.current = true;
-        const response = await api.get(`/property/all`)
+        const response: Axios.AxiosXHR<any> = await api.get(`/property/all`)
         console.log(response.data);
         if (response?.status === 200) {
           setprop(response.data.allprop)
@@ -39,18 +40,16 @@ function page() {
   }, [])
 
 
-  const serachProp = async () => {
+  const serachProp = async (): Promise<void> => {
     try {
-      console.log(type);
-
-      const response = await api.get(`/property/search?propertyType=${type}&title=${keyword}&leaseType=${value}`);
+      const response: Axios.AxiosXHR<any> = await api.get(`/property/search?propertyType=${type}&title=${keyword}&leaseType=${value}`);
       console.log(response.data.propertydetails);
       if (response.status === 200) {
         setprop(response?.data?.propertydetails);
         toast.success(response.data.message)
       }
 
-    } catch (error:any) {
+    } catch (error: any) {
       setprop([])
       toast.error(error.response.data.message)
       console.error('Search error:', error);

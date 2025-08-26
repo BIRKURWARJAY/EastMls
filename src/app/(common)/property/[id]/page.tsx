@@ -3,7 +3,7 @@ import BreadCrumbs from '@/src/components/BreadCrumbs';
 import { Box, IconButton, Stack, Typography } from '@mui/material';
 import Link from 'next/link';
 import { useParams } from 'next/navigation'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { ReactNode, useEffect, useRef, useState } from 'react'
 import MapOutlinedIcon from '@mui/icons-material/MapOutlined';
 import DateRangeOutlinedIcon from '@mui/icons-material/DateRangeOutlined';
 import BedOutlinedIcon from '@mui/icons-material/BedOutlined';
@@ -15,6 +15,7 @@ import Propertydetails from '@/src/components/Propertydetails';
 import SellerEnquiry from '@/src/components/SellerEnquiry';
 import { api } from '@/src/utils/api';
 import LoadingComponent from '@/src/components/Loading';
+
 
 type propertyProps = {
   title: string
@@ -36,8 +37,10 @@ type propertyProps = {
   }
 }
 
-function page() {
+
+function page(): ReactNode {
   const params = useParams()
+  const [isLoading, setLoading] = useState<boolean>(true);
   const [isLoading, setLoading] = useState<boolean>(true);
 
   const [prop, setprop] = useState<propertyProps | undefined | null>()
@@ -65,10 +68,10 @@ function page() {
 
   useEffect(() => {
 
-    const fetchprop = async () => {
+    const fetchprop = async (): Promise<void> => {
       try {
         apiRef.current = true;
-        const response = await api.get(`/property/${params.id}`)
+        const response: Axios.AxiosXHR<any> = await api.get(`/property/${params.id}`)
         console.log(response.data);
         setprop(response.data.propertydetails);
         setLoading(false);

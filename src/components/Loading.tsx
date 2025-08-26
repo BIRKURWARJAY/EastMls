@@ -1,4 +1,6 @@
-const LoadingComponent = () => {
+import { ReactNode } from "react";
+
+const LoadingComponent = (): ReactNode => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="flex flex-col items-center justify-center">

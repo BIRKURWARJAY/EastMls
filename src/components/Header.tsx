@@ -21,12 +21,12 @@ type HeaderProps = {
 };
 
 
-function Header({state}:HeaderProps) {
+function Header({state}:HeaderProps): React.ReactNode {
   const router = useRouter();
-  // console.log('↗️↗️',state);
   
 
-  const [drawerOpen, setDrawerOpen] = React.useState(false);
+  const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
+  const [loggedin, setloggedin] = React.useState<boolean>(false);
 
 
   const toggleDrawer = (open:boolean) => (event:any) => {
@@ -34,9 +34,9 @@ function Header({state}:HeaderProps) {
     setDrawerOpen(open);
   };
 
-  async function handleLogout() {
+  async function handleLogout(): Promise<void> {
     try {
-      const res = await api.get("/auth", { withCredentials: true });
+      const res: Axios.AxiosXHR<any> = await api.get("/auth", { withCredentials: true });
       if (res.data.status === "success") {
         deleteCookie('EastMlsUser', '/')
         toast.success(res.data.message);
@@ -47,7 +47,10 @@ function Header({state}:HeaderProps) {
     }
   }
 
-  const links = [
+  const links: {
+    text: string;
+    href: string;
+  }[] = [
     { text: "Home", href: "/" },
     { text: "Buy Property", href: "/buy-property" },
     { text: "Property List", href: "/property" },

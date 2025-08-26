@@ -1,20 +1,26 @@
 'use client'
 
-import { useState } from "react";
-import { Button, ButtonGroup,ButtonGroupProps, MenuItem, Paper, Select, Stack, TextField } from "@mui/material";
+import { ChangeEvent, ReactNode, useState } from "react";
+import { Button, ButtonGroup, MenuItem, Paper, Select, Stack, TextField } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 
 
-export default function SearchProperty() {
-  const [propertySearch, setPropertySearch] = useState("For Rent");
-  const [property, Setproperty] = useState(" ");
+interface color {
+  bgcolor: string;
+  color: string;
+}
 
-  const BgColor2 = propertySearch === "For Sale" ? { bgcolor: "#faa61f", color: "white" } : { bgcolor: "white", color: "Black" };
-  const BgColor1 = propertySearch === "For Rent" ? { bgcolor: "#faa61f", color: "white" } : { bgcolor: "white", color: "Black" };
 
-  const properties = ["Apartment", "House", "Condo", "Villa", "Commercial"];
+export default function SearchProperty(): ReactNode {
+  const [propertySearch, setPropertySearch] = useState<string>("For Rent");
+  const [property, Setproperty] = useState<string>(" ");
 
-  const handlePropertyChange = (e:any) => {
+  const BgColor2: color = propertySearch === "For Sale" ? { bgcolor: "#faa61f", color: "white" } : { bgcolor: "white", color: "Black" };
+  const BgColor1: color = propertySearch === "For Rent" ? { bgcolor: "#faa61f", color: "white" } : { bgcolor: "white", color: "Black" };
+
+  const properties: string[] = ["Apartment", "House", "Condo", "Villa", "Commercial"];
+
+  const handlePropertyChange = (e: any) => {
     Setproperty(e.target.value)
   }
 
@@ -33,7 +39,7 @@ export default function SearchProperty() {
 
           <TextField variant="outlined" label="Enter Keyword" sx={{width: {xs: "100%", md: "31%"}}}  />
 
-          <Select value={property} sx={{ width: {xs:"100%",md:"31%"}, textAlign: "left" }} onChange={handlePropertyChange}>
+          <Select value={property} sx={{ width: {xs:"100%",md:"31%"}, textAlign: "left" }} onChange={ handlePropertyChange}>
             <MenuItem value=" " disabled>Select property Type</MenuItem>
             {properties.map(property => <MenuItem key={property} value={property}>{property}</MenuItem>)}
           </Select>

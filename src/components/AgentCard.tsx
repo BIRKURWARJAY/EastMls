@@ -5,7 +5,7 @@ import DraftsOutlinedIcon from '@mui/icons-material/DraftsOutlined';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React,{ ReactNode } from 'react';
 
 type AgentCardProps = {
     agent:{
@@ -13,13 +13,13 @@ type AgentCardProps = {
         profileImage:string
         username:string
         role:string
-        number:number
+        contact?:number | string
         email:string
-        property:string
+        property?:number
     }
 }
 
-function AgentCard({ agent }:AgentCardProps) {
+function AgentCard({ agent }:AgentCardProps): ReactNode {
     const router = useRouter();
 
     return (
@@ -63,7 +63,7 @@ function AgentCard({ agent }:AgentCardProps) {
 
                         <Box display='flex' gap={1} mt={3}>
                             <PhoneCallbackIcon />
-                            <Typography>{agent.number}</Typography>
+                            <Typography>{agent.contact}</Typography>
                         </Box>
                         <Box display='flex' gap={1}>
                             <DraftsOutlinedIcon />

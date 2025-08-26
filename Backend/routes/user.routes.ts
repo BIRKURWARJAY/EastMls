@@ -13,7 +13,6 @@ router.put("/change-password", authenticateUser, changePassword());
 router.get("/", authenticateUser, getUserDetails());
 
 router.post("/:id", authenticateUser, getUserDetailsById());
-router.get("/agent/:id", authenticateUser, getAgentDetailById());
 
 
 

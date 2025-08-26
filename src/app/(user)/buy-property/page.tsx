@@ -1,26 +1,26 @@
 'use client'
 import PropertyListingCard from '../../../components/PropertyListingCard'
 import { Box, Button, FormControl, MenuItem, Select, Stack, TextField, Typography } from '@mui/material'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { ReactNode, useEffect, useRef, useState } from 'react'
 import { api } from '@/src/utils/api'
 import LoadingComponent from '../../../components/Loading'
 import toast from 'react-hot-toast'
+import PropertyInterface from '@/src/interfaces/property.interface'
 
-function page() {
+function page(): ReactNode {
   const [type, settype] = useState<string>('')
   const [keyword, setkeyword] = useState<string>('')
-  const [prop, setprop] = useState<any[]>([])
+  const [prop, setprop] = useState<PropertyInterface<string[]>[]>([])
   const [isLoading, setLoading] = useState<boolean>();
-  const apiRef = useRef<boolean | null>(null);
+  const apiRef: React.RefObject<boolean>= useRef(false);
 
   useEffect(() => {
-    async function fetchProp() {
-      apiRef.current = true;
+    async function fetchProp(): Promise<void> {
       try {
         apiRef.current = true;
         setLoading(true)
-        const response = await api.get(`/property/all`);
-        setprop(response.data.allprop);
+        const response = await api.get<{allProp: PropertyInterface<string[]>[]}>(`/property/all`);
+        setprop(response.data.allProp);
       } catch (error) {
         toast.error('Error in fetch property')
         apiRef.current = false;
@@ -34,13 +34,11 @@ function page() {
   }, [])
   console.log('>> component rerender', prop)
 
-  const serachProp = async () => {
+  const serachProp = async (): Promise<void> => {
     try {
-      console.log(type);
 
-      const response = await api.get(`/property/search?propertyType=${type}&title=${keyword}`);
-      console.log(response?.data?.propertydetails);
-      if (response?.status === 200) {
+      const response: Axios.AxiosXHR<any> = await api.get(`/property/search?propertyType=${type}&title=${keyword}`);
+      if (response.status === 200) {
         setprop(response.data.propertydetails);
         toast.success(response.data.message)
       }

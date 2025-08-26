@@ -3,7 +3,7 @@
 import { Button, FormLabel, Stack, TextField, Typography, Card, InputAdornment, CardContent, IconButton } from "@mui/material";
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import Link from "next/link";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -15,7 +15,7 @@ import CryptoJS from "crypto-js";
 import { setCookie } from "@/src/utils/cookies";
 
 
-export default function Login() {
+export default function Login(): ReactNode {
 
   const router = useRouter();
   const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
@@ -23,7 +23,7 @@ export default function Login() {
 
 
 
-  const Adornment = passwordVisible ? <VisibilityOffIcon /> : <VisibilityIcon />
+  const Adornment: ReactNode = passwordVisible ? <VisibilityOffIcon /> : <VisibilityIcon />
 
   const YupValidation = Yup.object().shape({
     email: Yup.string().email('invalid email').required('Email is required'),

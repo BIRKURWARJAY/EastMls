@@ -6,11 +6,11 @@ import Property from "../models/property.model";
 import { uploadOnCloudinary } from "../utils/uploadOnCloudinary";
 import { Transactions } from "../utils/transactions";
 import fs from "fs";
-import { cookieOptions } from "../utils/cookieOptions";
 import { Request, Response, NextFunction } from "express";
+import { ClientSession } from "mongoose";
 
 
-const addProperty = Transactions(async (req:any, res:Response, next:NextFunction, session) => {
+const addProperty = Transactions(async (req:any, res:Response, next:NextFunction, session: ClientSession) => {
 
   const data = req.body;
 
@@ -43,7 +43,7 @@ const addProperty = Transactions(async (req:any, res:Response, next:NextFunction
 
   const city = await City.create([{
     cityCode: data.cityCode,
-    country: data.countryName,
+    country: country[0]._id,
     cityName: data.cityName,
     state: data.state,
   }], { session })
@@ -166,7 +166,7 @@ const updateproperty = async (req: any, res: Response) => {
     })
 
     const newProperty = await Property.findByIdAndUpdate(id, {
-      agentId: req.user.id,
+      agentId: req?.user?.id,
       title: data.title,
       address: data.address,
       propertyDescription: data.propertyDescription,
@@ -192,7 +192,6 @@ const updateproperty = async (req: any, res: Response) => {
       features: data.features,
     }, { new: true })
     return res.status(201)
-      .cookie("accessToken", req.user.accessToken, cookieOptions(1000 * 60 * 60))
       .json({
       message: "Property updated successfully",
       newProperty
@@ -344,7 +343,7 @@ const searchproperty = async (req: any, res: Response) => {
 
 const agentProperty = async (req: any, res: Response) => {
   try {
-    const agentId = req.user.id;
+    const agentId = req?.user?.id;
 
     if (!agentId) {
       return res.status(400).json({

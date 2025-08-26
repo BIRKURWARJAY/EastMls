@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const countrySchema = new mongoose.Schema({
     countryCode: {
-        type: String,
+        type: Number,
         required: true,
 
     },

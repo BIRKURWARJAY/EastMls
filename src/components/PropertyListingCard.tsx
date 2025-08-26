@@ -1,9 +1,9 @@
-import { Image, LocationOn } from '@mui/icons-material';
+import { LocationOn } from '@mui/icons-material';
 import { Box, Button, Card, CardContent, CardMedia, Stack, Typography } from '@mui/material'
 import BathtubIcon from '@mui/icons-material/Bathtub';
 import BedIcon from '@mui/icons-material/Bed';
 import AspectRatioIcon from '@mui/icons-material/AspectRatio';
-import React from 'react'
+import React, { ReactNode } from 'react'
 import Link from 'next/link';
 
 type PropertyListingProps = {
@@ -22,7 +22,7 @@ type PropertyListingProps = {
   title:string
 }
 
-function PropertyListingCard({ prop, title }:PropertyListingProps) {
+function PropertyListingCard({ prop, title }:PropertyListingProps): ReactNode {
 
 
 

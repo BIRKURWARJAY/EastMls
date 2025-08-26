@@ -1,21 +1,25 @@
 'use client'
 import { Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, CircularProgress, Box } from '@mui/material'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { ReactNode, useEffect, useRef, useState } from 'react'
 import { api } from '../../../utils/api'
 import LoadingComponent from '../../../components/Loading'
+import inquiryInterface from '@/src/interfaces/inquiry.interface'
+import PropertyInterface from '@/src/interfaces/property.interface'
 
 
-function page() {
-  const [inquries, setinquries] = useState<any[]>([]);
+interface myInquiryInterface extends PropertyInterface<string[]>, inquiryInterface {}
+
+function page(): ReactNode {
+  const [inquries, setinquries] = useState<myInquiryInterface[]>([]);
   const [isLoading, setLoading] = useState<boolean>(true);
-  const apiRef = useRef<boolean>(false);
+  const apiRef: React.RefObject<boolean>= useRef(false);
 
 
   useEffect(() => {
-    const getinq = async () => {
+    const getinq = async (): Promise<void> => {
       try {
         apiRef.current = true;
-        const response = await api.get('/inquiry');
+        const response: Axios.AxiosXHR<any> = await api.get('/inquiry');
         setinquries(response.data.allInq);
         setLoading(false);
       } catch (error) {

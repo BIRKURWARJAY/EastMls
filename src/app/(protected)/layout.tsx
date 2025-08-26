@@ -3,13 +3,13 @@
 
 import Header from '@/src/components/Header';
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import LoadingComponent from "@/src/components/Loading";
 import { verifyRole } from "@/src/utils/verifyRole";
 import toast from "react-hot-toast";
 
 
-export default function Layout({ children }:any) {
+export default function Layout({ children }: {children: ReactNode}): ReactNode {
 
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(true);
@@ -17,11 +17,10 @@ export default function Layout({ children }:any) {
 
 
   useEffect(() => {
-    async function validate() {
+    async function validate(): Promise<void> {
       const verified = await verifyRole("check");
 
       if (verified === "login required") {
-        setState(false);
         setLoading(false)
         return;
       }

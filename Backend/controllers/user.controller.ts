@@ -91,17 +91,3 @@ export function changePassword() {
   })
 }
 
-export function getAgentDetailById() {
-  return tryCatchWrapper(async (req:any, res, next) => {
-    const { id } = await req.params
-    console.log(id);
-
-    const agent = await userModel.findById(id).select("-password -refreshToken");
-    if (!agent) return next(PostError("Agent Doesn't Exists", 404));
-
-    return res.status(200).json({
-      message: "agent fetch sucessfully",
-      agent
-    })
-  })
-}

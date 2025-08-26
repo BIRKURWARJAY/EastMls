@@ -3,24 +3,25 @@ import AgentCard from '@/src/components/AgentCard';
 import BreadCrumbs from '@/src/components/BreadCrumbs';
 import { Box, Stack, Typography } from '@mui/material';
 import Link from 'next/link';
-import React, { useEffect, useRef, useState } from 'react'
+import React, { ReactNode, useEffect, useRef, useState } from 'react'
 import { api } from '@/src/utils/api'
 import LoadingComponent from '@/src/components/Loading';
+import userInterface from '@/src/interfaces/user.interface';
 
 
 
-function page({ params }:any) {
+function page({ params }:any): ReactNode {
   const [isLoading, setLoading] = useState<boolean>(true);
-  const [agent, setAgent] = useState<any>();
-  const apiRef = useRef(false);
+  const [agent, setAgent] = useState<userInterface>();
+  const apiRef: React.RefObject<boolean>= useRef(false);
 
 
   useEffect(() => {
-    const fetchAgent = async () => {
+    const fetchAgent = async (): Promise<void> => {
       try {
         apiRef.current = true;
         setLoading(true);
-        const response = await api.get(`/user/agent/${params.id}`);
+        const response: Axios.AxiosXHR<any> = await api.get(`/agent/${params.id}`);
         setAgent(response.data.agent);
         setLoading(false);
       } catch (error) {

@@ -4,16 +4,16 @@ import { deleteCookie } from '../utils/cookies'
 import { Button, Stack } from '@mui/material'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import React from 'react'
+import React, { ReactNode } from 'react'
 import toast from 'react-hot-toast'
 
-function AgentHeader() {
+function AgentHeader(): ReactNode {
 
   const router = useRouter()
 
-  const logout = async () => {
+  const logout = async (): Promise<void> => {
     try {
-      const response = await api.get('/auth', { withCredentials: true })
+      const response: Axios.AxiosXHR<any> = await api.get('/auth', { withCredentials: true })
       console.log(response);
       if (response.status === 200) {
         deleteCookie('EastMlsUser', '/')
@@ -22,8 +22,7 @@ function AgentHeader() {
       }
     } catch (error) {
       console.log(error);
-      toast.error('Error in logout')
-
+      toast.error('Refresh the Page')
     }
 
   }

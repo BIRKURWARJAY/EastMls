@@ -6,13 +6,13 @@ import LoadingComponent from "../components/Loading";
 
 import Header from "../components/Header";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { verifyRole } from "../utils/verifyRole";
 import toast from "react-hot-toast";
 
 
 
-export default function Home(){
+export default function Home(): ReactNode{
 
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -21,7 +21,7 @@ export default function Home(){
   
 
   useEffect(() => {
-    async function validate() {
+    async function validate(): Promise<void> {
 
       const verified = await verifyRole("check");
 

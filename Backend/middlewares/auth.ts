@@ -2,7 +2,16 @@ import jwt from "jsonwebtoken";
 import autoRefreshToken from "../utils/autoRefreshToken";
 import { NextFunction, Request, Response } from "express";
 
-export const authenticateUser = async (req: any, res: Response, next: NextFunction) => {
+interface DecodedJWT {
+  id: string;
+  role: string;
+}
+
+export const authenticateUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   let token: string = req?.cookies?.accessToken;
 
   if (!token) {
@@ -18,8 +27,12 @@ export const authenticateUser = async (req: any, res: Response, next: NextFuncti
       return res.status(401).json({
         message: "Unauthorized",
       });
+    } else {
+      req.user = {
+        id: (decoded as DecodedJWT)?.id,
+        role: (decoded as DecodedJWT)?.role
+      };
+      return next();
     }
-    req.user = decoded;
-    return next();
   });
-}
+};
