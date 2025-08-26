@@ -16,7 +16,7 @@ type ErrType = {
   code?: number
 }
 
-const errorHandler = async (err: ErrType, req: Request, res: Response, next: NextFunction) => {
+const errorHandler = async (err: ErrType, req: any, res: Response, next: NextFunction) => {
 // return res.send(err)
   if (err instanceof MongoError) {
     if (err.isOperational) {

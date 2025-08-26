@@ -1,12 +1,12 @@
-import userModel from "../models/user.model.js";
-import { MongoError, PostError } from "../utils/ErrorHandler.js";
-import { tryCatchWrapper } from "../utils/transactions.js";
+import userModel from "../models/user.model";
+import { MongoError, PostError } from "../utils/ErrorHandler";
+import { tryCatchWrapper } from "../utils/transactions";
 import {Request, Response, NextFunction} from "express"
 
 
 
 export function getAllAgents() {
-  return tryCatchWrapper(async (req: Request, res: Response, next: NextFunction) => {
+  return tryCatchWrapper(async (req: any, res: Response, next: NextFunction) => {
     const agents = await userModel.find({
       role: "agent",
       isDeleted: false
@@ -24,7 +24,7 @@ export function getAllAgents() {
 }
 
 export function updateAgent() {
-  return tryCatchWrapper(async (req: Request, res: Response, next: NextFunction) => {
+  return tryCatchWrapper(async (req: any, res: Response, next: NextFunction) => {
     const { id } = req.user
     const { email, username, licenseNumber, phone, instagram, facebook, linkedin } = req.body;
     if (!id || !email.trim() || !username.trim()) return next(PostError("Fields are Missing", 304));
@@ -52,7 +52,7 @@ export function updateAgent() {
 }
 
 export function getAgent() {
-  return tryCatchWrapper(async (req: Request, res: Response, next: NextFunction) => {
+  return tryCatchWrapper(async (req: any, res: Response, next: NextFunction) => {
     const { id } = req.user;
     console.log(id);
 
@@ -68,7 +68,7 @@ export function getAgent() {
   })
 }
 
-export async function searchAgent(req: Request, res: Response) {
+export async function searchAgent(req: any, res: Response) {
   try {
     interface pop {
       username?: string

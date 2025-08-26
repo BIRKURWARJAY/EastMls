@@ -1,14 +1,15 @@
 import express from "express";
 import cors from "cors";
 import { configDotenv } from "dotenv";
-import propertyRouter from "./routes/property.routes.js";
+import propertyRouter from "./routes/property.routes";
 import connect from "./db/connect";
-import authRouter from "./routes/auth.routes.js";
-import { errorHandler } from "./utils/ErrorHandler.js";
-import userRouter from "./routes/user.routes.js";
-import agentRouter from "./routes/agent.routes.js";
-import inquiryRouter from "./routes/inquiry.routes.js";
+import authRouter from "./routes/auth.routes";
+import { errorHandler } from "./utils/ErrorHandler";
+import userRouter from "./routes/user.routes";
+import agentRouter from "./routes/agent.routes";
+import inquiryRouter from "./routes/inquiry.routes";
 import cookieParser from "cookie-parser";
+
 
 
 const app = express();

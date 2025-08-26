@@ -23,15 +23,11 @@ type HeaderProps = {
 
 function Header({state}:HeaderProps) {
   const router = useRouter();
-  console.log('↗️↗️',state);
+  // console.log('↗️↗️',state);
   
 
   const [drawerOpen, setDrawerOpen] = React.useState(false);
-  const [loggedin, setloggedin] = React.useState(false);
 
-  React.useEffect(() => {
-    setloggedin(state)
-  }, []);
 
   const toggleDrawer = (open:boolean) => (event:any) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) return;
@@ -44,7 +40,6 @@ function Header({state}:HeaderProps) {
       if (res.data.status === "success") {
         deleteCookie('EastMlsUser', '/')
         toast.success(res.data.message);
-        setloggedin(false)
         router.push("/login");
       }
     } catch (error) {
@@ -63,7 +58,7 @@ function Header({state}:HeaderProps) {
   return (
     <>
       <AppBar position="sticky" sx={{ bgcolor: 'white', color: 'black', boxShadow: "0px 0px 10px #dbdbdb !important" }}>
-        <Container sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", height: '12vh' }}>
+        <Container sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", height: '12vh', minHeight:"5rem" }}>
           <Toolbar sx={{ justifyContent: 'space-between', width: "100%" }}>
 
             {/* Mobile menu icon */}
@@ -73,7 +68,7 @@ function Header({state}:HeaderProps) {
               </IconButton>
             </Box>
 
-            <Image src="/eastmls/logo.webp" alt="Logo" width={70} height={70} />
+            <Image src="/eastmls/logo.webp" alt="Logo" width={80} height={60} style={{objectFit:'cover'}} />
 
             <Box sx={{ flexGrow: 1, display: { xs: 'none', lg: 'flex' }, justifyContent: 'center' }}>
               <Stack direction="row">
@@ -105,10 +100,10 @@ function Header({state}:HeaderProps) {
             </Drawer>
           </Toolbar>
 
-          <Stack direction="row" alignItems="center" sx={{ position: "absolute", right: "20px", display: { xs: 'none', lg: 'flex' } }}>
+          <Stack direction="row"  alignItems="center" sx={{ position: "absolute", right: "20px", display: { xs: 'none', lg: 'flex' } }}>
             <Button sx={{ bgcolor: "orange", color: "white", mr: "1rem" }}>Sell property</Button>
 
-            {loggedin ?
+            {state ?
               <Button onClick={handleLogout} style={{ color: "#faa61f" }}>
                 Logout
               </Button>

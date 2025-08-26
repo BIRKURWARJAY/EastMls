@@ -15,14 +15,10 @@ import toast from "react-hot-toast";
 export default function Home(){
 
 
+  const [loading, setLoading] = useState<boolean>(false);
+  const [state, setState] = useState<boolean>(true);
   const router = useRouter();
-<<<<<<< HEAD
-  const [loading, setLoading] = useState(true);
-  const [state, setState] = useState<boolean>();
-=======
-  const [loading, setLoading] = useState<boolean>(true);
-  const [state, setState] = useState<boolean>(false);
->>>>>>> 3b39480be3f0db9b16c0a84bebce6c3af2eef4e2
+  
 
   useEffect(() => {
     async function validate() {
@@ -50,7 +46,7 @@ export default function Home(){
   return (
     <>
       {loading ? <LoadingComponent /> : <>
-        <Header state={state!}/>
+        <Header state={state}/>
         <Stack
           direction={"row"}
           sx={{

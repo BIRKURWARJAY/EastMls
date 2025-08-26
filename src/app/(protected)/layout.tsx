@@ -13,7 +13,7 @@ export default function Layout({ children }:any) {
 
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-  const [state, setState] = useState<boolean>();
+  const [state, setState] = useState<boolean>(false);
 
 
   useEffect(() => {
@@ -45,7 +45,7 @@ export default function Layout({ children }:any) {
   return (
     <>
       {loading ? <LoadingComponent /> : <>
-        <Header state={state!}/>
+        <Header state={state}/>
         {children}
       </>
       }

@@ -1,23 +1,19 @@
-import cloudinary from "cloudinary";
+import { v2 as cloudinary } from "cloudinary";
 
-
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME!,
+  api_key: process.env.CLOUDINARY_KEY!,
+  api_secret: process.env.CLOUDINARY_SECRET!,
+});
 
 export async function uploadOnCloudinary(filePath: string): Promise<string | null> {
   try {
-    cloudinary.config({
-      cloud_name: process.env.CLOUD_NAME,
-      api_key: process.env.CLOUDINARY_KEY,
-      api_secret: process.env.CLOUDINARY_SECRET
-    });
-
     if (!filePath) return null;
-    
-    const upload = await cloudinary.v2.uploader.upload(filePath);
 
-    if (!upload) return null;
-    return upload?.url;
+    const upload = await cloudinary.uploader.upload(filePath);
+    return upload?.url ?? null;
   } catch (error) {
-    console.log(error);
-    return null
+    console.error(error);
+    return null;
   }
 }

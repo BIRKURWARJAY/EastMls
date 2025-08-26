@@ -1,12 +1,12 @@
-import Location from "../models/location.model.js";
-import City from "../models/city.model.js";
-import Country from "../models/country.model.js";
+import Location from "../models/location.model";
+import City from "../models/city.model";
+import Country from "../models/country.model";
 import { propertyValidator } from "../validators/property.validator";
-import Property from "../models/property.model.js";
-import { uploadOnCloudinary } from "../utils/uploadOnCloudinary.js";
-import { Transactions } from "../utils/transactions.js";
+import Property from "../models/property.model";
+import { uploadOnCloudinary } from "../utils/uploadOnCloudinary";
+import { Transactions } from "../utils/transactions";
 import fs from "fs";
-import { cookieOptions } from "../utils/cookieOptions.js";
+import { cookieOptions } from "../utils/cookieOptions";
 import { Request, Response, NextFunction } from "express";
 
 
@@ -15,10 +15,12 @@ const addProperty = Transactions(async (req:any, res:Response, next:NextFunction
   const data = req.body;
 
   const allImages = req.files["images[]"]?.map((img:any) => img.path) || [];
+  console.log(allImages, "?????????????")
 
   const allVideos = req.files["videos[]"]?.map((video:any) => video.path) || [];
 
   const uploadedImages = await Promise.all(allImages.map((img:any) => uploadOnCloudinary(img)));
+  console.log(uploadedImages, "??????????")
 
   const uploadedVideos = await Promise.all(allVideos.map((video:any) => uploadOnCloudinary(video)));
 
@@ -92,7 +94,7 @@ const addProperty = Transactions(async (req:any, res:Response, next:NextFunction
   }
 })
 
-const getproperty = async (req: Request, res: Response) => {
+const getproperty = async (req: any, res: Response) => {
   try {
     const { id } = req.params
     console.log(id);
@@ -126,12 +128,13 @@ const getproperty = async (req: Request, res: Response) => {
   }
 }
 
-const updateproperty = async (req: Request, res: Response) => {
+const updateproperty = async (req: any, res: Response) => {
   try {
     const { id } = req.params
     console.log(id)
 
     const propertydetails = await Property.findById(id)
+
     console.log(propertydetails)
     if (!propertydetails) {
       return res.status(404).json({
@@ -139,6 +142,9 @@ const updateproperty = async (req: Request, res: Response) => {
       })
     }
     const data = req.body
+
+    data.image = [...propertydetails.image, ...data.images];
+
     await propertyValidator.validate(data)
 
 
@@ -203,7 +209,7 @@ const updateproperty = async (req: Request, res: Response) => {
   }
 }
 
-const deleteproperty = async (req: Request, res: Response) => {
+const deleteproperty = async (req: any, res: Response) => {
   try {
     const { id } = req.params
     console.log(id);
@@ -255,7 +261,7 @@ const deleteproperty = async (req: Request, res: Response) => {
   }
 }
 
-const allproperties = async (req: Request, res: Response) => {
+const allproperties = async (req: any, res: Response) => {
   try {
 
     const allprop = await Property.find()
@@ -280,7 +286,7 @@ const allproperties = async (req: Request, res: Response) => {
   }
 }
 
-const searchproperty = async (req: Request, res: Response) => {
+const searchproperty = async (req: any, res: Response) => {
   try {
 
     let { propertyType, leaseType, title } :any= req.query;
@@ -336,7 +342,7 @@ const searchproperty = async (req: Request, res: Response) => {
   }
 };
 
-const agentProperty = async (req: Request, res: Response) => {
+const agentProperty = async (req: any, res: Response) => {
   try {
     const agentId = req.user.id;
 

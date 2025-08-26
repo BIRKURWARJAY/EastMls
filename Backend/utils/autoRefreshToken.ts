@@ -1,11 +1,11 @@
 import jwt from "jsonwebtoken";
-import userModel, { userModelInterface } from "../models/user.model.js";
-import { cookieOptions } from "./cookieOptions.js";
+import userModel, { userModelInterface } from "../models/user.model";
+import { cookieOptions } from "./cookieOptions";
 import { Request, Response } from "express";
 
 
 
-export default async function autoRefreshToken(req: Request, res: Response) {
+export default async function autoRefreshToken(req: any, res: Response) {
 
   try {
     const token = req?.cookies?.refreshToken;

@@ -1,14 +1,14 @@
-import { tryCatchWrapper } from "../utils/transactions.js";
-import { PostError } from "../utils/ErrorHandler.js";
-import userModel from "../models/user.model.js";
-import { hashPassword } from "../utils/hashPassword.js";
+import { tryCatchWrapper } from "../utils/transactions";
+import { PostError } from "../utils/ErrorHandler";
+import userModel from "../models/user.model";
+import { hashPassword } from "../utils/hashPassword";
 import bcrypt from 'bcrypt'
 import { Request, Response, NextFunction } from "express";
 
 
 
 export function getUserDetails() {
-  return tryCatchWrapper(async (req, res, next) => {
+  return tryCatchWrapper(async (req:any, res, next) => {
     const user = await userModel.findById(req.user.id).select("-password -refreshToken");
     if (!user) {
       return next(PostError("User not found", 404));
@@ -18,7 +18,7 @@ export function getUserDetails() {
 }
 
 export function getUserDetailsById() {
-  return tryCatchWrapper(async (req, res, next) => {
+  return tryCatchWrapper(async (req:any, res, next) => {
     const user = userModel.findById(req.user.id).select("-password -refreshToken");
     if (!user) return next(PostError("User Doesn't Exists", 404));
 
@@ -29,7 +29,7 @@ export function getUserDetailsById() {
 }
 
 export function validateEmail() {
-  return tryCatchWrapper(async (req, res, next) => {
+  return tryCatchWrapper(async (req:any, res, next) => {
     const { email } = req.body;
     if (!email) return next(PostError("Email is required", 304));
 
@@ -46,7 +46,7 @@ export function validateEmail() {
 }
 
 export function forgotPassword() {
-  return tryCatchWrapper(async (req, res, next) => {
+  return tryCatchWrapper(async (req:any, res, next) => {
     const { email, password } = req.body;
     if (!email || !password) return next(PostError("Email and Password is required", 400));
 
@@ -68,7 +68,7 @@ export function forgotPassword() {
 }
 
 export function changePassword() {
-  return tryCatchWrapper(async (req, res, next) => {
+  return tryCatchWrapper(async (req:any, res, next) => {
     const { oldpassword, newpassword } = req.body;
     console.log(req.body);
 
@@ -92,7 +92,7 @@ export function changePassword() {
 }
 
 export function getAgentDetailById() {
-  return tryCatchWrapper(async (req, res, next) => {
+  return tryCatchWrapper(async (req:any, res, next) => {
     const { id } = await req.params
     console.log(id);
 
